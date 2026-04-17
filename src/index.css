@@ -6,6 +6,7 @@
   --font-display: "Space Grotesk", sans-serif;
   --color-accent: #8B5CF6;
   --color-accent-pink: #D946EF;
+  --color-ink: #050505;
 }
 
 @layer base {
@@ -15,34 +16,33 @@
   }
   
   body {
-    @apply text-white antialiased;
+    @apply text-white antialiased overflow-x-hidden;
   }
 }
 
-.glass-card {
-  @apply bg-white/5 border border-white/10 backdrop-blur-2xl rounded-2xl;
-}
-
-.section-label {
-  @apply text-[10px] uppercase text-accent font-bold tracking-[2px] mb-3 block;
-}
-
-.btn-immersive {
-  @apply px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300;
-}
-
-.btn-immersive-primary {
-  @apply bg-linear-to-br from-accent to-accent-pink text-white shadow-[0_10px_20px_rgba(139,92,246,0.3)] hover:scale-105;
-}
-
-.btn-immersive-secondary {
-  @apply bg-white/5 border border-white/10 backdrop-blur-md text-white hover:bg-white/10;
-}
-
-.purple-glow {
-  background: radial-gradient(circle at center, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+.glass {
+  @apply bg-white/5 border border-white/10 backdrop-blur-xl;
 }
 
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-linear-to-r from-purple-400 to-indigo-400;
+  @apply bg-clip-text text-transparent bg-linear-to-r from-accent to-accent-pink;
+}
+
+.purple-glow {
+  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-content {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-content:hover {
+  animation-play-state: paused;
 }

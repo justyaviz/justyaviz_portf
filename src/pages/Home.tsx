@@ -131,30 +131,45 @@ export default function Home() {
             <div className="badge-it">
               <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" /> Just Yaviz
             </div>
-            <div className="space-y-6">
+            <div className="space-y-8">
               <motion.h1 
-                {...fadeIn}
-                className="text-[72px] md:text-[9vw] font-satoshi font-normal tracking-tighter flex items-center gap-4 leading-none"
+                initial={{ opacity: 0, scale: 0.98, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+                className="text-[64px] md:text-[8vw] font-satoshi font-medium tracking-tighter flex flex-wrap items-center gap-x-6 leading-tight"
               >
                 <EditableText contentKey="heroTitle" defaultText="just.yaviz" as="span" />
                 <motion.div 
-                  whileHover={{ rotate: 135, scale: 1.2 }}
-                  className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center border border-white/20 rounded-full cursor-pointer hover:border-white transition-all shrink-0"
+                  initial={{ rotate: -45, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 0.8 }}
+                  whileHover={{ rotate: 135, scale: 1.1 }}
+                  className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center border border-white/10 rounded-full cursor-pointer hover:border-white transition-all shrink-0 bg-white/5 backdrop-blur-xl"
                 >
-                   <ArrowUpRight className="size-6 md:size-10" />
+                   <ArrowUpRight className="size-5 md:size-8" />
                 </motion.div>
               </motion.h1>
               <motion.p 
-                {...fadeIn}
-                transition={{ delay: 0.1 }}
-                className="max-w-md text-white font-satoshi text-[16px] leading-relaxed font-medium tracking-tight"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="max-w-lg text-white/50 font-satoshi text-[16px] md:text-lg leading-relaxed font-medium tracking-tight"
               >
                 <EditableText contentKey="heroDesc" defaultText="Biz SMM va Brandface bo‘yicha ko‘p yo‘nalishli ijodkormiz. Biznesingiz uchun zamonaviy texnologiyalar va kuchli vizual identitet yaratamiz." type="textarea" />
               </motion.p>
             </div>
-            <motion.div {...fadeIn} transition={{ delay: 0.2 }} className="flex flex-wrap items-center gap-6">
-               <Link to="/projects" className="btn-download px-10 py-4 text-xs">Barcha loyihalar</Link>
-               <Link to="/contact" className="px-10 py-3.5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-full hover:scale-105 transition-transform">Hozir boshlaymiz</Link>
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="flex flex-wrap items-center gap-6"
+            >
+               <Link to="/projects" className="btn-download bg-white/[0.03] border-white/5 text-white/40 font-medium">
+                 Barcha loyihalarni ko'rish
+               </Link>
+               <Link to="/contact" className="neon-btn">
+                 <div className="neon-btn-content">Hozir murojaat qiling</div>
+               </Link>
             </motion.div>
           </motion.div>
 

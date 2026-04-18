@@ -17,6 +17,7 @@
   --color-accent: #8B5CF6;
   --color-accent-pink: #D946EF;
   --color-ink: #000000;
+  --color-neon: #ffffff;
 }
 
 @layer base {
@@ -27,64 +28,76 @@
   
   body {
     @apply text-white antialiased overflow-x-hidden font-sans;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   p {
-    @apply font-plus-jakarta;
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.6);
+    @apply font-plus-jakarta font-medium;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.7;
+    letter-spacing: -0.01em;
   }
 
   h1 {
-    @apply font-satoshi;
-    font-size: 72px;
+    @apply font-satoshi font-medium;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.04em;
     font-style: normal;
   }
 
   h2 {
-    @apply font-bricolage;
-    font-size: 40px;
+    @apply font-satoshi font-medium;
+    font-size: 42px;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
     font-style: normal;
   }
 
   h3 {
-    @apply font-satoshi;
+    @apply font-satoshi font-medium;
     font-style: normal;
+    letter-spacing: -0.02em;
   }
 
   h4 {
-    @apply font-plus-jakarta;
-    font-size: 25px;
+    @apply font-satoshi font-bold text-white;
+    font-size: 24px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
     font-style: normal;
   }
 }
 
 .glass {
-  @apply bg-white/5 border border-white/10 backdrop-blur-xl;
+  @apply bg-white/[0.03] border border-white/5 backdrop-blur-xl;
 }
 
 .pill-nav {
-  @apply fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-between px-6 py-2.5 rounded-full w-[90%] max-w-[800px] border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)];
-  @apply bg-white/5 backdrop-blur-xl;
+  @apply fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-between px-8 py-3 rounded-full w-[95%] max-w-[850px] border border-white/5 shadow-[0_15px_35px_rgba(0,0,0,0.6)];
+  @apply bg-black/20 backdrop-blur-2xl;
+}
+
+.nav-link {
+  @apply text-[13px] font-medium tracking-[0.02em] text-white/40 hover:text-white transition-all cursor-pointer;
 }
 
 .hero-note {
-  @apply p-6 border-white/5 rounded-2xl max-w-[280px] rotate-[-5deg] shadow-2xl relative overflow-hidden;
-  @apply bg-white/5 backdrop-blur-xl;
+  @apply p-6 bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-3xl max-w-[300px] rotate-[-5deg] shadow-xl relative overflow-hidden;
 }
 
 .hero-note::after {
   content: "just.yaviz";
-  @apply absolute bottom-4 right-4 text-[10px] text-white/20 font-bold;
+  @apply absolute bottom-4 right-6 text-[9px] text-white/5 font-bold uppercase tracking-widest;
 }
 
 .badge-it {
-  @apply inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/5 rounded-full text-[10px] font-bold tracking-widest text-white/50 mb-8 uppercase;
+  @apply inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/5 rounded-full text-[10px] font-bold tracking-[0.1em] text-white/30 mb-8 uppercase;
 }
 
 .check-card {
-  @apply p-10 bg-white/5 border border-white/5 backdrop-blur-xl rounded-[3rem] transition-all duration-500 hover:bg-white/[0.03] space-y-6 relative;
+  @apply p-10 bg-white/5 border border-white/5 backdrop-blur-xl rounded-[2.5rem] transition-all duration-500 hover:bg-white/[0.03] space-y-6 relative;
 }
 
 .check-card .icon-shield {
@@ -92,43 +105,43 @@
 }
 
 .check-card-good {
-  @apply border-l-4 border-l-accent;
+  @apply border-l-2 border-l-accent/50;
 }
 
 .check-card-bad {
-  @apply border-l-4 border-l-red-500/50 grayscale opacity-60 hover:opacity-100 transition-opacity;
+  @apply border-l-2 border-l-red-500/20 grayscale opacity-30 hover:opacity-100 transition-opacity;
 }
 
 .btn-download {
-  @apply relative px-8 py-2.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest text-white transition-all overflow-hidden;
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+  @apply relative px-8 py-3 bg-white/5 border border-white/10 rounded-full text-[12px] font-medium tracking-wide text-white transition-all overflow-hidden flex items-center justify-center gap-2;
 }
 
 .btn-download:hover {
   @apply bg-white text-black border-white;
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
 }
 
 .neon-btn {
-  @apply relative overflow-hidden rounded-full px-10 py-3 bg-black/80 text-white font-bold text-xs uppercase tracking-widest border border-white/10;
-  transition: all 0.3s ease;
+  @apply relative inline-flex items-center justify-center;
+}
+
+.neon-btn-content {
+  @apply relative z-10 px-8 py-3.5 rounded-full bg-black text-white font-medium text-[13px] border border-white/5 transition-all;
 }
 
 .neon-btn::before {
-  content: "";
-  @apply absolute -inset-[150%] z-0;
-  background: conic-gradient(from 0deg, transparent 0 345deg, white 360deg);
-  animation: rotate-neon 2s linear infinite;
-  filter: blur(2px);
+  content: '';
+  @apply absolute -inset-[2px] rounded-full opacity-10 blur-[8px] transition-opacity duration-300 pointer-events-none;
+  background: linear-gradient(90deg, #0ea5e9, #22d3ee);
+  animation: neon-skromniy-pulse 4s infinite ease-in-out;
 }
 
-.neon-btn::after {
-  content: "";
-  @apply absolute inset-[1px] bg-black rounded-full z-10;
+.neon-btn:hover::before {
+  @apply opacity-60 blur-[12px];
 }
 
-.neon-btn span {
-  @apply relative z-20;
+@keyframes neon-skromniy-pulse {
+  0%, 100% { opacity: 0.1; transform: scale(0.98); }
+  50% { opacity: 0.4; transform: scale(1.02); }
 }
 
 @keyframes rotate-neon {

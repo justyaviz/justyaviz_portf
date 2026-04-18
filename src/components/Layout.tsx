@@ -82,31 +82,42 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* REFINED NAVBAR - FLOATING PILL */}
-      <nav className={`pill-nav backdrop-blur-3xl bg-black/60 border-white/5 py-3 fixed left-1/2 -translate-x-1/2 z-[100] flex items-center justify-between px-10 rounded-full border transition-all ${isAdmin ? 'top-16 md:top-18' : 'top-6'}`}>
+      <nav className={`pill-nav transition-all ${isAdmin ? 'top-16' : 'top-6'}`}>
         <div className="flex items-center gap-3">
-           <Link to="/" className="flex flex-row items-center gap-2">
+           <Link to="/" className="flex flex-row items-center gap-3">
               <div className="flex flex-col items-center justify-center -rotate-90">
-                 <span className="text-[6px] font-black uppercase tracking-[0.3em] text-white/40">just.yaviz</span>
+                 <span className="text-[7px] font-bold uppercase tracking-[0.3em] text-white/10">just.yaviz</span>
               </div>
-              <div className="w-10 h-10 flex items-center justify-center font-black bg-white rounded-xl text-black overflow-hidden p-2">
+              <div className="w-10 h-10 flex items-center justify-center font-black bg-white rounded-xl text-black overflow-hidden p-2.5">
                  <Logo className="w-full h-full" />
               </div>
            </Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-10 text-[11px] font-medium tracking-[0.05em] text-white/60">
-          <Link to="/" className={`hover:text-white transition-colors ${location.pathname === '/' ? 'text-white' : ''}`}>Home</Link>
-          <Link to="/branding" className={`hover:text-white transition-colors ${location.pathname === '/branding' ? 'text-white' : ''}`}>Brending</Link>
-          <Link to="/projects" className={`hover:text-white transition-colors ${location.pathname === '/projects' ? 'text-white' : ''}`}>Loyihalar</Link>
-          <Link to="/contact" className={`hover:text-white transition-colors ${location.pathname === '/contact' ? 'text-white' : ''}`}>Aloqa</Link>
+        <div className="hidden md:flex items-center gap-10">
+          {[
+            { to: "/", label: "Home" },
+            { to: "/branding", label: "Brending" },
+            { to: "/projects", label: "Loyihalar" },
+            { to: "/contact", label: "Aloqa" }
+          ].map(link => (
+            <Link 
+              key={link.label}
+              to={link.to} 
+              className={`nav-link ${location.pathname === link.to ? 'text-white' : ''}`}
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
 
         <Link 
           to="/contact"
-          className="neon-btn group scale-90"
+          className="neon-btn scale-90"
         >
-          <span>Hozir bog'lanish</span>
-          <div className="absolute inset-0 bg-accent/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="neon-btn-content text-[11px] px-6 py-2.5">
+            Hozir bog'lanish
+          </div>
         </Link>
 
         <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>

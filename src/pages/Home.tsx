@@ -528,9 +528,10 @@ export default function Home() {
              <div className="relative">
                 <div className="absolute -inset-4 bg-accent/20 blur-[100px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
                 <img 
-                  src="https://raw.githubusercontent.com/StackBlitz-User-Images/ais-dev-fwlf2rjubxycr545cqwmfm-733816564986/main/input_file_0.png" 
+                  src="https://yt3.googleusercontent.com/7c66P3YnmaqgNiVybbisloEC64VHRMgdHJAifzqvnTsrZvuoWRnNJYsibF9eMtow3umhZeMlrA=s900-c-k-c0x00ffffff-no-rj" 
                   alt="Yahyobek Tohirjonov" 
                   className="relative rounded-[2.5rem] md:rounded-[5rem] grayscale group-hover:grayscale-0 transition-all duration-1000 border border-white/5 aspect-[4/5] object-cover shadow-2xl mx-auto" 
+                  referrerPolicy="no-referrer"
                 />
              </div>
           </motion.div>

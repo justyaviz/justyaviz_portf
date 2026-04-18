@@ -17,12 +17,13 @@ import {
 } from "lucide-react";
 
 const defaultProjects = [
-  { title: "Honor X6c vs Galaxy A07", category: "YouTube / Tech Obzor", image: "https://picsum.photos/seed/honorx6c/1200/800", type: "YouTube" },
-  { title: "Honor X9c vs X9d Review", category: "YouTube / Comparison", image: "https://picsum.photos/seed/honorx9c/1200/800", type: "YouTube" },
-  { title: "Honor X7d Water Test", category: "YouTube / Experiment", image: "https://picsum.photos/seed/honorx7d/1200/800", type: "YouTube" },
-  { title: "Redmi Note 15 Shok", category: "YouTube / Tech Obzor", image: "https://picsum.photos/seed/redminote15/1200/800", type: "YouTube" },
-  { title: "Redmi Pad Pro 5G", category: "YouTube / Tablet Review", image: "https://picsum.photos/seed/redmipad/1200/800", type: "YouTube" },
-  { title: "Honor X9c Flagman Review", category: "YouTube / Flagship", image: "https://picsum.photos/seed/honorflagship/1200/800", type: "YouTube" },
+  { title: "Honor X6c vs Galaxy A07", category: "YouTube / Tech Obzor", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/0.png", type: "YouTube" },
+  { title: "Honor X9c vs Honor X9d", category: "YouTube / Comparison", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/3.png", type: "YouTube" },
+  { title: "Honor X7d — Suvga soldik!", category: "YouTube / Experiment", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/6.png", type: "YouTube" },
+  { title: "Redmi Note 15 SHOK!", category: "YouTube / Tech Obzor", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/8.png", type: "YouTube" },
+  { title: "Redmi Pad Pro 5G", category: "YouTube / Tablet Review", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/10.png", type: "YouTube" },
+  { title: "Honor X9C — OBZOR", category: "YouTube / Flagship", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/11.png", type: "YouTube" },
+  { title: "Honor X8D — Rostini aytamiz", category: "YouTube / Tech Review", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/9.png", type: "YouTube" },
   { title: "Magic City", category: "Marketing", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxwrLEewH9Kw14lXc8nVXi2bIPilJXbDS1zg&s", type: "Marketing" },
   { title: "Sundecor", category: "Marketing", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfkcYEjWfYZIpWvZ7fLMcCVxfVZQcXAZ3RQ&s", type: "Marketing" },
   { title: "Ilm Chashmalari", category: "SMM", image: "https://static4.tgstat.ru/channels/_0/58/5874f696205edf0c7aa55152da39921a.jpg", type: "Marketing" },
@@ -105,13 +106,33 @@ export default function Projects() {
                 transition={{ delay: i * 0.05 }}
                 className="group cursor-pointer"
               >
-                <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/5 mb-6">
+                <div className={`relative ${p.type === "YouTube" ? "aspect-video" : "aspect-[4/5]"} rounded-[2.5rem] overflow-hidden border border-white/5 mb-6 group/card`}>
                   <ProjectControls project={p} />
-                  <img 
-                    src={p.image} 
-                    alt={p.title} 
-                    className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" 
-                  />
+                  {p.video ? (
+                    <div className="absolute inset-0 w-full h-full">
+                       <img 
+                          src={p.image} 
+                          alt={p.title} 
+                          className="absolute inset-0 w-full h-full object-cover grayscale group-hover/card:opacity-0 transition-all duration-700" 
+                          referrerPolicy="no-referrer"
+                       />
+                       <video 
+                          src={p.video} 
+                          className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover/card:opacity-100 transition-all duration-700" 
+                          autoPlay 
+                          muted 
+                          loop 
+                          playsInline
+                       />
+                    </div>
+                  ) : (
+                    <img 
+                      src={p.image} 
+                      alt={p.title} 
+                      className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" 
+                      referrerPolicy="no-referrer"
+                    />
+                  )}
                   <div className="absolute bottom-6 right-6 w-12 h-12 bg-black/80 backdrop-blur-md rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all border border-white/10 overflow-hidden p-2">
                     <Logo className="w-full h-full text-white" />
                   </div>

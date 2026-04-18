@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { db } from '../lib/firebase';
 import { doc, updateDoc, deleteDoc, addDoc, collection } from 'firebase/firestore';
-import { Edit2, Trash2, X, Plus } from 'lucide-react';
+import { Edit2, Trash2, X, Plus, Upload, Link as LinkIcon, Image as ImageIcon, Video as VideoIcon } from 'lucide-react';
 import { useAdmin } from './AdminProvider';
 
 interface ProjectEditorProps {
@@ -11,8 +11,27 @@ interface ProjectEditorProps {
 }
 
 export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, isAdd }) => {
-  const [formData, setFormData] = useState(project || { title: "", category: "", image: "", type: "Marketing" });
+  const [formData, setFormData] = useState(project || { title: "", category: "", image: "", video: "", type: "Marketing" });
+  const [uploadMode, setUploadMode] = useState<'url' | 'file'>('url');
+  const [videoMode, setVideoMode] = useState<'url' | 'file'>('url');
   const { isAdmin } = useAdmin();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'image' | 'video') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // 1MB limit for firestore doc size
+      const limit = field === 'image' ? 1024 * 1024 : 5 * 1024 * 1024; // 5MB for video if base64, still risky
+      if (file.size > limit) {
+        alert(`${field === 'image' ? 'Rasm' : 'Video'} hajmi juda katta. Iltimos, URL dan foydalaning.`);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, [field]: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSave = async () => {
     if (!isAdmin) return;
@@ -30,46 +49,129 @@ export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, 
 
   return (
     <div className="fixed inset-0 z-[300] bg-black/80 backdrop-blur-md flex items-center justify-center p-6">
-      <div className="w-full max-w-xl glass p-10 rounded-[3rem] space-y-8 relative">
+      <div className="w-full max-w-xl glass p-10 rounded-[3rem] space-y-8 relative max-h-[90vh] overflow-y-auto custom-scrollbar">
         <button onClick={onClose} className="absolute top-8 right-8 text-white/40 hover:text-white transition-opacity">
           <X size={24} />
         </button>
         <h3 className="text-3xl font-display font-black italic">{isAdd ? "Yangi loyiha" : "Loyihani tahrirlash"}</h3>
         
         <div className="grid grid-cols-1 gap-6">
-          <input 
-            value={formData.title}
-            onChange={e => setFormData({...formData, title: e.target.value})}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent" 
-            placeholder="Sarlavha"
-          />
-          <input 
-            value={formData.category}
-            onChange={e => setFormData({...formData, category: e.target.value})}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent" 
-            placeholder="Kategoriya (ko'rinishi)"
-          />
-          <input 
-            value={formData.image}
-            onChange={e => setFormData({...formData, image: e.target.value})}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent" 
-            placeholder="Rasm URL"
-          />
-          <select 
-            value={formData.type}
-            onChange={e => setFormData({...formData, type: e.target.value})}
-            className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent"
-          >
-            <option value="Marketing">Marketing</option>
-            <option value="Web site">Web site</option>
-            <option value="CRM">CRM</option>
-            <option value="Infografik">Infografik</option>
-            <option value="Banner">Banner</option>
-          </select>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-4">Sarlavha</label>
+            <input 
+              value={formData.title}
+              onChange={e => setFormData({...formData, title: e.target.value})}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent" 
+              placeholder="Masalan: Honor X9c Obzor"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-4">Muqova rasmi (Thumbnail)</label>
+            <div className="flex items-center gap-4 ml-4">
+               <button 
+                 onClick={() => setUploadMode('url')}
+                 className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 transition-colors ${uploadMode === 'url' ? 'text-accent' : 'text-white/20'}`}
+               >
+                 <LinkIcon size={12} /> URL
+               </button>
+               <button 
+                 onClick={() => setUploadMode('file')}
+                 className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 transition-colors ${uploadMode === 'file' ? 'text-accent' : 'text-white/20'}`}
+               >
+                 <Upload size={12} /> Fayl
+               </button>
+            </div>
+
+            {uploadMode === 'url' ? (
+              <input 
+                value={formData.image}
+                onChange={e => setFormData({...formData, image: e.target.value})}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent" 
+                placeholder="Rasm URL manzili"
+              />
+            ) : (
+              <div className="relative group">
+                <input 
+                  type="file" 
+                  onChange={e => handleFileChange(e, 'image')}
+                  accept="image/*"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                />
+                <div className="w-full bg-black/40 border border-white/5 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center gap-3 text-white/20 group-hover:text-white group-hover:border-white/30 transition-all">
+                   <ImageIcon size={32} />
+                   <span className="text-xs font-bold uppercase tracking-widest">Rasm tanlang</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-4">Video kontent (Ixtiyoriy)</label>
+            <div className="flex items-center gap-4 ml-4">
+               <button 
+                 onClick={() => setVideoMode('url')}
+                 className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 transition-colors ${videoMode === 'url' ? 'text-accent' : 'text-white/20'}`}
+               >
+                 <LinkIcon size={12} /> Video URL
+               </button>
+               <button 
+                 onClick={() => setVideoMode('file')}
+                 className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 transition-colors ${videoMode === 'file' ? 'text-accent' : 'text-white/20'}`}
+               >
+                 <Upload size={12} /> Video Fayl
+               </button>
+            </div>
+
+            {videoMode === 'url' ? (
+              <input 
+                value={formData.video}
+                onChange={e => setFormData({...formData, video: e.target.value})}
+                className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent" 
+                placeholder="Video URL (Direct link, YouTube emes)"
+              />
+            ) : (
+              <div className="relative group">
+                <input 
+                  type="file" 
+                  onChange={e => handleFileChange(e, 'video')}
+                  accept="video/*"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                />
+                <div className="w-full bg-black/40 border border-white/5 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center gap-3 text-white/20 group-hover:text-white group-hover:border-white/30 transition-all">
+                   <VideoIcon size={32} />
+                   <span className="text-xs font-bold uppercase tracking-widest">Video tanlang</span>
+                </div>
+              </div>
+            )}
+            
+            {formData.video && (
+              <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 mt-2 bg-black/40">
+                 <video src={formData.video} className="w-full h-full object-cover" controls />
+                 <div className="absolute top-2 right-2 px-2 py-1 bg-black/60 backdrop-blur-md rounded-md text-[8px] font-bold uppercase text-white/40">Video Preview</div>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-4">Turi</label>
+            <select 
+              value={formData.type}
+              onChange={e => setFormData({...formData, type: e.target.value})}
+              className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent appearance-none cursor-pointer"
+            >
+              <option value="Marketing">Marketing (Vertical)</option>
+              <option value="YouTube">YouTube (16:9 Landscape)</option>
+              <option value="Web site">Web site</option>
+              <option value="CRM">CRM</option>
+              <option value="Infografik">Infografik</option>
+              <option value="Banner">Banner</option>
+            </select>
+          </div>
         </div>
 
-        <button onClick={handleSave} className="btn-primary-site w-full py-5 text-sm uppercase">
-          Saqlash
+        <button onClick={handleSave} className="btn-primary-site w-full py-5 text-sm uppercase font-black tracking-widest">
+          Lohiyani saqlash
         </button>
       </div>
     </div>

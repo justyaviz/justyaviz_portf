@@ -20,8 +20,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isEditMode, setEditMode] = useState(false);
   const [siteContent, setSiteContent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [phoneVerified, setPhoneVerified] = useState(localStorage.getItem('admin_phone_verified') === 'true');
 
-  const isAdmin = user?.email?.toLowerCase() === 'yahyobektohirjonov0@gmail.com';
+  const isAdmin = (user?.email?.toLowerCase() === 'yahyobektohirjonov0@gmail.com') || phoneVerified;
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, (u) => {

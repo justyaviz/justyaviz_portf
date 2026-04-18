@@ -18,29 +18,70 @@ import {
   Image as ImageIcon,
   Check,
   Eye,
-  Edit3
+  Edit3,
+  Phone,
+  ArrowLeft
 } from "lucide-react";
 
 export default function Admin() {
   const { user, isAdmin, isEditMode, setEditMode, updateContent, siteContent: globalContent, loading } = useAdmin();
   const [activeTab, setActiveTab] = useState<"projects" | "content">("projects");
   const [projects, setProjects] = useState<any[]>([]);
+
+  // Phone Auth State
+  const [phoneStep, setPhoneStep] = useState<"initial" | "phone" | "code">("initial");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [smsCode, setSmsCode] = useState("");
+  const [timer, setTimer] = useState(60);
+  const [isVerifying, setIsVerifying] = useState(false);
   
   // Form States
   const [isEditing, setIsEditing] = useState<string | null>(null);
   const [formData, setFormData] = useState({ title: "", category: "", image: "", type: "Marketing" });
 
   useEffect(() => {
-    if (!user || !isAdmin) return;
-
+    if (!isAdmin) return;
     const unsubProjects = onSnapshot(collection(db, "projects"), (snapshot) => {
       setProjects(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
     });
+    return () => unsubProjects();
+  }, [isAdmin]);
 
-    return () => {
-      unsubProjects();
-    };
-  }, [user, isAdmin]);
+  useEffect(() => {
+    let interval: any;
+    if (phoneStep === "code" && timer > 0) {
+      interval = setInterval(() => setTimer(t => t - 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [phoneStep, timer]);
+
+  const handlePhoneSubmit = () => {
+    if (phoneNumber === "931949200") {
+      setPhoneStep("code");
+      setTimer(60);
+    } else {
+      alert("Noma'lum telefon raqami.");
+    }
+  };
+
+  const handleCodeSubmit = () => {
+    setIsVerifying(true);
+    setTimeout(() => {
+      if (smsCode === "9000") {
+        localStorage.setItem('admin_phone_verified', 'true');
+        window.location.reload();
+      } else {
+        alert("Kod noto'g'ri.");
+        setIsVerifying(false);
+      }
+    }, 1000);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin_phone_verified');
+    logout();
+    window.location.reload();
+  };
 
   const handleSaveProject = async () => {
     try {
@@ -70,46 +111,129 @@ export default function Admin() {
 
   if (!isAdmin) return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black p-6">
-      <div className="max-w-md w-full glass p-12 rounded-[3.5rem] text-center space-y-8">
-        <div className="w-20 h-20 bg-accent/20 rounded-3xl flex items-center justify-center mx-auto">
-          <Settings className="text-accent" size={40} />
-        </div>
-        <div className="space-y-2">
-          <h1 className="text-3xl font-display font-black line-tight">
-            {!user ? "Tizimga kirish" : "Kirish taqiqlangan"}
-          </h1>
-          <p className="text-white/40 text-sm">
-            {!user 
-              ? "Boshqaruv markaziga kirish uchun Google hisobingizdan foydalaning." 
-              : `Siz ${user.email} hisobi bilan kirdingiz. Bu hisobda admin huquqlari yo'q.`}
-          </p>
-        </div>
-        {!user ? (
-          <button 
-            onClick={async () => {
-              console.log("Login button clicked");
-              await loginWithGoogle();
-            }}
-            className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-full hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all flex items-center justify-center gap-3 active:scale-95"
-          >
-            Google orqali kirish
-          </button>
-        ) : (
-          <div className="space-y-4">
-            <button 
-              onClick={loginWithGoogle}
-              className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-full hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all flex items-center justify-center gap-3"
-            >
-              Boshqa hisob bilan kirish
-            </button>
-            <button 
-              onClick={logout}
-              className="w-full py-5 bg-red-600/10 text-red-500 font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-red-600 hover:text-white transition-all border border-red-500/20"
-            >
-              Tizimdan chiqish
-            </button>
+      <div className="max-w-md w-full glass p-10 rounded-[3.5rem] text-center space-y-8 relative overflow-hidden">
+        {isVerifying && (
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-md z-50 flex flex-col items-center justify-center gap-4">
+             <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+             <p className="text-[10px] font-black uppercase tracking-widest text-accent">Tekshirilmoqda...</p>
           </div>
         )}
+
+        <div className="w-20 h-20 bg-accent/20 rounded-3xl flex items-center justify-center mx-auto">
+          {phoneStep === "initial" ? <Settings className="text-accent" size={40} /> : <Phone className="text-accent" size={40} />}
+        </div>
+
+        <div className="space-y-2">
+          <h1 className="text-3xl font-display font-black line-tight">
+            {phoneStep === "initial" ? "Admin Panel" : phoneStep === "phone" ? "Telefon orqali kirish" : "Kodni kiriting"}
+          </h1>
+          <p className="text-white/40 text-sm">
+            {phoneStep === "initial" 
+              ? "Boshqaruv markaziga kirish uchun usullardan birini tanlang." 
+              : phoneStep === "phone" 
+                ? "Tasdiqlash kodi yuborilishi uchun telefon raqamingizni kiriting."
+                : `+998 ${phoneNumber} raqamiga SMS kod yuborildi.`}
+          </p>
+        </div>
+
+        <AnimatePresence mode="wait">
+          {phoneStep === "initial" ? (
+            <motion.div 
+              key="initial"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <button 
+                onClick={loginWithGoogle}
+                className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-full hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all flex items-center justify-center gap-3 active:scale-95"
+              >
+                Google orqali kirish
+              </button>
+              <div className="flex items-center gap-4 py-2">
+                <div className="h-px flex-1 bg-white/5" />
+                <span className="text-[10px] font-bold text-white/20 uppercase">yoki</span>
+                <div className="h-px flex-1 bg-white/5" />
+              </div>
+              <button 
+                onClick={() => setPhoneStep("phone")}
+                className="w-full py-5 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-xs rounded-full hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+              >
+                <Phone size={16} /> Telefon raqam orqali
+              </button>
+            </motion.div>
+          ) : phoneStep === "phone" ? (
+            <motion.div 
+              key="phone"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <div className="relative">
+                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40 font-bold">+998</div>
+                <input 
+                  type="text" 
+                  autoFocus
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
+                  placeholder="93 194 92 00"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-20 pr-6 text-xl font-bold tracking-widest outline-none focus:border-accent/40"
+                />
+              </div>
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setPhoneStep("initial")}
+                  className="flex-1 py-5 bg-white/5 text-white/60 font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white/10 transition-all"
+                >
+                  <ArrowLeft size={16} className="mx-auto" />
+                </button>
+                <button 
+                  onClick={handlePhoneSubmit}
+                  disabled={phoneNumber.length < 9}
+                  className="flex-[3] py-5 bg-accent text-black font-black uppercase tracking-widest text-xs rounded-full hover:shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)] transition-all disabled:opacity-20"
+                >
+                  Kodni olish
+                </button>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="code"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <input 
+                type="text" 
+                maxLength={4}
+                autoFocus
+                value={smsCode}
+                onChange={(e) => setSmsCode(e.target.value.replace(/\D/g, ''))}
+                placeholder="0 0 0 0"
+                className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 text-center text-3xl font-black tracking-[0.5em] outline-none focus:border-accent/40"
+              />
+              <div className="flex flex-col gap-4">
+                <button 
+                  onClick={handleCodeSubmit}
+                  disabled={smsCode.length < 4}
+                  className="w-full py-5 bg-accent text-black font-black uppercase tracking-widest text-xs rounded-full hover:shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)] transition-all disabled:opacity-20"
+                >
+                  Tasdiqlash
+                </button>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-white/20">
+                  {timer > 0 ? (
+                    <span>Qayta yuborish: {Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}</span>
+                  ) : (
+                    <button onClick={handlePhoneSubmit} className="text-accent underline">Qayta yuborish</button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
@@ -148,7 +272,7 @@ export default function Admin() {
               </button>
             </div>
 
-            <button onClick={logout} className="flex items-center gap-3 text-xs font-bold text-red-500/60 hover:text-red-500 transition-colors pt-4">
+            <button onClick={handleLogout} className="flex items-center gap-3 text-xs font-bold text-red-500/60 hover:text-red-500 transition-colors pt-4">
               <LogOut size={16} /> Chiqish
             </button>
           </div>

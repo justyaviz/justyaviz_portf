@@ -11,6 +11,7 @@ import {
   Layers,
   Award,
   Briefcase,
+  Target,
   ExternalLink,
   ChevronRight
 } from "lucide-react";
@@ -173,6 +174,66 @@ export default function Bio() {
               ))}
            </div>
         </div>
+
+        {/* JUST YAVIZ & YOUTUBE */}
+        <section className="space-y-16 py-20 border-t border-white/5">
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-8">
+                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-500 border border-red-500/20 text-[10px] font-black uppercase tracking-widest">
+                    <Video size={12} />
+                    YouTube & Branding
+                 </div>
+                 <h2 className="text-4xl md:text-7xl font-display font-black tracking-tighter leading-none uppercase">
+                   Just Yaviz <br />
+                   <span className="text-white/20">Digital Brand</span>
+                 </h2>
+                 <p className="text-white/40 text-sm md:text-base leading-relaxed font-medium">
+                   Just Yaviz — bu mening shaxsiy digital brendim bo‘lib, unda kreativ kontent, marketing yondashuvlar va zamonaviy vizual uslub orqali auditoriya bilan aloqa o‘rnataman. YouTube platformasida texnologiya, marketing va reklama roliklari orqali sifatli storytelling taqdim etaman.
+                 </p>
+                 <div className="grid grid-cols-2 gap-6">
+                    {[
+                      { label: "Storytelling", icon: <Brain size={16} /> },
+                      { label: "Video Montaj", icon: <Video size={16} /> },
+                      { label: "Auditoriya", icon: <User size={16} /> },
+                      { label: "Targeting", icon: <Target size={16} /> }
+                    ].map((feature, i) => (
+                      <div key={i} className="flex items-center gap-3 text-white/60">
+                         <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-accent">
+                            {feature.icon}
+                         </div>
+                         <span className="text-xs font-bold uppercase tracking-wider">{feature.label}</span>
+                      </div>
+                    ))}
+                 </div>
+              </div>
+              <div className="relative aspect-video rounded-[3rem] overflow-hidden border border-white/10 group">
+                 <img 
+                   src="https://picsum.photos/seed/justyaviz/1200/800" 
+                   alt="Just Yaviz YouTube" 
+                   className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700" 
+                 />
+                 <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(220,38,38,0.5)] group-hover:scale-110 transition-transform">
+                       <Video size={32} />
+                    </div>
+                 </div>
+              </div>
+           </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {[
+                { title: "Auditoriya bilan ishlash", desc: "Mijoz va tomoshabin orasidagi ko'prik." },
+                { title: "Kontent strategiya", desc: "Viral va sotuvga yo‘naltirilgan rejalar." },
+                { title: "Video Storytelling", desc: "Mahsulotni sinash va qiziqarli taqdim etish." },
+                { title: "Brend bilan hamkorlik", desc: "Yirik kompaniyalar bilan ishlash tajribasi." }
+              ].map((item, i) => (
+                <div key={i} className="glass p-6 rounded-3xl border-white/5 space-y-3">
+                   <h5 className="font-bold text-sm tracking-tight">{item.title}</h5>
+                   <p className="text-[11px] text-white/30 leading-relaxed font-medium">{item.desc}</p>
+                </div>
+              ))}
+           </div>
+        </section>
 
         {/* CERTIFICATES GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

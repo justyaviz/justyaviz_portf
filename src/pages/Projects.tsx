@@ -17,12 +17,17 @@ import {
 } from "lucide-react";
 
 const defaultProjects = [
+  { title: "Honor X6c vs Galaxy A07", category: "YouTube / Tech Obzor", image: "https://picsum.photos/seed/honorx6c/1200/800", type: "YouTube" },
+  { title: "Honor X9c vs X9d Review", category: "YouTube / Comparison", image: "https://picsum.photos/seed/honorx9c/1200/800", type: "YouTube" },
+  { title: "Honor X7d Water Test", category: "YouTube / Experiment", image: "https://picsum.photos/seed/honorx7d/1200/800", type: "YouTube" },
+  { title: "Redmi Note 15 Shok", category: "YouTube / Tech Obzor", image: "https://picsum.photos/seed/redminote15/1200/800", type: "YouTube" },
+  { title: "Redmi Pad Pro 5G", category: "YouTube / Tablet Review", image: "https://picsum.photos/seed/redmipad/1200/800", type: "YouTube" },
+  { title: "Honor X9c Flagman Review", category: "YouTube / Flagship", image: "https://picsum.photos/seed/honorflagship/1200/800", type: "YouTube" },
   { title: "Magic City", category: "Marketing", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxwrLEewH9Kw14lXc8nVXi2bIPilJXbDS1zg&s", type: "Marketing" },
   { title: "Sundecor", category: "Marketing", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfkcYEjWfYZIpWvZ7fLMcCVxfVZQcXAZ3RQ&s", type: "Marketing" },
   { title: "Ilm Chashmalari", category: "SMM", image: "https://static4.tgstat.ru/channels/_0/58/5874f696205edf0c7aa55152da39921a.jpg", type: "Marketing" },
   { title: "e-one stores", category: "Web site", image: "https://taplink.st/a/5/1/6/f/99552c.jpg?1", type: "Web site" },
   { title: "aloo shop", category: "Yandex Maps / Marketing", image: "https://proud-cyan-whxxiapwah.edgeone.app/8586B6B0-80CD-45D5-8121-D8BB132DDF0B.jpeg", type: "Marketing", link: "https://yandex.uz/maps/org/180263652317/" },
-  { title: "aloo Maps", category: "Geo-Marketing", image: "https://picsum.photos/seed/aloomaps/1200/800", type: "Marketing" },
   { title: "Yengil Taxi", category: "CRM", image: "https://assets.nicepagecdn.com/bc13c16f/6522583/images/Untitled-1.png", type: "CRM" },
   { title: "Yengil Mijoz", category: "Marketing", image: "https://play-lh.googleusercontent.com/7hUsDaIdSaYwgWXQosQZGuOpQ8RLhp8Iw-bSKzNIxocMqw5l-2ZysdbGdyllKkQIOw", type: "Marketing" },
 ];

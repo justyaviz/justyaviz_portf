@@ -203,86 +203,88 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          <div className="relative hidden lg:block h-[700px]">
-             <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative hidden lg:block h-[700px] w-full">
+             <div className="absolute inset-0 flex items-center justify-end">
                 {/* BACKGROUND LINES FROM SCREENSHOT */}
                 <div className="absolute inset-0 pointer-events-none opacity-20">
-                  <div className="absolute top-[15%] left-[10%] w-[300px] h-px bg-white/20 -rotate-45" />
-                  <div className="absolute top-[25%] left-[5%] w-[400px] h-px bg-white/10 -rotate-45" />
-                  <div className="absolute top-[40%] right-[10%] w-[250px] h-px bg-white/15 rotate-[30deg]" />
+                  <div className="absolute top-[8%] left-[25%] w-[450px] h-px bg-white/20 -rotate-[35deg]" />
+                  <div className="absolute top-[32%] left-[15%] w-[550px] h-px bg-white/10 -rotate-[35deg]" />
+                  <div className="absolute top-[22%] right-[-5%] w-[450px] h-px bg-white/15 rotate-[22deg]" />
                 </div>
 
                 {/* FLOATING CURSORS LIKE IN SCREENSHOT */}
                 <motion.div 
                   style={{ 
-                    x: useTransform(springX, [0, 2000], [50, -50]), 
-                    y: useTransform(springY, [0, 1000], [0, -30]) 
+                    x: useTransform(springX, [0, 2000], [200, 50]), 
+                    y: useTransform(springY, [0, 1000], [-40, -100]) 
                   }}
-                  className="absolute top-[35%] right-[25%] z-30 pointer-events-none"
+                  className="absolute top-[35%] right-[2%] z-30 pointer-events-none"
                 >
-                   <MousePointer2 className="fill-white text-white rotate-[15deg] drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" size={24} />
+                   <MousePointer2 className="fill-white text-white rotate-[15deg] drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]" size={28} />
                 </motion.div>
                 <motion.div 
                   style={{ 
-                    x: useTransform(springX, [0, 2000], [-80, 80]), 
-                    y: useTransform(springY, [0, 1000], [100, 50]) 
+                    x: useTransform(springX, [0, 2000], [50, 150]), 
+                    y: useTransform(springY, [0, 1000], [220, 120]) 
                   }}
-                  className="absolute bottom-[30%] left-[30%] z-30 pointer-events-none"
+                  className="absolute bottom-[28%] right-[15%] z-30 pointer-events-none"
                 >
-                   <MousePointer2 className="fill-white text-white rotate-[-20deg] drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]" size={20} />
+                   <MousePointer2 className="fill-white text-white rotate-[-20deg] drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]" size={24} />
                 </motion.div>
 
-                {/* THE CARDS FROM SCREENSHOT */}
-                <motion.div 
-                  drag
-                  dragConstraints={{ left: -150, right: 150, top: -150, bottom: 150 }}
-                  style={{ 
-                    x: useTransform(springX, [0, 2000], [-30, 30]), 
-                    y: useTransform(springY, [0, 1000], [-20, 20]),
-                    rotate: -8
-                  }}
-                  whileHover={{ scale: 1.02, rotate: -6, zIndex: 100 }}
-                  className="hero-note z-20 cursor-grab active:cursor-grabbing"
-                >
-                   <p className="text-[17px] font-dm-sans font-medium leading-relaxed pr-8 text-white/90">
-                    Biznesingizga mos professional dizayn va aniq boshqaruv — natija kafolatli.
-                   </p>
-                   <div className="handle">just.yaviz</div>
-                </motion.div>
+                {/* THE CARDS FROM SCREENSHOT - EXTREMELY SPREAD TO THE RIGHT */}
+                <div className="relative w-full h-full flex items-center justify-end pr-10">
+                  <motion.div 
+                    drag
+                    dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
+                    style={{ 
+                      x: useTransform(springX, [0, 2000], [-50, 50]), 
+                      y: useTransform(springY, [0, 1000], [-100, -20]),
+                      rotate: -15
+                    }}
+                    whileHover={{ scale: 1.03, rotate: -12, zIndex: 100 }}
+                    className="hero-note z-20 cursor-grab active:cursor-grabbing absolute right-[120px]"
+                  >
+                    <p className="text-[17px] font-dm-sans font-medium leading-relaxed pr-8 text-white/90">
+                      Biznesingizga mos professional dizayn va aniq boshqaruv — natija kafolatli.
+                    </p>
+                    <div className="handle">just.yaviz</div>
+                  </motion.div>
 
-                <motion.div 
-                  drag
-                  dragConstraints={{ left: -150, right: 150, top: -150, bottom: 150 }}
-                  style={{ 
-                    x: useTransform(springX, [0, 2000], [80, -80]), 
-                    y: useTransform(springY, [0, 1000], [120, 80]),
-                    rotate: 6
-                  }}
-                  whileHover={{ scale: 1.02, rotate: 4, zIndex: 100 }}
-                  className="hero-note absolute z-10 cursor-grab active:cursor-grabbing"
-                >
-                   <p className="text-[17px] font-dm-sans font-medium leading-relaxed pr-8 text-white/90">
-                    Sifatli dizayn — bu tasodif emas, tizim.
-                   </p>
-                   <div className="handle">just.yaviz</div>
-                </motion.div>
+                  <motion.div 
+                    drag
+                    dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
+                    style={{ 
+                      x: useTransform(springX, [0, 2000], [150, 250]), 
+                      y: useTransform(springY, [0, 1000], [150, 50]),
+                      rotate: 12
+                    }}
+                    whileHover={{ scale: 1.03, rotate: 8, zIndex: 100 }}
+                    className="hero-note z-10 cursor-grab active:cursor-grabbing absolute right-[-40px] top-[45%]"
+                  >
+                    <p className="text-[17px] font-dm-sans font-medium leading-relaxed pr-8 text-white/90">
+                      Sifatli dizayn — bu tasodif emas, tizim.
+                    </p>
+                    <div className="handle">just.yaviz</div>
+                  </motion.div>
 
-                <motion.div 
-                  drag
-                  dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
-                  style={{ 
-                    x: useTransform(springX, [0, 2000], [0, 0]), 
-                    y: useTransform(springY, [0, 1000], [250, 200]),
-                    rotate: -2
-                  }}
-                  whileHover={{ scale: 1.02, rotate: 0, zIndex: 100 }}
-                  className="hero-note absolute z-0 opacity-20 blur-[2px] transition-all hover:opacity-100 hover:blur-0 cursor-grab active:cursor-grabbing hidden xl:block"
-                >
-                   <p className="text-[15px] font-dm-sans font-medium leading-relaxed pr-8 text-white/90">
-                    Innovatsion yechimlar va strategik yondashuv orqali natija.
-                   </p>
-                   <div className="handle">just.yaviz</div>
-                </motion.div>
+                  <motion.div 
+                    drag
+                    dragConstraints={{ left: -500, right: 500, top: -500, bottom: 500 }}
+                    style={{ 
+                      x: useTransform(springX, [0, 2000], [0, -50]), 
+                      y: useTransform(springY, [0, 1000], [450, 380]),
+                      rotate: -4
+                    }}
+                    whileHover={{ scale: 1.03, rotate: -2, zIndex: 100 }}
+                    className="hero-note z-0 opacity-10 blur-[5px] transition-all hover:opacity-100 hover:blur-0 cursor-grab active:cursor-grabbing hidden xl:block absolute right-[250px]"
+                  >
+                    <p className="text-[15px] font-dm-sans font-medium leading-relaxed pr-8 text-white/90">
+                      Innovatsion yechimlar va strategik yondashuv orqali natija.
+                    </p>
+                    <div className="handle">just.yaviz</div>
+                  </motion.div>
+                </div>
              </div>
           </div>
         </div>

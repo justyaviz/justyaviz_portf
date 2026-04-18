@@ -10,6 +10,7 @@ import {
   Layout, 
   Layers,
   Award,
+  Briefcase,
   ExternalLink,
   ChevronRight
 } from "lucide-react";
@@ -92,9 +93,11 @@ export default function Bio() {
               <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-accent/10 to-transparent pointer-events-none" />
               <div className="relative z-10 space-y-6">
                  <h1 className="text-3xl md:text-5xl font-medium leading-[1.1] tracking-tight">
-                   Kreativ fikrlash orqali <br /> yuqori natijalarga erishish
+                   Marketing, Media va <br /> IT sohasida tajriba
                  </h1>
-                 <p className="text-white/40 max-w-md font-medium">Ijodiy loyihalaringiz uchun eksklyuziv ilhom va resurs manbai.</p>
+                 <p className="text-white/40 max-w-xl font-medium leading-relaxed">
+                   Men turli sohalarda faoliyat yuritib, marketing, savdo va media yo‘nalishlarida amaliy tajriba orttirganman. Hozirda ijtimoiy tarmoqlar, target reklama, grafik dizayn va web yechimlar orqali bizneslarni rivojlantirish bilan shug‘ullanaman.
+                 </p>
               </div>
               <motion.div 
                 animate={{ y: [0, -10, 0] }}
@@ -112,6 +115,62 @@ export default function Bio() {
               </div>
               <h4 className="text-xl font-bold">Sertifikatlar</h4>
               <p className="text-white/30 text-sm">O'qish va rivojlanish davomida olingan xalqaro darajadagi yutuqlar.</p>
+           </div>
+        </div>
+
+        {/* EXPERIENCE TIMELINE */}
+        <div className="space-y-12 py-10">
+           <div className="space-y-4">
+              <h3 className="text-2xl font-bold flex items-center gap-4">
+                 <Briefcase className="text-accent" size={24} />
+                 Ish Tajribasi
+              </h3>
+              <div className="h-px w-20 bg-accent/30" />
+           </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {[
+                { 
+                  company: "E-ONE ELECTRONICS", 
+                  role: "SMM mutaxassisi (Hozirgi vaqtda)", 
+                  desc: "Ijtimoiy tarmoqlar, Meta Ads, Grafik dizayn, Video montaj, Web saytlar va admin panellar yaratish." 
+                },
+                { 
+                  company: "NOVA TV", 
+                  role: "Direktor", 
+                  desc: "Jamoa boshqaruvi, kontent ishlab chiqarish va strategik loyiha rivojlantirish." 
+                },
+                { 
+                  company: "SUNDECOR BLINDS", 
+                  role: "SMM mutaxassisi", 
+                  desc: "Reklama, kontent va brend sahifalarini ijtimoiy tarmoqlarda rivojlantirish." 
+                },
+                { 
+                  company: "ILM CHASHMALARI", 
+                  role: "O‘qituvchi & Bosh menejer", 
+                  desc: "SMM, sotuv va umumiy boshqaruv jarayonlarini yo'lga qo'yish." 
+                },
+                { 
+                  company: "MAGIC CITY (Carstone)", 
+                  role: "Kassir/Operatsion jarayonlar", 
+                  desc: "Biznesning ichki operatsion, hisob-kitob va xizmat ko'rsatish tizimini o'rganish." 
+                }
+              ].map((job, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="glass p-8 rounded-3xl border-white/5 space-y-4 hover:bg-white/[0.03] transition-all border-l-4 border-l-accent/20"
+                >
+                   <div className="space-y-1">
+                      <h4 className="text-accent font-black uppercase tracking-widest text-[10px]">{job.company}</h4>
+                      <h5 className="text-xl font-bold">{job.role}</h5>
+                   </div>
+                   <p className="text-white/40 text-sm leading-relaxed">{job.desc}</p>
+                </motion.div>
+              ))}
            </div>
         </div>
 

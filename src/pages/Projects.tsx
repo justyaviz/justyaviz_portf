@@ -21,7 +21,8 @@ const defaultProjects = [
   { title: "Sundecor", category: "Marketing", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfkcYEjWfYZIpWvZ7fLMcCVxfVZQcXAZ3RQ&s", type: "Marketing" },
   { title: "Ilm Chashmalari", category: "SMM", image: "https://static4.tgstat.ru/channels/_0/58/5874f696205edf0c7aa55152da39921a.jpg", type: "Marketing" },
   { title: "e-one stores", category: "Web site", image: "https://taplink.st/a/5/1/6/f/99552c.jpg?1", type: "Web site" },
-  { title: "aloo shop", category: "Marketing", image: "https://proud-cyan-whxxiapwah.edgeone.app/8586B6B0-80CD-45D5-8121-D8BB132DDF0B.jpeg", type: "Marketing" },
+  { title: "aloo shop", category: "Yandex Maps / Marketing", image: "https://proud-cyan-whxxiapwah.edgeone.app/8586B6B0-80CD-45D5-8121-D8BB132DDF0B.jpeg", type: "Marketing", link: "https://yandex.uz/maps/org/180263652317/" },
+  { title: "aloo Maps", category: "Geo-Marketing", image: "https://picsum.photos/seed/aloomaps/1200/800", type: "Marketing" },
   { title: "Yengil Taxi", category: "CRM", image: "https://assets.nicepagecdn.com/bc13c16f/6522583/images/Untitled-1.png", type: "CRM" },
   { title: "Yengil Mijoz", category: "Marketing", image: "https://play-lh.googleusercontent.com/7hUsDaIdSaYwgWXQosQZGuOpQ8RLhp8Iw-bSKzNIxocMqw5l-2ZysdbGdyllKkQIOw", type: "Marketing" },
 ];
@@ -110,10 +111,17 @@ export default function Projects() {
                     <Logo className="w-full h-full text-white" />
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <h4 className="text-3xl font-display font-black tracking-tight">{p.title}</h4>
-                  <p className="text-white/40 text-xs uppercase font-bold tracking-widest">{p.category}</p>
-                </div>
+                  <div className="space-y-2">
+                    <h4 className="text-3xl font-display font-black tracking-tight">{p.title}</h4>
+                    <p className="text-white/40 text-xs uppercase font-bold tracking-widest leading-relaxed">
+                      {p.category}
+                      {p.title === "aloo shop" && (
+                        <span className="block mt-2 text-[10px] normal-case font-medium text-accent/60 italic">
+                          Filiallar, mahsulotlar va narxlar Yandex Maps tizimiga professional darajada integratsiya qilingan.
+                        </span>
+                      )}
+                    </p>
+                  </div>
               </motion.div>
             ))}
             <AddProjectBtn />

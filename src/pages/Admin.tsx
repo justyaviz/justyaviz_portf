@@ -25,6 +25,16 @@ import {
 
 export default function Admin() {
   const { user, isAdmin, isEditMode, setEditMode, updateContent, siteContent: globalContent, loading } = useAdmin();
+  
+  useEffect(() => {
+    console.log("Admin Dashboard Debug:", { 
+      loading, 
+      isAdmin, 
+      userEmail: user?.email, 
+      phoneVerified: localStorage.getItem('admin_phone_verified') 
+    });
+  }, [loading, isAdmin, user]);
+
   const [activeTab, setActiveTab] = useState<"projects" | "content">("projects");
   const [projects, setProjects] = useState<any[]>([]);
 
@@ -245,9 +255,9 @@ export default function Admin() {
         <div className="lg:w-72 shrink-0 space-y-8">
           <div className="glass p-8 rounded-[2.5rem] space-y-6">
             <div className="flex items-center gap-4">
-              <img src={user.photoURL || ""} className="w-12 h-12 rounded-2xl border border-white/10" />
+              <img src={user?.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin"} className="w-12 h-12 rounded-2xl border border-white/10" />
               <div>
-                <p className="text-sm font-bold truncate max-w-[140px]">{user.displayName}</p>
+                <p className="text-sm font-bold truncate max-w-[140px]">{user?.displayName || "Administrator"}</p>
                 <p className="text-[10px] text-white/40 uppercase tracking-widest">Admin Access</p>
               </div>
             </div>

@@ -25,18 +25,26 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const isAdmin = (user?.email?.toLowerCase() === 'yahyobektohirjonov0@gmail.com') || phoneVerified;
 
   useEffect(() => {
+    // Safety timeout: if auth takes too long, stop loading
+    const timer = setTimeout(() => setLoading(false), 5000);
+
     const unsubAuth = onAuthStateChanged(auth, (u) => {
       setUser(u);
       setLoading(false);
+      clearTimeout(timer);
     });
 
     const unsubContent = onSnapshot(doc(db, "siteContent", "main"), (d) => {
       if (d.exists()) setSiteContent(d.data());
+    }, (err) => {
+      console.warn("Content subscription error (likely permissions):", err);
+      // Don't set loading false here, auth is more important
     });
 
     return () => {
       unsubAuth();
       unsubContent();
+      clearTimeout(timer);
     };
   }, []);
 

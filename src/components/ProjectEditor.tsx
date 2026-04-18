@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { db } from '../lib/firebase';
 import { doc, updateDoc, deleteDoc, addDoc, collection } from 'firebase/firestore';
-import { Edit2, Trash2, X, Plus, Upload, Link as LinkIcon, Image as ImageIcon, Video as VideoIcon } from 'lucide-react';
+import { Edit2, Trash2, X, Plus, Upload, Link as LinkIcon, Image as ImageIcon, Video as VideoIcon, Play } from 'lucide-react';
 import { useAdmin } from './AdminProvider';
 
 interface ProjectEditorProps {
@@ -10,8 +10,23 @@ interface ProjectEditorProps {
   isAdd?: boolean;
 }
 
+// Helper to get YouTube ID
+const getYoutubeId = (url: string | undefined) => {
+  if (!url || typeof url !== 'string') return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+};
+
 export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, isAdd }) => {
-  const [formData, setFormData] = useState(project || { title: "", category: "", image: "", video: "", type: "Marketing" });
+  const [formData, setFormData] = useState({
+    title: project?.title || "",
+    category: project?.category || "",
+    image: project?.image || "",
+    video: project?.video || "",
+    type: project?.type || "Marketing",
+    link: project?.link || ""
+  });
   const [uploadMode, setUploadMode] = useState<'url' | 'file'>('url');
   const [videoMode, setVideoMode] = useState<'url' | 'file'>('url');
   const { isAdmin } = useAdmin();
@@ -19,15 +34,14 @@ export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'image' | 'video') => {
     const file = e.target.files?.[0];
     if (file) {
-      // 1MB limit for firestore doc size
-      const limit = field === 'image' ? 1024 * 1024 : 5 * 1024 * 1024; // 5MB for video if base64, still risky
+      const limit = field === 'image' ? 1024 * 1024 : 5 * 1024 * 1024;
       if (file.size > limit) {
         alert(`${field === 'image' ? 'Rasm' : 'Video'} hajmi juda katta. Iltimos, URL dan foydalaning.`);
         return;
       }
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData({ ...formData, [field]: reader.result as string });
+        setFormData(prev => ({ ...prev, [field]: reader.result as string }));
       };
       reader.readAsDataURL(file);
     }
@@ -39,13 +53,17 @@ export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, 
       if (isAdd) {
         await addDoc(collection(db, "projects"), { ...formData, order: Date.now() });
       } else {
+        if (!project?.id) throw new Error("Loyiha ID si topilmadi.");
         await updateDoc(doc(db, "projects", project.id), formData);
       }
       onClose?.();
-    } catch (err) {
-      alert("Xatolik: " + err);
+    } catch (err: any) {
+      console.error("Firebase saqlashda xatolik:", err);
+      alert("Xatolik: " + (err.message || err));
     }
   };
+
+  const isYoutube = getYoutubeId(formData.video);
 
   return (
     <div className="fixed inset-0 z-[300] bg-black/80 backdrop-blur-md flex items-center justify-center p-6">
@@ -60,7 +78,7 @@ export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, 
             <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-4">Sarlavha</label>
             <input 
               value={formData.title}
-              onChange={e => setFormData({...formData, title: e.target.value})}
+              onChange={e => setFormData(prev => ({...prev, title: e.target.value}))}
               className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent" 
               placeholder="Masalan: Honor X9c Obzor"
             />
@@ -86,7 +104,7 @@ export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, 
             {uploadMode === 'url' ? (
               <input 
                 value={formData.image}
-                onChange={e => setFormData({...formData, image: e.target.value})}
+                onChange={e => setFormData(prev => ({...prev, image: e.target.value}))}
                 className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent" 
                 placeholder="Rasm URL manzili"
               />
@@ -126,9 +144,9 @@ export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, 
             {videoMode === 'url' ? (
               <input 
                 value={formData.video}
-                onChange={e => setFormData({...formData, video: e.target.value})}
+                onChange={e => setFormData(prev => ({...prev, video: e.target.value}))}
                 className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 outline-none focus:border-accent" 
-                placeholder="Video URL (Direct link, YouTube emes)"
+                placeholder="Video URL (Direct link yoki YouTube)"
               />
             ) : (
               <div className="relative group">
@@ -147,8 +165,18 @@ export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, 
             
             {formData.video && (
               <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 mt-2 bg-black/40">
-                 <video src={formData.video} className="w-full h-full object-cover" controls />
-                 <div className="absolute top-2 right-2 px-2 py-1 bg-black/60 backdrop-blur-md rounded-md text-[8px] font-bold uppercase text-white/40">Video Preview</div>
+                 {isYoutube ? (
+                   <div className="w-full h-full flex flex-col items-center justify-center gap-4 text-white/20">
+                      <Play size={48} className="text-red-600" />
+                      <div className="text-center">
+                        <p className="text-xs font-bold uppercase tracking-widest">YouTube Video aniqlandi</p>
+                        <p className="text-[10px] opacity-50 mt-1">Preview mavjud emas, lekin saytda ko'rinadi.</p>
+                      </div>
+                   </div>
+                 ) : (
+                   <video src={formData.video} className="w-full h-full object-cover" controls />
+                 )}
+                 <div className="absolute top-2 right-2 px-2 py-1 bg-black/60 backdrop-blur-md rounded-md text-[8px] font-bold uppercase text-white/40">Preview</div>
               </div>
             )}
           </div>

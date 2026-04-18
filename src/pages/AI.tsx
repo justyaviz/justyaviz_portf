@@ -41,14 +41,14 @@ export default function AI() {
            ))}
         </div>
 
-        <div className="glass p-12 md:p-24 rounded-[4rem] border-white/5 text-center space-y-12 relative overflow-hidden">
+        <div className="glass p-8 md:p-24 rounded-3xl md:rounded-[4rem] border-white/5 text-center space-y-8 md:space-y-12 relative overflow-hidden">
            <div className="absolute inset-0 bg-accent/5 blur-[100px] rounded-full pointer-events-none" />
-           <h2 className="text-4xl md:text-7xl font-satoshi font-medium tracking-tighter leading-tight relative z-10">
+           <h2 className="text-3xl md:text-7xl font-satoshi font-medium tracking-tighter leading-tight relative z-10">
              Ilovani yuklab olish
            </h2>
-           <p className="text-white/40 max-w-xl mx-auto font-medium relative z-10">IT va marketing sohasidagi barcha vositalar bir joyda.</p>
-           <button className="neon-btn h-[60px] relative z-10 overflow-visible">
-              <div className="neon-btn-content px-16 py-6 text-sm">
+           <p className="text-white/40 max-w-xl mx-auto font-medium relative z-10 text-sm md:text-base px-4">IT va marketing sohasidagi barcha vositalar bir joyda.</p>
+           <button className="neon-btn w-full md:w-auto h-[55px] md:h-[60px] relative z-10 overflow-visible">
+              <div className="neon-btn-content w-full md:w-auto px-8 md:px-16 py-4 md:py-6 text-xs md:text-sm text-center">
                  Yuklab olish
               </div>
            </button>

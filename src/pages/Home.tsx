@@ -18,7 +18,11 @@ import {
   Github,
   Rocket,
   Instagram,
-  Youtube
+  Youtube,
+  Quote,
+  ChevronDown,
+  Users,
+  Database
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -118,42 +122,68 @@ export default function Home() {
       </motion.div>
 
       {/* HERO SECTION */}
-      <section className="relative min-h-screen flex items-center pt-24 px-6 md:px-20 overflow-hidden">
+      <section className="relative min-h-[90vh] md:min-h-screen flex items-center pt-32 md:pt-24 px-6 md:px-20 overflow-hidden">
         <div className="absolute top-[20%] left-[-10%] w-[40vw] h-[40vw] bg-white/5 blur-[120px] rounded-full pointer-events-none" />
-        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
           <motion.div 
             style={{ opacity: heroOpacity }}
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="space-y-8 relative z-20"
+            className="space-y-6 md:space-y-8 relative z-20"
           >
             <div className="badge-it">
               <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" /> Just Yaviz
             </div>
-            <div className="space-y-8">
+            <div className="space-y-6 md:space-y-8">
               <motion.h1 
                 initial={{ opacity: 0, scale: 0.98, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
-                className="text-[64px] md:text-[8vw] font-satoshi font-medium tracking-tighter flex flex-wrap items-center gap-x-6 leading-tight"
+                className="text-[44px] sm:text-[64px] md:text-[8vw] font-satoshi font-medium tracking-tighter flex items-center gap-x-4 md:gap-x-6 leading-[0.9] md:leading-tight whitespace-nowrap"
               >
                 <EditableText contentKey="heroTitle" defaultText="just.yaviz" as="span" />
-                <motion.div 
-                  initial={{ rotate: -45, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 0.8 }}
-                  whileHover={{ rotate: 135, scale: 1.1 }}
-                  className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center border border-white/10 rounded-full cursor-pointer hover:border-white transition-all shrink-0 bg-white/5 backdrop-blur-xl"
-                >
-                   <ArrowUpRight className="size-5 md:size-8" />
-                </motion.div>
+                <Link to="/bio" className="relative shrink-0">
+                  <motion.div 
+                    initial="initial"
+                    whileHover="hover"
+                    animate="animate"
+                    className="relative flex items-center"
+                  >
+                    <motion.div 
+                      variants={{
+                        initial: { rotate: -45, opacity: 0, scale: 0.8 },
+                        animate: { rotate: 0, opacity: 1, scale: 1 },
+                        hover: { rotate: 135, scale: 1.1, borderColor: "rgba(255,255,255,0.8)" }
+                      }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
+                      className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center border border-white/10 rounded-full cursor-pointer bg-white/5 backdrop-blur-xl transition-colors"
+                    >
+                      <ArrowUpRight className="size-6 md:size-8" />
+                    </motion.div>
+                    
+                    {/* ABOUT ME FLOATING TEXT */}
+                    <motion.div
+                      variants={{
+                        initial: { opacity: 0, x: -10, rotate: -15, scale: 0.8 },
+                        animate: { opacity: 0 },
+                        hover: { opacity: 1, x: 0, rotate: -25, scale: 1 }
+                      }}
+                      transition={{ duration: 0.4, ease: "backOut" }}
+                      className="absolute top-12 left-8 md:top-14 md:left-12 pointer-events-none z-[100]"
+                    >
+                      <div className="bg-white text-black text-[10px] md:text-sm font-bold px-3 py-1.5 rounded-full shadow-[0_10px_30px_rgba(255,255,255,0.2)] whitespace-nowrap">
+                        (about me)
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </Link>
               </motion.h1>
               <motion.p 
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
-                className="max-w-lg text-white/50 font-satoshi text-[16px] md:text-lg leading-relaxed font-medium tracking-tight"
+                className="max-w-lg text-white/50 font-satoshi text-[15px] md:text-lg leading-relaxed font-medium tracking-tight"
               >
                 <EditableText contentKey="heroDesc" defaultText="Marketing va raqamli texnologiyalar uyg'unligida biznesingiz uchun innovatsion, strategik va natijaga yo'naltirilgan zamonaviy yechimlar." type="textarea" />
               </motion.p>
@@ -201,14 +231,14 @@ export default function Home() {
       </section>
 
       {/* PROFESSIONAL DIRECTIONS */}
-      <section className="py-32 px-6">
-        <div className="max-w-7xl mx-auto space-y-20">
+      <section className="py-20 md:py-32 px-6">
+        <div className="max-w-7xl mx-auto space-y-12 md:space-y-20">
            <motion.div {...fadeIn} className="text-center space-y-4">
               <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">Yo‘nalishlarim</span>
-              <h2 className="text-[40px] md:text-7xl font-satoshi font-medium tracking-tighter">Professional Mahorat</h2>
+              <h2 className="text-[32px] md:text-7xl font-satoshi font-medium tracking-tighter">Professional Mahorat</h2>
            </motion.div>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {[
                 { title: "Digital Marketing & SMM", desc: "Brendlarni ijtimoiy tarmoqlarda rivojlantirish va auditoriya yig‘ish.", icon: <Megaphone /> },
                 { title: "Performance Marketing", desc: "Meta Ads orqali aniq auditoriyaga chiqish va konversiyani oshirish.", icon: <Target /> },
@@ -224,13 +254,13 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="p-10 glass border-white/5 rounded-[3rem] space-y-6 hover:bg-accent/5 transition-all group"
+                  transition={{ delay: i * 0.05 }}
+                  className="p-8 md:p-10 glass border-white/5 rounded-3xl md:rounded-[3rem] space-y-4 md:space-y-6 hover:bg-accent/5 transition-all group"
                 >
-                   <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-black transition-all">
+                   <div className="w-10 h-10 md:w-12 md:h-12 bg-white/5 rounded-2xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-black transition-all">
                       {item.icon}
                    </div>
-                   <h4 className="text-xl font-satoshi font-bold leading-tight">{item.title}</h4>
+                   <h4 className="text-lg md:text-xl font-satoshi font-bold leading-tight">{item.title}</h4>
                    <p className="text-white/30 text-sm leading-relaxed">{item.desc}</p>
                 </motion.div>
               ))}
@@ -265,23 +295,53 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* WORKFLOW SECTION */}
+      <section className="py-20 md:py-40 px-6 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto space-y-20">
+          <div className="max-w-3xl space-y-6">
+            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">Jarayon</span>
+            <h2 className="text-[32px] md:text-7xl font-satoshi font-medium tracking-tighter leading-tight italic">
+              Biznesingizni tizimli <br /> ravishda o'stiramiz
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 border border-white/10 rounded-3xl md:rounded-[4rem] overflow-hidden">
+            {[
+              { step: "01", title: "Analiz & Tadqiqot", desc: "Sizning biznesingiz va raqobatchilaringizni chuqur tahlil qilib, optimal yo'lni aniqlaymiz." },
+              { step: "02", title: "Strategiya Tuzish", desc: "Aniq maqsadlar va ularga erishish uchun bosqichma-bosqich marketing rejasini ishlab chiqamiz." },
+              { step: "03", title: "Ijro & Kreativ", desc: "Kontent yaratish, reklama sozlash va texnik yechimlarni yuqori sifatda amalga oshiramiz." },
+              { step: "04", title: "Optimallash & Natija", desc: "Ko'rsatkichlarni doimiy tahlil qilib, natijani maksimal darajaga olib chiqamiz." }
+            ].map((item, i) => (
+              <div key={i} className="p-10 md:p-14 space-y-8 bg-black/40 backdrop-blur-xl border-r border-white/5 last:border-0 hover:bg-white/[0.03] transition-all group">
+                <span className="text-4xl md:text-6xl font-satoshi font-black text-white/5 group-hover:text-accent/20 transition-all leading-none">{item.step}</span>
+                <div className="space-y-4">
+                  <h4 className="text-xl md:text-2xl font-satoshi font-bold leading-tight">{item.title}</h4>
+                  <p className="text-white/40 text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-accent/5 blur-[150px] rounded-full pointer-events-none" />
+      </section>
+
       {/* DETAILED SERVICES */}
       <section className="py-20 px-6 border-t border-white/5 overflow-hidden bg-white/[0.01]">
-         <div className="max-w-7xl mx-auto space-y-24">
-            <div className="flex flex-col md:flex-row items-end justify-between gap-10">
-               <motion.div {...fadeIn} className="space-y-6">
+         <div className="max-w-7xl mx-auto space-y-16 md:space-y-24">
+            <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 md:gap-10">
+               <motion.div {...fadeIn} className="space-y-4 md:space-y-6">
                 <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">Xizmatlarim</span>
-                <h2 className="text-[40px] md:text-8xl font-satoshi font-medium tracking-tighter leading-none">
+                <h2 className="text-[32px] md:text-8xl font-satoshi font-medium tracking-tighter leading-none">
                   IT va marketing <br /> yechimlari
                 </h2>
-                <p className="font-dm-sans text-[16px] text-white/40 max-w-lg">Sizning g'oyangizni real natijalarga aylantiruvchi kompleks xizmatlar to'plami.</p>
+                <p className="font-dm-sans text-[15px] md:text-[16px] text-white/40 max-w-lg">Sizning g'oyangizni real natijalarga aylantiruvchi kompleks xizmatlar to'plami.</p>
                </motion.div>
-               <Link to="/contact" className="neon-btn">
-                 <div className="neon-btn-content">Hozir murojaat qiling</div>
+               <Link to="/contact" className="neon-btn w-full md:w-auto">
+                 <div className="neon-btn-content text-center">Hozir murojaat qiling</div>
                </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
                {[
                  { 
                    title: "SMM & Marketing", 
@@ -319,16 +379,16 @@ export default function Home() {
                    initial={{ opacity: 0, y: 30 }}
                    whileInView={{ opacity: 1, y: 0 }}
                    viewport={{ once: true }}
-                   transition={{ delay: idx * 0.1 }}
-                   className="p-10 glass border-white/5 rounded-[3.5rem] space-y-8 hover:border-white/20 transition-all"
+                   transition={{ delay: idx * 0.05 }}
+                   className="p-8 md:p-10 glass border-white/5 rounded-3xl md:rounded-[3.5rem] space-y-6 md:space-y-8 hover:border-white/20 transition-all"
                  >
-                    <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center">
+                    <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-2xl flex items-center justify-center">
                        {service.icon}
                     </div>
-                    <h4 className="text-2xl font-satoshi font-bold">{service.title}</h4>
-                    <ul className="space-y-4">
+                    <h4 className="text-xl md:text-2xl font-satoshi font-bold">{service.title}</h4>
+                    <ul className="space-y-3 md:space-y-4">
                        {service.items.map((item, i) => (
-                         <li key={i} className="flex items-center gap-3 text-white/40 text-sm font-medium">
+                         <li key={i} className="flex items-center gap-3 text-white/40 text-[13px] md:text-sm font-medium">
                             <div className="w-1.5 h-1.5 rounded-full bg-accent/40" />
                             {item}
                          </li>
@@ -358,30 +418,30 @@ export default function Home() {
       </section>
 
       {/* PROJECTS PREVIEW */}
-      <section className="py-40 px-6 border-t border-white/5 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto space-y-24">
-          <div className="flex flex-col md:flex-row items-end justify-between gap-8">
-            <div className="space-y-6">
+      <section className="py-20 md:py-40 px-6 border-t border-white/5 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto space-y-12 md:space-y-24">
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
+            <div className="space-y-4 md:space-y-6">
               <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/20">Portfolio</span>
-              <h2 className="text-[40px] md:text-9xl font-satoshi font-medium tracking-tighter leading-none">Loyihalar</h2>
+              <h2 className="text-[32px] md:text-9xl font-satoshi font-medium tracking-tighter leading-none">Loyihalar</h2>
             </div>
-            <Link to="/projects" className="text-accent flex items-center gap-2 font-bold uppercase tracking-widest text-xs hover:gap-4 transition-all">
-              Barchasini ko'rish <ArrowUpRight size={16} />
+            <Link to="/projects" className="text-accent flex items-center gap-2 font-bold uppercase tracking-widest text-[11px] md:text-xs hover:gap-4 transition-all">
+              Barchasini ko'rish <ArrowUpRight size={14} className="md:size-4" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
             {(projects.length > 0 ? projects : [
               { title: "Texnika kontentlari", category: "Honor & Redmi Showcase", image: "https://picsum.photos/seed/tech13/1200/800" },
               { title: "Savdo loyihalari", category: "E-commerce Strategy", image: "https://picsum.photos/seed/sale13/1200/800" },
             ]).map((p, i) => (
-              <motion.div key={i} {...fadeIn} className="group relative h-[500px] md:h-[650px] bg-white/5 rounded-[4rem] overflow-hidden border border-white/5 cursor-pointer">
+              <motion.div key={i} {...fadeIn} className="group relative h-[400px] md:h-[650px] bg-white/5 rounded-3xl md:rounded-[4rem] overflow-hidden border border-white/5 cursor-pointer">
                 <ProjectControls project={p} />
                 <img src={p.image} alt="" className="absolute inset-0 w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-80 group-hover:scale-110 transition-all duration-1000" />
-                <div className="absolute inset-0 bg-transparent p-12 flex flex-col justify-end">
-                   <div className="glass backdrop-blur-3xl p-8 rounded-[2.5rem] border-white/10 space-y-2 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                      <span className="text-xs font-black uppercase tracking-widest text-white/40">{p.category}</span>
-                      <h4 className="text-3xl font-display font-black">{p.title}</h4>
+                <div className="absolute inset-0 bg-transparent p-8 md:p-12 flex flex-col justify-end">
+                   <div className="glass backdrop-blur-3xl p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border-white/10 space-y-1 md:space-y-2 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                      <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-white/40">{p.category}</span>
+                      <h4 className="text-xl md:text-3xl font-display font-black">{p.title}</h4>
                    </div>
                 </div>
               </motion.div>
@@ -391,37 +451,134 @@ export default function Home() {
         </div>
       </section>
 
+      {/* TESTIMONIALS */}
+      <section className="py-20 md:py-40 px-6 bg-white/[0.01] border-t border-white/5 overflow-hidden">
+        <div className="max-w-7xl mx-auto space-y-20">
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
+            <div className="space-y-4 md:space-y-6 text-center md:text-left w-full">
+              <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">Mijozlarimizdan</span>
+              <h2 className="text-[32px] md:text-8xl font-satoshi font-medium tracking-tighter leading-none">Muvaffaqiyat tarixi</h2>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+            {[
+              { name: "Asilbek K.", Role: "E-commerce egasi", text: "Marketing strategiyasi bo'yicha hamkorlikdan solingan investitsiya 3 barovar ko'proq foyda keltirdi. Professional yondashuv!" },
+              { name: "Malika R.", Role: "Kiyim-kechak brendi", text: "SMM upakovka va videolar sahifamiz ko'rinishini butunlay o'zgartirdi. Mijozlar soni sezilarli darajada oshdi." },
+              { name: "Jasur O.", Role: "Biznes maslahatchi", text: "IT va Web yechimlar bo'yicha juda tez va sifatli ishlandi. Admin panel tizimi ishimizni sezilarli darajada osonlashtirdi." }
+            ].map((test, i) => (
+              <motion.div 
+                key={i} 
+                {...fadeIn} 
+                transition={{ delay: i * 0.1 }}
+                className="p-10 md:p-14 glass border-white/5 rounded-3xl md:rounded-[4rem] space-y-8 relative group hover:border-white/20 transition-all"
+              >
+                <div className="text-accent/20 absolute top-10 right-10 group-hover:text-accent/60 transition-all">
+                  <Quote size={40} />
+                </div>
+                <p className="text-white/60 text-lg md:text-xl font-dm-sans leading-relaxed italic">"{test.text}"</p>
+                <div className="pt-6 border-t border-white/5">
+                  <h5 className="text-lg md:text-xl font-satoshi font-bold">{test.name}</h5>
+                  <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-white/30">{test.Role}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ SECTION */}
+      <section className="py-20 md:py-40 px-6 border-t border-white/5">
+        <div className="max-w-4xl mx-auto space-y-16 md:space-y-24">
+          <div className="text-center space-y-6">
+            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">FAQ</span>
+            <h2 className="text-[32px] md:text-7xl font-satoshi font-medium tracking-tighter">Ko'p so'raladigan savollar</h2>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              { q: "Xizmatlaringiz narxi qancha?", a: "Har bir loyiha uning murakkabligi va talablaridan kelib chiqib individual baholanadi. Biz biznesingiz byudjetiga mos va samarali yechimlarni taklif qilamiz." },
+              { q: "Loyihani yakunlash uchun qancha vaqt ketadi?", a: "Bu loyiha turiga bog'liq. Masalan, landing page 1 haftadan 2 haftagacha, to'liq marketing strategiyasi esa 1 oygacha vaqt olishi mumkin." },
+              { q: "Natijaga kafolat beriladimi?", a: "Biz va'da emas, strategiya va ijro sifatiga javob beramiz. Marketingda 100% natija kafolati yo'q, lekin bizda aniq tahlillar va amaliy tajriba natijasi bor." },
+              { q: "Qanday sohalarda tajribangiz bor?", a: "Biz ko'proq xizmat ko'rsatish sohalari, e-commerce, ta'lim va shaxsiy brendlar bilan ishlashda katta tajribaga egamiz." }
+            ].map((faq, i) => (
+              <motion.div 
+                key={i}
+                className="glass border-white/5 rounded-3xl overflow-hidden"
+              >
+                <details className="group">
+                  <summary className="flex items-center justify-between p-8 md:p-10 cursor-pointer list-none">
+                    <span className="text-lg md:text-xl font-satoshi font-bold pr-8">{faq.q}</span>
+                    <ChevronDown className="shrink-0 transition-transform group-open:rotate-180 text-accent/60" />
+                  </summary>
+                  <div className="px-8 md:px-10 pb-8 md:pb-10 pt-2 border-t border-white/5">
+                    <p className="text-white/40 leading-relaxed font-dm-sans">{faq.a}</p>
+                  </div>
+                </details>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ABOUT PREVIEW */}
-      <section className="py-40 px-6 bg-white/[0.02] relative overflow-hidden">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-24 items-center">
-          <motion.div {...fadeIn} className="lg:w-1/2 relative group">
+      <section className="py-20 md:py-40 px-6 bg-white/[0.02] relative overflow-hidden">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 md:gap-24 items-center">
+          <motion.div {...fadeIn} className="w-full lg:w-1/2 relative group">
              <div className="relative">
                 <div className="absolute -inset-4 bg-accent/20 blur-[100px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
                 <img 
                   src="https://raw.githubusercontent.com/StackBlitz-User-Images/ais-dev-fwlf2rjubxycr545cqwmfm-733816564986/main/input_file_0.png" 
                   alt="Yahyobek Tohirjonov" 
-                  className="relative rounded-[5rem] grayscale group-hover:grayscale-0 transition-all duration-1000 border border-white/5 aspect-[4/5] object-cover shadow-2xl" 
+                  className="relative rounded-[2.5rem] md:rounded-[5rem] grayscale group-hover:grayscale-0 transition-all duration-1000 border border-white/5 aspect-[4/5] object-cover shadow-2xl mx-auto" 
                 />
              </div>
           </motion.div>
-          <motion.div {...fadeIn} className="lg:w-1/2 space-y-12">
-            <div className="space-y-4">
+          <motion.div {...fadeIn} className="w-full lg:w-1/2 space-y-8 md:space-y-12">
+            <div className="space-y-3 md:space-y-4">
                <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">Tanishuv</span>
-               <h3 className="text-[40px] md:text-7xl font-satoshi font-normal tracking-tighter leading-[0.9]">
+               <h3 className="text-[32px] md:text-7xl font-satoshi font-normal tracking-tighter leading-[0.9]">
                  <EditableText contentKey="heroTitleFullName" defaultText="Yahyobek Tohirjonov" as="span" />
                </h3>
             </div>
-            <div className="text-[17px] font-inter-display text-white/70 leading-relaxed font-medium tracking-tight space-y-6">
+            <div className="text-[15px] md:text-[17px] font-inter-display text-white/70 leading-relaxed font-medium tracking-tight space-y-4 md:space-y-6">
               <EditableText contentKey="aboutTextExtended" defaultText="Yahyobek Tohirjonov Rashidjon o‘g‘li — o‘zbek digital ijodkor, SMM mutaxassisi, kontent yaratuvchi, grafik dizayner va web dasturchi. U zamonaviy marketing va texnologiyalar yo‘nalishida faoliyat yuritib, ijtimoiy tarmoqlar orqali brendlarni rivojlantirish, kontent yaratish va reklama strategiyalarini ishlab chiqish bilan shug‘ullanadi." type="textarea" />
               <p className="text-white/40 text-sm">
                 Faoliyatini ta’lim sohasida boshlagan va keyinchalik marketing, savdo va media yo‘nalishlariga o‘tgan. Hozirda marketing va IT sohalarini birlashtirib, bizneslar uchun innovatsion va samarali yechimlar yaratishga intiladi. Asosiy maqsadi — xalqaro darajada rivojlanish va o‘z marketing agentligini yaratishdir.
               </p>
             </div>
-            <div className="flex flex-wrap gap-4 pt-4">
-               <Link to="/contact" className="brand-btn-skromniy inline-block px-10 py-5 uppercase bg-white text-black font-bold rounded-full hover:scale-105 transition-transform">Hamkorlik qilish</Link>
-               <a href="https://t.me/justyaviz_life" className="inline-block px-10 py-5 uppercase border border-white/10 text-white font-bold rounded-full hover:bg-white/5 transition-all">Bog'lanish</a>
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+               <Link to="/contact" className="brand-btn-skromniy text-center px-10 py-5 uppercase bg-white text-black font-bold rounded-full hover:scale-105 transition-transform">Hamkorlik qilish</Link>
+               <a href="https://t.me/justyaviz_life" className="text-center px-10 py-5 uppercase border border-white/10 text-white font-bold rounded-full hover:bg-white/5 transition-all">Bog'lanish</a>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* STATS COUNTER */}
+      <section className="py-20 md:py-32 border-b border-white/5 bg-white/[0.01]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
+            {[
+              { label: "Muvaffaqiyatli loyihalar", value: "100+", icon: <Rocket size={20} /> },
+              { label: "Mamnun mijozlar", value: "50+", icon: <Users size={20} /> },
+              { label: "Target kempaynlar", value: "150+", icon: <Target size={20} /> },
+              { label: "Web yechimlar", value: "20+", icon: <Database size={20} /> }
+            ].map((stat, i) => (
+              <motion.div 
+                key={i} 
+                {...fadeIn} 
+                transition={{ delay: i * 0.1 }}
+                className="space-y-3 text-center md:text-left"
+              >
+                <div className="flex items-center justify-center md:justify-start gap-3 text-accent/60">
+                  {stat.icon}
+                </div>
+                <div className="text-[32px] md:text-5xl font-satoshi font-bold tracking-tighter">{stat.value}</div>
+                <p className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-white/30">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 

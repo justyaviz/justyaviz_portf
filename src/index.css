@@ -27,36 +27,43 @@
   }
   
   body {
-    @apply text-white antialiased overflow-x-hidden font-sans;
+    @apply text-white antialiased overflow-x-hidden font-sans bg-[#050505];
     font-size: 14px;
   }
 
   p {
     @apply font-plus-jakarta font-medium;
-    font-size: 15px;
+    font-size: 14px;
+    @screen md {
+      font-size: 15px;
+    }
     color: rgba(255, 255, 255, 0.5);
-    line-height: 1.7;
+    line-height: 1.6;
+    @screen md {
+      line-height: 1.7;
+    }
     letter-spacing: -0.01em;
   }
 
   h1 {
     @apply font-satoshi font-medium;
-    font-size: 64px;
-    line-height: 1;
+    font-size: clamp(40px, 10vw, 84px);
+    line-height: 0.95;
     letter-spacing: -0.04em;
     font-style: normal;
   }
 
   h2 {
     @apply font-satoshi font-medium;
-    font-size: 42px;
-    line-height: 1.1;
+    font-size: clamp(32px, 8vw, 64px);
+    line-height: 1;
     letter-spacing: -0.03em;
     font-style: normal;
   }
 
   h3 {
     @apply font-satoshi font-medium;
+    font-size: clamp(24px, 5vw, 42px);
     font-style: normal;
     letter-spacing: -0.02em;
   }
@@ -75,7 +82,7 @@
 }
 
 .pill-nav {
-  @apply fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-between px-8 py-3 rounded-full w-[95%] max-w-[850px] border border-white/5 shadow-[0_15px_35px_rgba(0,0,0,0.6)];
+  @apply fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-between px-5 md:px-8 py-2 md:py-3 rounded-full w-[92%] md:w-[95%] max-w-[850px] border border-white/5 shadow-[0_15px_35px_rgba(0,0,0,0.6)];
   @apply bg-black/20 backdrop-blur-2xl;
 }
 

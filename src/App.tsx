@@ -8,6 +8,7 @@ import Branding from "./pages/Branding";
 import Projects from "./pages/Projects";
 import Contact from "./pages/Contact";
 import AI from "./pages/AI";
+import Bio from "./pages/Bio";
 import Admin from "./pages/Admin";
 
 export default function App() {
@@ -64,6 +65,7 @@ export default function App() {
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/ai" element={<AI />} />
+                <Route path="/bio" element={<Bio />} />
                 <Route path="/admin" element={<Admin />} />
               </Routes>
             </Layout>

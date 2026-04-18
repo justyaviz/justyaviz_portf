@@ -155,7 +155,7 @@ export default function Home() {
                 transition={{ delay: 0.3, duration: 0.8 }}
                 className="max-w-lg text-white/50 font-satoshi text-[16px] md:text-lg leading-relaxed font-medium tracking-tight"
               >
-                <EditableText contentKey="heroDesc" defaultText="👉 SMM | Target | Content | Design | Web — biznesni o‘stiradigan xizmatlar" type="textarea" />
+                <EditableText contentKey="heroDesc" defaultText="Marketing va raqamli texnologiyalar uyg'unligida biznesingiz uchun innovatsion, strategik va natijaga yo'naltirilgan zamonaviy yechimlar." type="textarea" />
               </motion.p>
             </div>
             <motion.div 
@@ -200,6 +200,44 @@ export default function Home() {
         </div>
       </section>
 
+      {/* PROFESSIONAL DIRECTIONS */}
+      <section className="py-32 px-6">
+        <div className="max-w-7xl mx-auto space-y-20">
+           <motion.div {...fadeIn} className="text-center space-y-4">
+              <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">Yo‘nalishlarim</span>
+              <h2 className="text-[40px] md:text-7xl font-satoshi font-medium tracking-tighter">Professional Mahorat</h2>
+           </motion.div>
+
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { title: "Digital Marketing & SMM", desc: "Brendlarni ijtimoiy tarmoqlarda rivojlantirish va auditoriya yig‘ish.", icon: <Megaphone /> },
+                { title: "Performance Marketing", desc: "Meta Ads orqali aniq auditoriyaga chiqish va konversiyani oshirish.", icon: <Target /> },
+                { title: "Content Production", desc: "Qisqa videolar va viral kontentlar orqali e’tibor jalb qilish.", icon: <Video /> },
+                { title: "Graphic Design", desc: "Brendning vizual identifikatsiyasini yaratish va kuchaytirish.", icon: <Palette /> },
+                { title: "Brandface & Personal", desc: "Shaxsiy va brend imidjini kamera oldida shakllantirish.", icon: <Award /> },
+                { title: "Web Development", desc: "Biznes jarayonlarini avtomatlashtiruvchi web tizimlar yaratish.", icon: <Rocket /> },
+                { title: "E-commerce Systems", desc: "Online do‘konlar va mukammal sotuv tizimlarini yo‘lga qo‘yish.", icon: <Briefcase /> },
+                { title: "Marketing Strategy", desc: "Biznesni tahlil qilish va tizimli o‘sishni ta’minlash.", icon: <Globe /> }
+              ].map((item, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-10 glass border-white/5 rounded-[3rem] space-y-6 hover:bg-accent/5 transition-all group"
+                >
+                   <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-black transition-all">
+                      {item.icon}
+                   </div>
+                   <h4 className="text-xl font-satoshi font-bold leading-tight">{item.title}</h4>
+                   <p className="text-white/30 text-sm leading-relaxed">{item.desc}</p>
+                </motion.div>
+              ))}
+           </div>
+        </div>
+      </section>
+
       {/* AI SECTION */}
       <section className="py-20 px-6 relative z-30">
         <motion.div {...fadeIn} className="max-w-7xl mx-auto">
@@ -227,21 +265,81 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* SERVICES HIGHLIGHT */}
-      <section className="py-20 px-6 border-t border-white/5 overflow-hidden">
-         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-end justify-between gap-10">
-            <motion.div {...fadeIn} className="space-y-6">
-              <h2 className="text-[40px] md:text-8xl font-satoshi font-medium tracking-tighter leading-none">
-                IT va marketing <br /> xizmatlari
-              </h2>
-              <p className="font-dm-sans text-[16px] text-white max-w-lg">Texnologiya va marketing strategiyasini uyg'unlashtirib, sizga ishlaydigan va o'suvchi natija yaratamiz.</p>
-            </motion.div>
-            <Link to="/contact" className="px-10 py-5 bg-white text-black font-black uppercase tracking-widest text-sm rounded-full hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all">
-              Hozir murojaat qiling
-            </Link>
-         </div>
+      {/* DETAILED SERVICES */}
+      <section className="py-20 px-6 border-t border-white/5 overflow-hidden bg-white/[0.01]">
+         <div className="max-w-7xl mx-auto space-y-24">
+            <div className="flex flex-col md:flex-row items-end justify-between gap-10">
+               <motion.div {...fadeIn} className="space-y-6">
+                <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">Xizmatlarim</span>
+                <h2 className="text-[40px] md:text-8xl font-satoshi font-medium tracking-tighter leading-none">
+                  IT va marketing <br /> yechimlari
+                </h2>
+                <p className="font-dm-sans text-[16px] text-white/40 max-w-lg">Sizning g'oyangizni real natijalarga aylantiruvchi kompleks xizmatlar to'plami.</p>
+               </motion.div>
+               <Link to="/contact" className="neon-btn">
+                 <div className="neon-btn-content">Hozir murojaat qiling</div>
+               </Link>
+            </div>
 
-         <div className="mt-20 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+               {[
+                 { 
+                   title: "SMM & Marketing", 
+                   items: ["Ijtimoiy tarmoqlarni yuritish", "Kontent strategiya tuzish", "Sahifani “upakovka” qilish", "Engagement oshirish"],
+                   icon: <Megaphone className="text-accent" /> 
+                 },
+                 { 
+                   title: "Target Reklama", 
+                   items: ["Meta Ads sozlash", "Auditoriya segmentatsiyasi", "Sales funnel qurish", "ROAS optimizatsiyasi"],
+                   icon: <Target className="text-accent" /> 
+                 },
+                 { 
+                   title: "Content & Video", 
+                   items: ["Reels & Shorts videolar", "Mobilografiya (shoot)", "Video montaj (CapCut)", "Viral g'oyalar"],
+                   icon: <Video className="text-accent" /> 
+                 },
+                 { 
+                   title: "Grafik Dizayn", 
+                   items: ["SMM post & bannerlar", "Reklama vizuallari", "Brend stili (Identity)", "Packaging dizayn"],
+                   icon: <Palette className="text-accent" /> 
+                 },
+                 { 
+                   title: "Web & IT Yechimlar", 
+                   items: ["Landing page yaratish", "Admin panel tizimlari", "SMM avtomatizatsiya", "Frontend dasturlash"],
+                   icon: <Rocket className="text-accent" /> 
+                 },
+                 { 
+                   title: "Marketing Strategiya", 
+                   items: ["Biznes tahlil & Audit", "Raqobatchilar tahlili", "Growth strategiya", "Sotuvni oshirish rejasi"],
+                   icon: <Globe className="text-accent" /> 
+                 }
+               ].map((service, idx) => (
+                 <motion.div 
+                   key={idx}
+                   initial={{ opacity: 0, y: 30 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   transition={{ delay: idx * 0.1 }}
+                   className="p-10 glass border-white/5 rounded-[3.5rem] space-y-8 hover:border-white/20 transition-all"
+                 >
+                    <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center">
+                       {service.icon}
+                    </div>
+                    <h4 className="text-2xl font-satoshi font-bold">{service.title}</h4>
+                    <ul className="space-y-4">
+                       {service.items.map((item, i) => (
+                         <li key={i} className="flex items-center gap-3 text-white/40 text-sm font-medium">
+                            <div className="w-1.5 h-1.5 rounded-full bg-accent/40" />
+                            {item}
+                         </li>
+                       ))}
+                    </ul>
+                 </motion.div>
+               ))}
+            </div>
+         </div>
+         
+         <div className="mt-32 space-y-4">
             <div className="marquee-wrapper">
                <motion.div variants={marqueeVariants} animate="animate" className="flex gap-4">
                   {[...Array(3)].map((_, idx) => (
@@ -295,18 +393,34 @@ export default function Home() {
 
       {/* ABOUT PREVIEW */}
       <section className="py-40 px-6 bg-white/[0.02] relative overflow-hidden">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-20 items-center">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-24 items-center">
           <motion.div {...fadeIn} className="lg:w-1/2 relative group">
-             <img src="https://picsum.photos/seed/yaviz-pro-about/1000/1200" alt="Just Yaviz" className="relative rounded-[4rem] grayscale group-hover:grayscale-0 transition-all duration-1000 border border-white/5 aspect-[4/5] object-cover" />
+             <div className="relative">
+                <div className="absolute -inset-4 bg-accent/20 blur-[100px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                <img 
+                  src="https://raw.githubusercontent.com/StackBlitz-User-Images/ais-dev-fwlf2rjubxycr545cqwmfm-733816564986/main/input_file_0.png" 
+                  alt="Yahyobek Tohirjonov" 
+                  className="relative rounded-[5rem] grayscale group-hover:grayscale-0 transition-all duration-1000 border border-white/5 aspect-[4/5] object-cover shadow-2xl" 
+                />
+             </div>
           </motion.div>
           <motion.div {...fadeIn} className="lg:w-1/2 space-y-12">
-            <h3 className="text-[35px] font-satoshi font-normal tracking-tighter leading-[0.8]">
-              <EditableText contentKey="heroTitle" defaultText="just.yaviz" as="span" />
-            </h3>
-            <div className="text-[18px] font-inter-display text-white leading-relaxed font-medium tracking-tight">
-              <EditableText contentKey="aboutText" defaultText="Yahyobek Tohirjonov (Just Yaviz) — zamonaviy marketing, media va IT yo‘nalishlarida faoliyat yuritayotgan yosh, kreativ va natijaga yo‘naltirilgan mutaxassis. U SMM, kontent yaratish, grafik dizayn, video montaj, target reklama va web dasturlash yo‘nalishlarida real amaliy tajribaga ega. Faoliyatini o‘qituvchi sifatida boshlagan bo‘lib, keyinchalik marketing va savdo yo‘nalishiga o‘tgan." type="textarea" />
+            <div className="space-y-4">
+               <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">Tanishuv</span>
+               <h3 className="text-[40px] md:text-7xl font-satoshi font-normal tracking-tighter leading-[0.9]">
+                 <EditableText contentKey="heroTitleFullName" defaultText="Yahyobek Tohirjonov" as="span" />
+               </h3>
             </div>
-            <Link to="/contact" className="brand-btn-skromniy inline-block px-10 py-5 uppercase bg-white text-black font-bold rounded-full">Hamkorlik qilish</Link>
+            <div className="text-[17px] font-inter-display text-white/70 leading-relaxed font-medium tracking-tight space-y-6">
+              <EditableText contentKey="aboutTextExtended" defaultText="Yahyobek Tohirjonov Rashidjon o‘g‘li — o‘zbek digital ijodkor, SMM mutaxassisi, kontent yaratuvchi, grafik dizayner va web dasturchi. U zamonaviy marketing va texnologiyalar yo‘nalishida faoliyat yuritib, ijtimoiy tarmoqlar orqali brendlarni rivojlantirish, kontent yaratish va reklama strategiyalarini ishlab chiqish bilan shug‘ullanadi." type="textarea" />
+              <p className="text-white/40 text-sm">
+                Faoliyatini ta’lim sohasida boshlagan va keyinchalik marketing, savdo va media yo‘nalishlariga o‘tgan. Hozirda marketing va IT sohalarini birlashtirib, bizneslar uchun innovatsion va samarali yechimlar yaratishga intiladi. Asosiy maqsadi — xalqaro darajada rivojlanish va o‘z marketing agentligini yaratishdir.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-4 pt-4">
+               <Link to="/contact" className="brand-btn-skromniy inline-block px-10 py-5 uppercase bg-white text-black font-bold rounded-full hover:scale-105 transition-transform">Hamkorlik qilish</Link>
+               <a href="https://t.me/justyaviz_life" className="inline-block px-10 py-5 uppercase border border-white/10 text-white font-bold rounded-full hover:bg-white/5 transition-all">Bog'lanish</a>
+            </div>
           </motion.div>
         </div>
       </section>

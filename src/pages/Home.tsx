@@ -584,16 +584,34 @@ export default function Home() {
 
       {/* CLIENTS MARQUEE */}
       <section className="py-20 border-t border-white/5 overflow-hidden">
-         <div className="marquee-wrapper opacity-30 grayscale saturate-0 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+         <div className="marquee-wrapper opacity-40 grayscale saturate-0 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
             <motion.div 
-               animate={{ x: [0, -2000] }} 
-               transition={{ duration: 40, repeat: Infinity, ease: "linear" }} 
-               className="flex gap-20 items-center whitespace-nowrap"
+               animate={{ x: [0, -2500] }} 
+               transition={{ duration: 50, repeat: Infinity, ease: "linear" }} 
+               className="flex gap-16 md:gap-24 items-center whitespace-nowrap"
             >
-               {[...Array(2)].map((_, i) => (
-                 <div key={i} className="flex gap-20 items-center">
-                    {["JAC motors", "HOFMANN", "SMEG", "STYX", "Logix ERP", "DODDA.UZ", "Destec group", "Prime Electrotechnical", "Logix Academy", "Fonon jewellery", "KANGO", "In Plus", "Global Service", "Grand Pharm"].map((client, idx) => (
-                      <span key={idx} className="text-3xl font-satoshi font-black tracking-tighter uppercase">{client}</span>
+               {[...Array(3)].map((_, i) => (
+                 <div key={i} className="flex gap-16 md:gap-24 items-center shrink-0">
+                    {[
+                      { name: "Ilm Chashmalari", logo: "https://static4.tgstat.ru/channels/_0/58/5874f696205edf0c7aa55152da39921a.jpg" },
+                      { name: "Sundecor", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfkcYEjWfYZIpWvZ7fLMcCVxfVZQcXAZ3RQ&s" },
+                      { name: "Magic City", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxwrLEewH9Kw14lXc8nVXi2bIPilJXbDS1zg&s" },
+                      { name: "Yengil Mijoz", logo: "https://play-lh.googleusercontent.com/7hUsDaIdSaYwgWXQosQZGuOpQ8RLhp8Iw-bSKzNIxocMqw5l-2ZysdbGdyllKkQIOw" },
+                      { name: "Yengil Taxi", logo: "https://assets.nicepagecdn.com/bc13c16f/6522583/images/Untitled-1.png" },
+                      { name: "e-one", logo: "https://taplink.st/a/5/1/6/f/99552c.jpg?1" },
+                      { name: "aloo", logo: "https://proud-cyan-whxxiapwah.edgeone.app/8586B6B0-80CD-45D5-8121-D8BB132DDF0B.jpeg" }
+                    ].map((client, idx) => (
+                      <div key={idx} className="flex items-center gap-4 group/logo">
+                        <img 
+                          src={client.logo} 
+                          alt={client.name} 
+                          className="h-8 md:h-12 w-auto object-contain rounded-lg"
+                          referrerPolicy="no-referrer"
+                        />
+                        <span className="text-xl md:text-2xl font-satoshi font-black tracking-tighter uppercase text-white/40 group-hover/logo:text-white transition-colors">
+                          {client.name}
+                        </span>
+                      </div>
                     ))}
                  </div>
                ))}

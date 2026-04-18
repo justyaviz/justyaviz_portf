@@ -91,9 +91,18 @@ export default function Branding() {
                <button className="w-full md:w-auto px-10 py-4 bg-white text-black font-black uppercase text-xs tracking-widest rounded-full hover:scale-105 transition-all">Boshlaymiz</button>
             </div>
             <div className="grid grid-cols-4 gap-3 md:gap-4">
-               {[...Array(8)].map((_, i) => (
-                 <div key={i} className="aspect-square bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 flex items-center justify-center grayscale hover:grayscale-0 transition-all hover:border-white/20 px-2">
-                   <Sparkles className="text-white/20 size-4 md:size-6" />
+               {[
+                 "https://static4.tgstat.ru/channels/_0/58/5874f696205edf0c7aa55152da39921a.jpg",
+                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfkcYEjWfYZIpWvZ7fLMcCVxfVZQcXAZ3RQ&s",
+                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxwrLEewH9Kw14lXc8nVXi2bIPilJXbDS1zg&s",
+                 "https://play-lh.googleusercontent.com/7hUsDaIdSaYwgWXQosQZGuOpQ8RLhp8Iw-bSKzNIxocMqw5l-2ZysdbGdyllKkQIOw",
+                 "https://assets.nicepagecdn.com/bc13c16f/6522583/images/Untitled-1.png",
+                 "https://taplink.st/a/5/1/6/f/99552c.jpg?1",
+                 "https://proud-cyan-whxxiapwah.edgeone.app/8586B6B0-80CD-45D5-8121-D8BB132DDF0B.jpeg",
+                 "https://picsum.photos/seed/brand8/200/200"
+               ].map((logo, i) => (
+                 <div key={i} className="aspect-square bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 overflow-hidden flex items-center justify-center grayscale hover:grayscale-0 transition-all hover:border-white/20">
+                   <img src={logo} alt={`Logo ${i}`} className="w-full h-full object-cover p-2" referrerPolicy="no-referrer" />
                  </div>
                ))}
             </div>

@@ -10,12 +10,15 @@ import {
   Settings,
   Edit3,
   LogOut,
-  Eye
+  Eye,
+  Sun,
+  Moon
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useAdmin } from "./AdminProvider";
+import { useAppContext } from "../context/AppContext";
 import { logout } from "../lib/firebase";
 import { Logo } from "./Logo";
 
@@ -23,22 +26,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { isAdmin, isEditMode, setEditMode, user } = useAdmin();
+  const { lang, setLang, theme, toggleTheme, t } = useAppContext();
 
   useEffect(() => {
     setMobileMenuOpen(false);
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  if (location.pathname === "/admin") {
+  if (location.pathname === "/admin" || location.pathname === "/bio") {
     return (
-      <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
+      <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-accent/40 selection:text-white ${location.pathname === "/admin" ? "bg-[#f8fafc] text-slate-900" : ""}`}>
         {children}
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#000] text-white font-sans selection:bg-accent/40 selection:text-white overflow-hidden">
+    <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-accent/40 selection:text-white overflow-hidden ${theme === 'dark' ? 'bg-[#000] text-white' : 'bg-[#fff] text-[#0f172a]'}`}>
       {/* ADMIN BAR */}
       {isAdmin && (
         <div className="fixed top-0 left-0 right-0 h-12 bg-accent text-black z-[200] flex items-center justify-between px-6 font-space-grotesk text-[10px] font-bold uppercase tracking-widest shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)]">
@@ -94,43 +98,70 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex items-center gap-3">
            <Link to="/" className="flex flex-row items-center gap-3">
               <div className="flex flex-col items-center justify-center -rotate-90">
-                 <span className="text-[7px] font-bold uppercase tracking-[0.3em] text-white/10">just.yaviz</span>
+                 <span className="text-[7px] font-bold uppercase tracking-[0.3em] opacity-10">just.yaviz</span>
               </div>
-              <div className="w-10 h-10 flex items-center justify-center font-black bg-white rounded-xl text-black overflow-hidden p-2.5">
+              <div className={`w-10 h-10 flex items-center justify-center font-black rounded-xl overflow-hidden p-2.5 transition-colors ${theme === 'dark' ? 'bg-white text-black' : 'bg-black text-white'}`}>
                  <Logo className="w-full h-full" />
               </div>
            </Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-10">
+        <div className="hidden lg:flex items-center gap-8">
           {[
-            { to: "/", label: "Home" },
-            { to: "/branding", label: "Brending" },
-            { to: "/projects", label: "Loyihalar" },
-            { to: "/contact", label: "Aloqa" }
+            { to: "/", label: t("nav.home") },
+            { to: "/branding", label: t("nav.branding") },
+            { to: "/projects", label: t("nav.projects") },
+            { to: "/contact", label: t("nav.contact") }
           ].map(link => (
             <Link 
-              key={link.label}
+              key={link.to}
               to={link.to} 
-              className={`nav-link ${location.pathname === link.to ? 'text-white' : ''}`}
+              className={`nav-link ${location.pathname === link.to ? theme === 'dark' ? 'text-white' : 'text-black font-bold' : ''}`}
             >
               {link.label}
             </Link>
           ))}
         </div>
 
-        <Link 
-          to="/contact"
-          className="neon-btn scale-90"
-        >
-          <div className="neon-btn-content text-[11px] px-6 py-2.5">
-            Hozir bog'lanish
+        <div className="flex items-center gap-4">
+          {/* LANGUAGE SWITCHER */}
+          <div className="flex items-center gap-1.5 p-1 bg-[var(--border-primary)] rounded-full">
+            {[
+              { code: 'uz', flag: '🇺🇿' },
+              { code: 'ru', flag: '🇷🇺' },
+              { code: 'en', flag: '🇬🇧' }
+            ].map(l => (
+              <button
+                key={l.code}
+                onClick={() => setLang(l.code as any)}
+                className={`w-7 h-7 flex items-center justify-center rounded-full text-[13px] transition-all ${lang === l.code ? 'bg-white shadow-sm scale-110' : 'opacity-40 hover:opacity-100'}`}
+              >
+                {l.flag}
+              </button>
+            ))}
           </div>
-        </Link>
 
-        <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-        </button>
+          {/* THEME TOGGLE */}
+          <button 
+            onClick={toggleTheme}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--border-primary)] text-[var(--text-primary)] hover:scale-110 transition-transform"
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
+          <Link 
+            to="/contact"
+            className="neon-btn scale-90 hidden sm:inline-flex"
+          >
+            <div className="neon-btn-content text-[11px] px-6 py-2.5">
+              {t("nav.connect")}
+            </div>
+          </Link>
+
+          <button className="lg:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </nav>
 
       {/* MOBILE MENU */}
@@ -140,58 +171,58 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[90] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 text-2xl font-display font-black"
+            className={`fixed inset-0 z-[90] ${theme === 'dark' ? 'bg-black/95' : 'bg-white/95'} backdrop-blur-2xl flex flex-col items-center justify-center gap-8 text-2xl font-display font-black`}
           >
-            <Link to="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-            <Link to="/branding" onClick={() => setMobileMenuOpen(false)}>Brending</Link>
-            <Link to="/projects" onClick={() => setMobileMenuOpen(false)}>Loyihalar</Link>
-            <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>Aloqa</Link>
+            <Link to="/" onClick={() => setMobileMenuOpen(false)}>{t("nav.home")}</Link>
+            <Link to="/branding" onClick={() => setMobileMenuOpen(false)}>{t("nav.branding")}</Link>
+            <Link to="/projects" onClick={() => setMobileMenuOpen(false)}>{t("nav.projects")}</Link>
+            <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>{t("nav.contact")}</Link>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <main className="relative z-10">
+      <main className="relative z-10 transition-colors duration-300">
         {children}
       </main>
 
       {/* FOOTER */}
-      <footer className="py-32 px-6 border-t border-white/5 bg-[#000] relative overflow-hidden z-10">
+      <footer className={`py-32 px-6 border-t border-[var(--border-primary)] relative overflow-hidden z-10 ${theme === 'dark' ? 'bg-[#000]' : 'bg-[#fff]'}`}>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-linear-to-r from-transparent via-white/20 to-transparent" />
         
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-20">
           <div className="flex flex-col items-center gap-8">
-            <div className="w-16 h-16 flex items-center justify-center font-black bg-white rounded-2xl text-black overflow-hidden relative rotate-[-5deg] hover:rotate-0 transition-transform cursor-pointer">
+            <div className={`w-16 h-16 flex items-center justify-center font-black rounded-2xl overflow-hidden relative rotate-[-5deg] hover:rotate-0 transition-transform cursor-pointer ${theme === 'dark' ? 'bg-white text-black' : 'bg-black text-white'}`}>
                <Logo className="w-full h-full relative z-10 p-3" />
                <div className="absolute inset-0 bg-linear-to-br from-white via-white to-accent opacity-20" />
             </div>
-            <div className="text-[35px] font-satoshi font-normal tracking-tighter">
+            <div className={`text-[35px] font-satoshi font-normal tracking-tighter ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
               just.yaviz
             </div>
           </div>
 
           <div className="flex gap-8 md:gap-16">
-            <a href="https://instagram.com/just_yaviz" className="text-white/30 hover:text-white transition-all hover:scale-125">
+            <a href="https://instagram.com/just_yaviz" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:scale-125">
               <Instagram size={24} />
             </a>
-            <a href="https://t.me/justyaviz_life" className="text-white/30 hover:text-white transition-all hover:scale-125">
+            <a href="https://t.me/justyaviz_life" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:scale-125">
               <Send size={24} />
             </a>
-            <a href="https://github.com/justyaviz" className="text-white/30 hover:text-white transition-all hover:scale-125">
+            <a href="https://github.com/justyaviz" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:scale-125">
               <Github size={24} />
             </a>
-            <a href="https://youtube.com/@just_yaviz" className="text-white/30 hover:text-white transition-all hover:scale-125">
+            <a href="https://youtube.com/@just_yaviz" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:scale-125">
               <Youtube size={24} />
             </a>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-between w-full border-t border-white/5 pt-12 gap-6">
-            <div className="text-[13px] font-cactus text-white/40 font-normal uppercase tracking-[0.5em]">
-              © 2026 just yaviz
+          <div className="flex flex-col md:flex-row items-center justify-between w-full border-t border-[var(--border-primary)] pt-12 gap-6">
+            <div className="text-[13px] font-cactus text-[var(--text-secondary)] font-normal uppercase tracking-[0.5em]">
+              {t("footer.rights")}
             </div>
-            <div className="flex gap-8 text-[14px] font-space-grotesk text-white font-medium uppercase tracking-widest">
-               <Link to="/admin" className="text-white/20 hover:text-white transition-colors">Admin</Link>
-               <Link to="#" className="hover:text-accent transition-colors">Privacy Policy</Link>
-               <Link to="#" className="hover:text-accent transition-colors">Terms of Service</Link>
+            <div className="flex gap-8 text-[14px] font-space-grotesk text-[var(--text-primary)] font-medium uppercase tracking-widest">
+               <Link to="/admin" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Admin</Link>
+               <Link to="#" className="hover:text-accent transition-colors">{t("footer.privacy")}</Link>
+               <Link to="#" className="hover:text-accent transition-colors">{t("footer.terms")}</Link>
             </div>
           </div>
         </div>

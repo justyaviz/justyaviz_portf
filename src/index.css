@@ -21,23 +21,45 @@
 }
 
 @layer base {
+  :root {
+    --bg-primary: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --border-primary: rgba(0, 0, 0, 0.05);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --hero-note-bg: #f8fafc;
+  }
+
+  .dark {
+    --bg-primary: #050505;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.5);
+    --border-primary: rgba(255, 255, 255, 0.05);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --hero-note-bg: #0a0a0a;
+  }
+
   html {
     scroll-behavior: smooth;
-    background-color: #050505;
+    background-color: var(--bg-primary);
+    transition: background-color 0.3s ease;
   }
   
   body {
-    @apply text-white antialiased overflow-x-hidden font-sans bg-[#050505];
+    @apply antialiased overflow-x-hidden font-sans;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     font-size: 14px;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   p {
-    @apply font-plus-jakarta font-medium;
+    @apply font-plus-jakarta font-medium transition-colors;
     font-size: 14px;
     @screen md {
       font-size: 15px;
     }
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-secondary);
     line-height: 1.6;
     @screen md {
       line-height: 1.7;
@@ -45,69 +67,41 @@
     letter-spacing: -0.01em;
   }
 
-  h1 {
-    @apply font-satoshi font-medium;
-    font-size: clamp(40px, 10vw, 84px);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    font-style: normal;
+  h1, h2, h3, h4 {
+    @apply text-[var(--text-primary)] transition-colors;
   }
-
-  h2 {
-    @apply font-satoshi font-medium;
-    font-size: clamp(32px, 8vw, 64px);
-    line-height: 1;
-    letter-spacing: -0.03em;
-    font-style: normal;
-  }
-
-  h3 {
-    @apply font-satoshi font-medium;
-    font-size: clamp(24px, 5vw, 42px);
-    font-style: normal;
-    letter-spacing: -0.02em;
-  }
-
-  h4 {
-    @apply font-satoshi font-bold text-white;
-    font-size: 24px;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    font-style: normal;
-  }
-}
 
 .glass {
-  @apply bg-white/[0.03] border border-white/5 backdrop-blur-xl;
+  @apply bg-[var(--glass-bg)] border border-[var(--border-primary)] backdrop-blur-xl;
 }
 
 .pill-nav {
-  @apply fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-between px-5 md:px-8 py-2 md:py-3 rounded-full w-[92%] md:w-[95%] max-w-[850px] border border-white/5 shadow-[0_15px_35px_rgba(0,0,0,0.6)];
-  @apply bg-black/20 backdrop-blur-2xl;
+  @apply fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-between px-5 md:px-8 py-2 md:py-3 rounded-full w-[92%] md:w-[95%] max-w-[850px] border border-[var(--border-primary)] shadow-[0_15px_35px_rgba(0,0,0,0.1)];
+  @apply bg-[var(--glass-bg)] backdrop-blur-2xl dark:shadow-[0_15px_35px_rgba(0,0,0,0.6)];
 }
 
 .nav-link {
-  @apply text-[13px] font-medium tracking-[0.02em] text-white/40 hover:text-white transition-all cursor-pointer;
+  @apply text-[13px] font-medium tracking-[0.02em] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all cursor-pointer;
 }
 
 .hero-note {
-  @apply p-10 bg-[#0a0a0a] border border-white/10 backdrop-blur-3xl rounded-[2.5rem] w-[320px] shadow-[0_40px_80px_rgba(0,0,0,0.9)] relative overflow-hidden transition-all duration-500 ease-out;
+  @apply p-10 bg-[var(--hero-note-bg)] border border-[var(--border-primary)] backdrop-blur-3xl rounded-[2.5rem] w-[320px] shadow-[0_40px_80px_rgba(0,0,0,0.1)] relative overflow-hidden transition-all duration-500 ease-out dark:shadow-[0_40px_80px_rgba(0,0,0,0.9)];
 }
 
 .hero-note .handle {
-  @apply absolute bottom-8 right-10 text-[11px] text-white/10 font-medium tracking-tight;
+  @apply absolute bottom-8 right-10 text-[11px] text-[var(--text-secondary)] opacity-20 font-medium tracking-tight;
 }
 
 .badge-it {
-  @apply inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/5 rounded-full text-[10px] font-bold tracking-[0.1em] text-white/30 mb-8 uppercase;
+  @apply inline-flex items-center gap-2 px-3 py-1 bg-[var(--glass-bg)] border border-[var(--border-primary)] rounded-full text-[10px] font-bold tracking-[0.1em] text-[var(--text-secondary)] mb-8 uppercase;
 }
 
 .check-card {
-  @apply p-10 bg-white/5 border border-white/5 backdrop-blur-xl rounded-[2.5rem] transition-all duration-500 hover:bg-white/[0.03] space-y-6 relative;
+  @apply p-10 bg-[var(--glass-bg)] border border-[var(--border-primary)] backdrop-blur-xl rounded-[2.5rem] transition-all duration-500 hover:bg-white/[0.03] space-y-6 relative;
 }
 
 .check-card .icon-shield {
-  @apply absolute top-8 left-8 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 border border-white/10;
+  @apply absolute top-8 left-8 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--glass-bg)] border border-[var(--border-primary)];
 }
 
 .check-card-good {
@@ -181,4 +175,5 @@
 
 .marquee-content:hover {
   animation-play-state: paused;
+}
 }

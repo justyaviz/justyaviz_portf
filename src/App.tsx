@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { useState, useEffect } from "react";
 import { AdminProvider } from "./components/AdminProvider";
+import { AppProvider } from "./context/AppContext";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Branding from "./pages/Branding";
@@ -21,8 +22,9 @@ export default function App() {
 
   return (
     <Router>
-      <AdminProvider>
-        <AnimatePresence mode="wait">
+      <AppProvider>
+        <AdminProvider>
+          <AnimatePresence mode="wait">
           {loading ? (
             <motion.div 
               key="preloader"
@@ -71,7 +73,8 @@ export default function App() {
             </Layout>
           )}
         </AnimatePresence>
-      </AdminProvider>
+        </AdminProvider>
+      </AppProvider>
     </Router>
   );
 }

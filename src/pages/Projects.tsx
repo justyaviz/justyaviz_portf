@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import { db } from "../lib/firebase";
+import { useAppContext } from "../context/AppContext";
 import { ProjectControls, AddProjectBtn } from "../components/ProjectEditor";
 import { Logo } from "../components/Logo";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
@@ -36,22 +37,23 @@ const defaultProjects = [
   { title: "Yengil Mijoz", category: "Marketing", image: "https://play-lh.googleusercontent.com/7hUsDaIdSaYwgWXQosQZGuOpQ8RLhp8Iw-bSKzNIxocMqw5l-2ZysdbGdyllKkQIOw", type: "Marketing" },
 ];
 
-const categories = [
-  { name: "Hammasi", id: "all", icon: <LayoutGrid size={16} /> },
-  { name: "Infografik", id: "Infografik", icon: <Palette size={16} /> },
-  { name: "Banner", id: "Banner", icon: <Rocket size={16} /> },
-  { name: "Web site", id: "Web site", icon: <Globe size={16} /> },
-  { name: "CRM", id: "CRM", icon: <Cpu size={16} /> },
-  { name: "YouTube", id: "YouTube", icon: <Video size={16} /> },
-  { name: "Brend book", id: "Brend book", icon: <Smartphone size={16} /> },
-  { name: "Catalog", id: "Catalog", icon: <Palette size={16} /> },
-  { name: "Flayer", id: "Flayer", icon: <Palette size={16} /> },
-];
-
 export default function Projects() {
+  const { t, theme } = useAppContext();
   const [activeCategory, setActiveCategory] = useState("all");
   const [dbProjects, setDbProjects] = useState<any[]>([]);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
+
+  const categories = [
+    { name: t("projects.filter.all"), id: "all", icon: <LayoutGrid size={16} /> },
+    { name: t("projects.filter.infographic"), id: "Infografik", icon: <Palette size={16} /> },
+    { name: t("projects.filter.banner"), id: "Banner", icon: <Rocket size={16} /> },
+    { name: t("projects.filter.website"), id: "Web site", icon: <Globe size={16} /> },
+    { name: t("projects.filter.crm"), id: "CRM", icon: <Cpu size={16} /> },
+    { name: t("projects.filter.youtube"), id: "YouTube", icon: <Video size={16} /> },
+    { name: t("projects.filter.brandbook"), id: "Brend book", icon: <Smartphone size={16} /> },
+    { name: t("projects.filter.catalog"), id: "Catalog", icon: <Palette size={16} /> },
+    { name: t("projects.filter.flayer"), id: "Flayer", icon: <Palette size={16} /> },
+  ];
 
   useEffect(() => {
     const q = query(collection(db, "projects"), orderBy("order", "asc"));
@@ -90,7 +92,7 @@ export default function Projects() {
              className="absolute top-8 right-8 text-white/40 hover:text-white transition-opacity z-10"
            >
              <X size={24} className="md:size-32" />
-             <span className="block text-[10px] font-bold uppercase tracking-widest mt-2">Yopish</span>
+             <span className="block text-[10px] font-bold uppercase tracking-widest mt-2">{t("projects.modal.close")}</span>
            </button>
            <div className="w-full max-w-6xl aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative" onClick={e => e.stopPropagation()}>
               <iframe 
@@ -113,8 +115,8 @@ export default function Projects() {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl transition-all font-medium text-xs uppercase tracking-widest ${
                   activeCategory === cat.id 
-                    ? "bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)]" 
-                    : "text-white/40 hover:text-white hover:bg-white/5"
+                    ? "bg-accent text-white shadow-xl" 
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-accent/5"
                 }`}
               >
                 {cat.icon}
@@ -128,10 +130,10 @@ export default function Projects() {
         <div className="flex-1 space-y-16">
           <div className="text-center space-y-6">
             <h1 className="text-5xl md:text-8xl font-display font-black tracking-tighter leading-none">
-              Hamkor Kompaniyalar
+              {t("projects.hero.title")}
             </h1>
-            <p className="text-white/40 max-w-2xl mx-auto font-medium">
-              Siz ham brendingizni yuqori darajalarga olib chiqing biz bunda yordam beramiz !
+            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto font-medium">
+              {t("projects.hero.desc")}
             </p>
           </div>
 

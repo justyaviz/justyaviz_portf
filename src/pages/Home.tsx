@@ -155,7 +155,7 @@ export default function Home() {
                 transition={{ delay: 0.3, duration: 0.8 }}
                 className="max-w-lg text-white/50 font-satoshi text-[16px] md:text-lg leading-relaxed font-medium tracking-tight"
               >
-                <EditableText contentKey="heroDesc" defaultText="Biz SMM va Brandface bo‘yicha ko‘p yo‘nalishli ijodkormiz. Biznesingiz uchun zamonaviy texnologiyalar va kuchli vizual identitet yaratamiz." type="textarea" />
+                <EditableText contentKey="heroDesc" defaultText="👉 SMM | Target | Content | Design | Web — biznesni o‘stiradigan xizmatlar" type="textarea" />
               </motion.p>
             </div>
             <motion.div 
@@ -209,7 +209,7 @@ export default function Home() {
                    <EditableText contentKey="aiTitle" defaultText="AI just.yaviz" as="span" />
                 </h3>
                 <div className="font-dm-sans text-[16px] text-white leading-relaxed font-medium">
-                   <EditableText contentKey="aiDesc" defaultText="Platformamizda siz SMM sohasida ishlash, o'rganish va rivojlanish uchun zarur bo'lgan 45 ta muhim vosita hamda sun’iy intellekt xizmatlaridan foydalanishingiz mumkin." type="textarea" />
+                   <EditableText contentKey="aiDesc" defaultText="Platformamizda siz IT sohasida ishlash, o'rganish va rivojlanish uchun zarur bo'lgan 45 ta muhim sayt hamda sun’iy intellekt xizmatlaridan foydalanishingiz mumkin." type="textarea" />
                 </div>
                 <div className="pt-4">
                    <Link to="/ai" className="px-8 py-3 bg-white/5 border border-white/20 rounded-full text-[10px] font-black uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all">
@@ -231,8 +231,8 @@ export default function Home() {
       <section className="py-20 px-6 border-t border-white/5 overflow-hidden">
          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-end justify-between gap-10">
             <motion.div {...fadeIn} className="space-y-6">
-              <h2 className="text-[40px] md:text-8xl font-bricolage font-normal tracking-tighter leading-none">
-                SMM va marketing <br /> xizmatlari
+              <h2 className="text-[40px] md:text-8xl font-satoshi font-medium tracking-tighter leading-none">
+                IT va marketing <br /> xizmatlari
               </h2>
               <p className="font-dm-sans text-[16px] text-white max-w-lg">Texnologiya va marketing strategiyasini uyg'unlashtirib, sizga ishlaydigan va o'suvchi natija yaratamiz.</p>
             </motion.div>
@@ -246,7 +246,7 @@ export default function Home() {
                <motion.div variants={marqueeVariants} animate="animate" className="flex gap-4">
                   {[...Array(3)].map((_, idx) => (
                     <div key={idx} className="flex gap-4">
-                      {["SMM Strategiya", "Video & Motion dizayn", "Brandface Branding", "Targeting Ads", "Mobilografiya", "Grafik Dizayn", "SEO Optimallashtirish"].map((tag, i) => (
+                      {["SEO", "Social Media", "Optimallashtirish", "Kopirayterlik", "Plakatlar", "Grafik dizayn", "Framer migratsiyasi", "Video & Motion dizayn", "Dasturlash", "Veb dizayn"].map((tag, i) => (
                         <div key={i} className="flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/5 rounded-full whitespace-nowrap text-[14px] font-hanken font-medium uppercase tracking-widest text-[#f9f8f5] transition-all">
                            <CheckCircle2 size={14} className="text-accent" />
                            {tag}
@@ -265,7 +265,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-end justify-between gap-8">
             <div className="space-y-6">
               <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/20">Portfolio</span>
-              <h2 className="text-[40px] md:text-9xl font-bricolage font-normal tracking-tighter leading-none">Loyihalar</h2>
+              <h2 className="text-[40px] md:text-9xl font-satoshi font-medium tracking-tighter leading-none">Loyihalar</h2>
             </div>
             <Link to="/projects" className="text-accent flex items-center gap-2 font-bold uppercase tracking-widest text-xs hover:gap-4 transition-all">
               Barchasini ko'rish <ArrowUpRight size={16} />
@@ -304,11 +304,30 @@ export default function Home() {
               <EditableText contentKey="heroTitle" defaultText="just.yaviz" as="span" />
             </h3>
             <div className="text-[18px] font-inter-display text-white leading-relaxed font-medium tracking-tight">
-              <EditableText contentKey="aboutText" defaultText="Men — Just Yaviz (Yahyobek Tohirjonov), O‘zbekistonda faoliyat yurituvchi SMM mutaxassisi, brandface va kontent yaratuvchiman." type="textarea" />
+              <EditableText contentKey="aboutText" defaultText="Yahyobek Tohirjonov (Just Yaviz) — zamonaviy marketing, media va IT yo‘nalishlarida faoliyat yuritayotgan yosh, kreativ va natijaga yo‘naltirilgan mutaxassis. U SMM, kontent yaratish, grafik dizayn, video montaj, target reklama va web dasturlash yo‘nalishlarida real amaliy tajribaga ega. Faoliyatini o‘qituvchi sifatida boshlagan bo‘lib, keyinchalik marketing va savdo yo‘nalishiga o‘tgan." type="textarea" />
             </div>
-            <Link to="/contact" className="btn-primary-site inline-block px-10 py-5 uppercase">Hamkorlik qilish</Link>
+            <Link to="/contact" className="brand-btn-skromniy inline-block px-10 py-5 uppercase bg-white text-black font-bold rounded-full">Hamkorlik qilish</Link>
           </motion.div>
         </div>
+      </section>
+
+      {/* CLIENTS MARQUEE */}
+      <section className="py-20 border-t border-white/5 overflow-hidden">
+         <div className="marquee-wrapper opacity-30 grayscale saturate-0 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+            <motion.div 
+               animate={{ x: [0, -2000] }} 
+               transition={{ duration: 40, repeat: Infinity, ease: "linear" }} 
+               className="flex gap-20 items-center whitespace-nowrap"
+            >
+               {[...Array(2)].map((_, i) => (
+                 <div key={i} className="flex gap-20 items-center">
+                    {["JAC motors", "HOFMANN", "SMEG", "STYX", "Logix ERP", "DODDA.UZ", "Destec group", "Prime Electrotechnical", "Logix Academy", "Fonon jewellery", "KANGO", "In Plus", "Global Service", "Grand Pharm"].map((client, idx) => (
+                      <span key={idx} className="text-3xl font-satoshi font-black tracking-tighter uppercase">{client}</span>
+                    ))}
+                 </div>
+               ))}
+            </motion.div>
+         </div>
       </section>
     </>
   );

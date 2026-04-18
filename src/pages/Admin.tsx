@@ -432,10 +432,12 @@ export default function Admin() {
                 <div className="grid grid-cols-1 gap-6">
                   {[
                     { key: "heroTitle", label: "Asosiy Sarlavha", value: globalContent?.heroTitle || "just.yaviz" },
-                    { key: "heroDesc", label: "Asosiy Tavsif", value: globalContent?.heroDesc || "Biz SMM va Brandface bo‘yicha ko‘p yo‘nalishli ijodkormiz...", type: "textarea" },
-                    { key: "brandingTitle", label: "Brending Sarlavhasi", value: globalContent?.brandingTitle || "Mijozlarni xidorga aylantiradigan dizaynlar." },
-                    { key: "brandingDesc", label: "Brending Tavsifi", value: globalContent?.brandingDesc || "Kliklarni mijozlarga...", type: "textarea" },
-                    { key: "aboutText", label: "Men haqimda matni", value: globalContent?.aboutText || "Men — Just Yaviz...", type: "textarea" }
+                    { key: "heroDesc", label: "Asosiy Tavsif", value: globalContent?.heroDesc || "👉 SMM | Target | Content | Design | Web — biznesni o‘stiradigan xizmatlar", type: "textarea" },
+                    { key: "aiTitle", label: "AI Bo'limi Sarlavhasi", value: globalContent?.aiTitle || "AI Ecosystem" },
+                    { key: "aiDesc", label: "AI Bo'limi Tavsifi", value: globalContent?.aiDesc || "Platformamizda siz IT sohasida ishlash...", type: "textarea" },
+                    { key: "brandingTitle", label: "Brending Sarlavhasi", value: globalContent?.brandingTitle || "Sifatli dizayn — bu tasodif emas, tizim." },
+                    { key: "brandingDesc", label: "Brending Tavsifi", value: globalContent?.brandingDesc || "Biznesingizga mos professional dizayn...", type: "textarea" },
+                    { key: "aboutText", label: "Men haqimda matni", value: globalContent?.aboutText || "Yahyobek Tohirjonov (Just Yaviz) — zamonaviy marketing...", type: "textarea" }
                   ].map(field => (
                     <div key={field.key} className="glass p-8 rounded-[2.5rem] group hover:border-accent/40 transition-all flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                       <div className="space-y-2">

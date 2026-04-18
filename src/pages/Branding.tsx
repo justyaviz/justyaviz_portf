@@ -11,7 +11,8 @@ import {
   Smartphone, 
   Briefcase,
   ExternalLink,
-  Check
+  Check,
+  X
 } from "lucide-react";
 
 const fadeIn = {
@@ -38,17 +39,17 @@ export default function Branding() {
         <motion.h1 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl md:text-[8vw] font-display font-black tracking-tighter leading-[0.85] max-w-6xl mx-auto"
+          className="text-5xl md:text-[8vw] font-satoshi font-medium tracking-tighter leading-[0.85] max-w-6xl mx-auto"
         >
-          <EditableText contentKey="brandingTitle" defaultText="Mijozlarni xidorga aylantiradigan dizaynlar." as="span" />
+          <EditableText contentKey="brandingTitle" defaultText="Sifatli dizayn — bu tasodif emas, tizim." as="span" />
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="max-w-2xl mx-auto text-white/40 text-sm md:text-lg leading-relaxed font-medium"
+          className="max-w-2xl mx-auto text-white/40 text-[16px] leading-relaxed font-medium"
         >
-          <EditableText contentKey="brandingDesc" defaultText="Kliklarni mijozlarga aylantirish uchun mo'ljallangan yuqori samarali brend ega bo'ling, barchasi oddiy, stresssiz obuna bilan — qiyinchiliksiz." type="textarea" />
+          <EditableText contentKey="brandingDesc" defaultText="Biznesingizga mos professional dizayn va aniq boshqaruv — natija kafolatli. Har bir detal ustida tizimli ishlaymiz." type="textarea" />
         </motion.p>
       </section>
 
@@ -56,9 +57,9 @@ export default function Branding() {
       <section className="px-6 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
              {[
-               { key: "brandingCard1", title: "Brendingizni kuchaytring!", desc: "Istalgan vaqtda yangilang - brending sahifasi ochish yoki dizayn kerak bo'ladimi." },
-               { key: "brandingCard2", title: "Tezkor dizayn!", desc: "Ko'pgina dizayn so'rovlari 48 soat yoki undan kamroq vaqt ichida bajariladi." },
-               { key: "brandingCard3", title: "Cheksiz so'rovlar", desc: "Bir vaqtning o'zida kerakli dizayn so'rovlarini yuboring." }
+               { key: "brandingCard1", title: "Marketing Strategiyasi", desc: "Biznesingizni rivojlantirish uchun aniq va natijaga yo'naltirilgan SMM strategiyalarini tuzamiz." },
+               { key: "brandingCard2", title: "IT Yechimlar", desc: "Veb-saytlar, admin panellar va avtomatlashtirilgan tizimlar orqali biznesingizni raqamlashtiramiz." },
+               { key: "brandingCard3", title: "Kreativ Kontent", desc: "Mijozlarni jalb qiluvchi Reels, Shorts va professional grafik dizayn xizmatlarini taqdim etamiz." }
              ].map((card, i) => (
                <motion.div
                  key={i}
@@ -99,11 +100,65 @@ export default function Branding() {
          </div>
       </section>
 
+      {/* ADVANTAGES COMPARISON */}
+      <section className="px-6 max-w-7xl mx-auto space-y-20">
+         <div className="text-center space-y-4">
+            <h2 className="text-4xl md:text-6xl font-satoshi font-medium tracking-tighter">Nega biz bilan ishlash kerak?</h2>
+            <p className="text-white/40 max-w-lg mx-auto">Biznesingiz uchun eng to'g'ri tanlovni qiling.</p>
+         </div>
+
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 rounded-[4rem] overflow-hidden border border-white/10">
+            {[
+              {
+                okTile: "Tajriba va Mukammallik",
+                okDesc: "Ko‘p yillik tajribaga ega IT va marketing jamoasi — yuqori sifat, innovatsion yondashuv va mukammal natija kafolati.",
+                badTitle: "Tajriba Yetishmasligi",
+                badDesc: "Havaskor ijrochi — tajriba yetishmasligi natijasida IT va marketing loyihalarida nomuvofiqlik, xatoliklar va kutilgan natijaga erishmaslik xavfi tug‘iladi"
+              },
+              {
+                okTile: "Zamonaviy Yondashuv",
+                okDesc: "Kelajakka mos yechimlar — biznesingiz bilan birga o‘suvchi, trendlarni ilgari ko‘ra oladigan, moslashuvchan va zamonaviy IT hamda marketing xizmatlari",
+                badTitle: "Eskirgan G‘oyalar",
+                badDesc: "Muddati o‘tgan yechimlar — zamonaviy brend imidjingizga mos kelmaydigan, trenddan orqada qolgan IT va marketing yondashuvlari."
+              },
+              {
+                okTile: "Mijoz Markazida Hamkorlik",
+                okDesc: "Sizning g‘oyangiz asosida ishlash — biz sizning maqsadlaringizni markazga qo‘yib, aniq strategiya va kreativ yechimlar bilan natijaga yetamiz",
+                badTitle: "Aloqaning Yo‘qligi",
+                badDesc: "Muloqot yetishmasligi va fikr almashinuvi sustligi — noto‘g‘ri qarorlar, yo‘nalishdan chetlanish va kutilmagan natijalarga olib keladi."
+              },
+              {
+                okTile: "Aniq Rejaga Asoslangan Nazorat",
+                okDesc: "Har bir bosqichda doimiy yangilanishlar, aniq vaqt rejalari va o‘z vaqtida topshiriladigan ishlar — siz har doim jarayon markazidasiz.",
+                badTitle: "Tartibsiz Ish Yondashuvi",
+                badDesc: "Vaqtni to‘g‘ri rejalamaslik, oxirgi daqiqadagi o‘zgarishlar va muloqotdagi sustlik natijasida sifatsiz mahsulotga olib keladi."
+              }
+            ].map((item, i) => (
+              <div key={i} className="grid grid-cols-1 lg:grid-cols-2 bg-black">
+                 <div className="p-10 md:p-14 space-y-6 border-b lg:border-b-0 lg:border-r border-white/5 bg-white/[0.02]">
+                    <div className="w-10 h-10 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center">
+                       <Check size={20} />
+                    </div>
+                    <h4 className="text-2xl font-satoshi font-bold">{item.okTile}</h4>
+                    <p className="text-white/40 text-sm leading-relaxed">{item.okDesc}</p>
+                 </div>
+                 <div className="p-10 md:p-14 space-y-6">
+                    <div className="w-10 h-10 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center">
+                       <X size={20} />
+                    </div>
+                    <h4 className="text-2xl font-satoshi font-bold text-white/60">{item.badTitle}</h4>
+                    <p className="text-white/30 text-sm leading-relaxed">{item.badDesc}</p>
+                 </div>
+              </div>
+            ))}
+         </div>
+      </section>
+
       {/* WHY US */}
       <section className="py-40 px-6 border-t border-white/5 text-center space-y-24">
          <div className="space-y-8">
-            <h2 className="text-5xl md:text-8xl font-display font-black tracking-tighter leading-none">Nega bizni tanlaysiz?</h2>
-            <p className="text-white/40 max-w-xl mx-auto font-medium">Biz kelishuv yordamida brending dizaynni oddiy, tez va kengaytiriladigan qilamiz.</p>
+            <h2 className="text-5xl md:text-8xl font-satoshi font-medium tracking-tighter leading-none">Nega bizni tanlaysiz?</h2>
+            <p className="text-white/40 max-w-xl mx-auto font-medium tracking-tight leading-relaxed">Biz har bir loyihaga individual yondashib, uning rivojlanishi uchun barcha zamonaviy marketing va IT vositalarini birlashtiramiz.</p>
          </div>
 
          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 relative">

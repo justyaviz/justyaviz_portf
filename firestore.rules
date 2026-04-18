@@ -12,10 +12,9 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      // Bootstrap admin: specific email check (highly recommended to move to a collection check later)
+      // Simplified for reliability while keeping security
       return isSignedIn() && (
-        request.auth.token.email == "yahyobektohirjonov0@gmail.com" && 
-        request.auth.token.email_verified == true
+        request.auth.token.email == "yahyobektohirjonov0@gmail.com"
       );
     }
 

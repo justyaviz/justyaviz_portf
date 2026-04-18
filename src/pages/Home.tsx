@@ -203,27 +203,85 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          <div className="relative hidden lg:block">
-             <div className="relative h-[500px] flex items-center justify-center">
+          <div className="relative hidden lg:block h-[700px]">
+             <div className="absolute inset-0 flex items-center justify-center">
+                {/* BACKGROUND LINES FROM SCREENSHOT */}
+                <div className="absolute inset-0 pointer-events-none opacity-20">
+                  <div className="absolute top-[15%] left-[10%] w-[300px] h-px bg-white/20 -rotate-45" />
+                  <div className="absolute top-[25%] left-[5%] w-[400px] h-px bg-white/10 -rotate-45" />
+                  <div className="absolute top-[40%] right-[10%] w-[250px] h-px bg-white/15 rotate-[30deg]" />
+                </div>
+
+                {/* FLOATING CURSORS LIKE IN SCREENSHOT */}
                 <motion.div 
-                  animate={{ rotate: [-8, -6, -8], y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  whileHover={{ rotate: -4, scale: 1.05 }}
-                  className="hero-note z-20 bg-black/95 backdrop-blur-3xl border border-white/5 shadow-[0_32px_64px_rgba(0,0,0,0.8)]"
+                  style={{ 
+                    x: useTransform(springX, [0, 2000], [50, -50]), 
+                    y: useTransform(springY, [0, 1000], [0, -30]) 
+                  }}
+                  className="absolute top-[35%] right-[25%] z-30 pointer-events-none"
                 >
-                   <p className="text-sm font-medium leading-relaxed">
-                    Biznesingizga mos professional dizayn va aniq boshqaruv — natija kafolatli.
-                   </p>
+                   <MousePointer2 className="fill-white text-white rotate-[15deg] drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" size={24} />
                 </motion.div>
                 <motion.div 
-                  animate={{ rotate: [12, 10, 12], y: [40, 50, 40] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                  whileHover={{ rotate: 5, scale: 1.05 }}
-                  className="hero-note absolute right-10 bottom-20 z-10 bg-black/95 backdrop-blur-3xl border border-white/5 shadow-[0_32px_64px_rgba(0,0,0,0.8)]"
+                  style={{ 
+                    x: useTransform(springX, [0, 2000], [-80, 80]), 
+                    y: useTransform(springY, [0, 1000], [100, 50]) 
+                  }}
+                  className="absolute bottom-[30%] left-[30%] z-30 pointer-events-none"
                 >
-                   <p className="text-sm font-medium leading-relaxed">
+                   <MousePointer2 className="fill-white text-white rotate-[-20deg] drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]" size={20} />
+                </motion.div>
+
+                {/* THE CARDS FROM SCREENSHOT */}
+                <motion.div 
+                  drag
+                  dragConstraints={{ left: -150, right: 150, top: -150, bottom: 150 }}
+                  style={{ 
+                    x: useTransform(springX, [0, 2000], [-30, 30]), 
+                    y: useTransform(springY, [0, 1000], [-20, 20]),
+                    rotate: -8
+                  }}
+                  whileHover={{ scale: 1.02, rotate: -6, zIndex: 100 }}
+                  className="hero-note z-20 cursor-grab active:cursor-grabbing"
+                >
+                   <p className="text-[17px] font-dm-sans font-medium leading-relaxed pr-8 text-white/90">
+                    Biznesingizga mos professional dizayn va aniq boshqaruv — natija kafolatli.
+                   </p>
+                   <div className="handle">just.yaviz</div>
+                </motion.div>
+
+                <motion.div 
+                  drag
+                  dragConstraints={{ left: -150, right: 150, top: -150, bottom: 150 }}
+                  style={{ 
+                    x: useTransform(springX, [0, 2000], [80, -80]), 
+                    y: useTransform(springY, [0, 1000], [120, 80]),
+                    rotate: 6
+                  }}
+                  whileHover={{ scale: 1.02, rotate: 4, zIndex: 100 }}
+                  className="hero-note absolute z-10 cursor-grab active:cursor-grabbing"
+                >
+                   <p className="text-[17px] font-dm-sans font-medium leading-relaxed pr-8 text-white/90">
                     Sifatli dizayn — bu tasodif emas, tizim.
                    </p>
+                   <div className="handle">just.yaviz</div>
+                </motion.div>
+
+                <motion.div 
+                  drag
+                  dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
+                  style={{ 
+                    x: useTransform(springX, [0, 2000], [0, 0]), 
+                    y: useTransform(springY, [0, 1000], [250, 200]),
+                    rotate: -2
+                  }}
+                  whileHover={{ scale: 1.02, rotate: 0, zIndex: 100 }}
+                  className="hero-note absolute z-0 opacity-20 blur-[2px] transition-all hover:opacity-100 hover:blur-0 cursor-grab active:cursor-grabbing hidden xl:block"
+                >
+                   <p className="text-[15px] font-dm-sans font-medium leading-relaxed pr-8 text-white/90">
+                    Innovatsion yechimlar va strategik yondashuv orqali natija.
+                   </p>
+                   <div className="handle">just.yaviz</div>
                 </motion.div>
              </div>
           </div>
@@ -432,8 +490,8 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
             {(projects.length > 0 ? projects : [
-              { title: "Texnika kontentlari", category: "Honor & Redmi Showcase", image: "https://picsum.photos/seed/tech13/1200/800" },
               { title: "Savdo loyihalari", category: "E-commerce Strategy", image: "https://picsum.photos/seed/sale13/1200/800" },
+              { title: "Marketing vizuallari", category: "Brand Identity", image: "https://picsum.photos/seed/brand13/1200/800" },
             ]).map((p, i) => (
               <motion.div key={i} {...fadeIn} className="group relative h-[400px] md:h-[650px] bg-white/5 rounded-3xl md:rounded-[4rem] overflow-hidden border border-white/5 cursor-pointer">
                 <ProjectControls project={p} />

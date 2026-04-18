@@ -27,13 +27,6 @@ const getYoutubeId = (url: string | undefined) => {
 };
 
 const defaultProjects = [
-  { title: "Honor X6c vs Galaxy A07", category: "YouTube / Tech Obzor", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/0.png", type: "YouTube" },
-  { title: "Honor X9c vs Honor X9d", category: "YouTube / Comparison", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/3.png", type: "YouTube" },
-  { title: "Honor X7d — Suvga soldik!", category: "YouTube / Experiment", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/6.png", type: "YouTube" },
-  { title: "Redmi Note 15 SHOK!", category: "YouTube / Tech Obzor", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/8.png", type: "YouTube" },
-  { title: "Redmi Pad Pro 5G", category: "YouTube / Tablet Review", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/10.png", type: "YouTube" },
-  { title: "Honor X9C — OBZOR", category: "YouTube / Flagship", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/11.png", type: "YouTube" },
-  { title: "Honor X8D — Rostini aytamiz", category: "YouTube / Tech Review", image: "https://ais-pre-fwlf2rjubxycr545cqwmfm-733816564986.asia-east1.run.app/api/attachments/a763ecfb-9a9b-4b84-a57e-4730e3c037e7/9.png", type: "YouTube" },
   { title: "Magic City", category: "Marketing", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxwrLEewH9Kw14lXc8nVXi2bIPilJXbDS1zg&s", type: "Marketing" },
   { title: "Sundecor", category: "Marketing", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfkcYEjWfYZIpWvZ7fLMcCVxfVZQcXAZ3RQ&s", type: "Marketing" },
   { title: "Ilm Chashmalari", category: "SMM", image: "https://static4.tgstat.ru/channels/_0/58/5874f696205edf0c7aa55152da39921a.jpg", type: "Marketing" },

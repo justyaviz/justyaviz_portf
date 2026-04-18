@@ -91,12 +91,11 @@
 }
 
 .hero-note {
-  @apply p-6 bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-3xl max-w-[300px] rotate-[-5deg] shadow-xl relative overflow-hidden;
+  @apply p-10 bg-[#0a0a0a] border border-white/10 backdrop-blur-3xl rounded-[2.5rem] w-[320px] shadow-[0_40px_80px_rgba(0,0,0,0.9)] relative overflow-hidden transition-all duration-500 ease-out;
 }
 
-.hero-note::after {
-  content: "just.yaviz";
-  @apply absolute bottom-4 right-6 text-[9px] text-white/5 font-bold uppercase tracking-widest;
+.hero-note .handle {
+  @apply absolute bottom-8 right-10 text-[11px] text-white/10 font-medium tracking-tight;
 }
 
 .badge-it {

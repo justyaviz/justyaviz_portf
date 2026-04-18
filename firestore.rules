@@ -1,0 +1,34 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Basic denial
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      // Bootstrap admin: specific email check (highly recommended to move to a collection check later)
+      return isSignedIn() && (
+        request.auth.token.email == "yahyobektohirjonov0@gmail.com" && 
+        request.auth.token.email_verified == true
+      );
+    }
+
+    // Projects collection
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Site Content collection
+    match /siteContent/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

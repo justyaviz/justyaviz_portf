@@ -1,0 +1,41 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "Portfolio project entry",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "Project title" },
+        "category": { "type": "string", "description": "Display category" },
+        "image": { "type": "string", "description": "URL to project cover" },
+        "type": { "type": "string", "description": "Slug for filtering (e.g. 'web-site', 'marketing')" },
+        "order": { "type": "number", "description": "Display order" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "image", "type"]
+    },
+    "SiteContent": {
+      "title": "Site Content",
+      "description": "Dynamic text content for various sections",
+      "type": "object",
+      "properties": {
+        "heroTitle": { "type": "string" },
+        "heroDesc": { "type": "string" },
+        "brandingTitle": { "type": "string" },
+        "brandingDesc": { "type": "string" },
+        "aboutText": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Collection of portfolio projects"
+    },
+    "/siteContent/{docId}": {
+      "schema": "SiteContent",
+      "description": "Singleton or sectional text content"
+    }
+  }
+}

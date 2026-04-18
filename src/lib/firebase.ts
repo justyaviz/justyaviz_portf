@@ -8,7 +8,22 @@ export const auth = getAuth(app);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 export const googleProvider = new GoogleAuthProvider();
 
-export const loginWithGoogle = () => signInWithPopup(auth, googleProvider);
+export const loginWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    return result;
+  } catch (error: any) {
+    console.error("Login Error:", error);
+    if (error.code === 'auth/popup-blocked') {
+      alert("Brauzeringizda 'Popup' (qalqib chiquvchi oyna) bloklangan. Iltimos, unga ruxsat bering.");
+    } else if (error.code === 'auth/unauthorized-domain') {
+      alert("Hozirgi domen Firebase konsolida ruxsat berilgan domenlar ro'yxatida yo'q.");
+    } else {
+      alert("Kirishda xatolik: " + error.message);
+    }
+    throw error;
+  }
+};
 export const logout = () => signOut(auth);
 
 // Helper for Firestore errors

@@ -22,9 +22,7 @@ import {
 } from "lucide-react";
 
 export default function Admin() {
-  const { isAdmin, isEditMode, setEditMode, updateContent, siteContent: globalContent } = useAdmin();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isAdmin, isEditMode, setEditMode, updateContent, siteContent: globalContent, loading } = useAdmin();
   const [activeTab, setActiveTab] = useState<"projects" | "content">("projects");
   const [projects, setProjects] = useState<any[]>([]);
   
@@ -33,15 +31,7 @@ export default function Admin() {
   const [formData, setFormData] = useState({ title: "", category: "", image: "", type: "Marketing" });
 
   useEffect(() => {
-    const unsubAuth = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      setLoading(false);
-    });
-    return () => unsubAuth();
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
+    if (!user || !isAdmin) return;
 
     const unsubProjects = onSnapshot(collection(db, "projects"), (snapshot) => {
       setProjects(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
@@ -50,7 +40,7 @@ export default function Admin() {
     return () => {
       unsubProjects();
     };
-  }, [user]);
+  }, [user, isAdmin]);
 
   const handleSaveProject = async () => {
     try {
@@ -78,30 +68,47 @@ export default function Admin() {
     </div>
   );
 
-  if (!user || user.email !== 'yahyobektohirjonov0@gmail.com') return (
+  if (!isAdmin) return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black p-6">
       <div className="max-w-md w-full glass p-12 rounded-[3.5rem] text-center space-y-8">
         <div className="w-20 h-20 bg-accent/20 rounded-3xl flex items-center justify-center mx-auto">
           <Settings className="text-accent" size={40} />
         </div>
         <div className="space-y-2">
-          <h1 className="text-3xl font-display font-black">Kirish taqiqlangan</h1>
-          <p className="text-white/40">Sizda ushbu sahifaga kirish huquqi yo'q yoki tizimga kirmagansiz.</p>
+          <h1 className="text-3xl font-display font-black line-tight">
+            {!user ? "Tizimga kirish" : "Kirish taqiqlangan"}
+          </h1>
+          <p className="text-white/40 text-sm">
+            {!user 
+              ? "Boshqaruv markaziga kirish uchun Google hisobingizdan foydalaning." 
+              : `Siz ${user.email} hisobi bilan kirdingiz. Bu hisobda admin huquqlari yo'q.`}
+          </p>
         </div>
         {!user ? (
           <button 
-            onClick={loginWithGoogle}
-            className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-full hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all flex items-center justify-center gap-3"
+            onClick={async () => {
+              console.log("Login button clicked");
+              await loginWithGoogle();
+            }}
+            className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-full hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all flex items-center justify-center gap-3 active:scale-95"
           >
             Google orqali kirish
           </button>
         ) : (
-          <button 
-            onClick={logout}
-            className="w-full py-5 bg-red-600 text-white font-black uppercase tracking-widest text-xs rounded-full transition-all flex items-center justify-center gap-3"
-          >
-            Chiqish
-          </button>
+          <div className="space-y-4">
+            <button 
+              onClick={loginWithGoogle}
+              className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-full hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all flex items-center justify-center gap-3"
+            >
+              Boshqa hisob bilan kirish
+            </button>
+            <button 
+              onClick={logout}
+              className="w-full py-5 bg-red-600/10 text-red-500 font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-red-600 hover:text-white transition-all border border-red-500/20"
+            >
+              Tizimdan chiqish
+            </button>
+          </div>
         )}
       </div>
     </div>

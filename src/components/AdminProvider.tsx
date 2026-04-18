@@ -21,7 +21,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [siteContent, setSiteContent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const isAdmin = user?.email === 'yahyobektohirjonov0@gmail.com';
+  const isAdmin = user?.email?.toLowerCase() === 'yahyobektohirjonov0@gmail.com';
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, (u) => {

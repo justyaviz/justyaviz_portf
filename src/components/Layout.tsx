@@ -29,6 +29,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+  if (location.pathname === "/admin") {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#000] text-white font-sans selection:bg-accent/40 selection:text-white overflow-hidden">
       {/* ADMIN BAR */}

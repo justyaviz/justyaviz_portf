@@ -18,6 +18,36 @@ const getYoutubeId = (url: string | undefined) => {
   return (match && match[2].length === 11) ? match[2] : null;
 };
 
+// Helper for image compression
+const compressImage = (file: File, maxWidth = 1200, quality = 0.7): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height;
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+    };
+    reader.onerror = reject;
+  });
+};
+
 export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, isAdd }) => {
   const [formData, setFormData] = useState({
     title: project?.title || "",
@@ -29,31 +59,43 @@ export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, 
   });
   const [uploadMode, setUploadMode] = useState<'url' | 'file'>('url');
   const [videoMode, setVideoMode] = useState<'url' | 'file'>('url');
+  const [isCompressing, setIsCompressing] = useState(false);
   const { isAdmin } = useAdmin();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'image' | 'video') => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, field: 'image' | 'video') => {
     const file = e.target.files?.[0];
     if (file) {
-      const limit = field === 'image' ? 1024 * 1024 : 5 * 1024 * 1024;
-      if (file.size > limit) {
-        alert(`${field === 'image' ? 'Rasm' : 'Video'} hajmi juda katta. Iltimos, URL dan foydalaning.`);
-        return;
+      if (field === 'image') {
+        try {
+          setIsCompressing(true);
+          const compressed = await compressImage(file);
+          setFormData(prev => ({ ...prev, image: compressed }));
+        } catch (err) {
+          alert("Rasmni siqishda xatolik yuz berdi");
+        } finally {
+          setIsCompressing(false);
+        }
+      } else {
+        const limit = 5 * 1024 * 1024; // 5MB for video
+        if (file.size > limit) {
+          alert(`Video hajmi juda katta. Iltimos, URL dan foydalaning.`);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFormData(prev => ({ ...prev, video: reader.result as string }));
+        };
+        reader.readAsDataURL(file);
       }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, [field]: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
     }
   };
 
   const handleSave = async () => {
     if (!isAdmin) return;
     try {
-      if (isAdd) {
+      if (isAdd || !project?.id) {
         await addDoc(collection(db, "projects"), { ...formData, order: Date.now() });
       } else {
-        if (!project?.id) throw new Error("Loyiha ID si topilmadi.");
         await updateDoc(doc(db, "projects", project.id), formData);
       }
       onClose?.();
@@ -100,6 +142,13 @@ export const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onClose, 
                  <Upload size={12} /> Fayl
                </button>
             </div>
+
+            {(uploadMode === 'file' && isCompressing) && (
+              <div className="text-center p-4">
+                 <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                 <p className="text-[10px] font-bold uppercase tracking-widest text-accent">Rasm optimallashmoqda...</p>
+              </div>
+            )}
 
             {uploadMode === 'url' ? (
               <input 
@@ -213,6 +262,10 @@ export const ProjectControls: React.FC<{ project: any }> = ({ project }) => {
   if (!isEditMode || !isAdmin) return null;
 
   const handleDelete = async () => {
+    if (!project.id) {
+       alert("Bu namunaviy loyiha. Uni o'chirib bo'lmaydi. Birinchi haqiqiy loyihangizni qo'shishingiz bilan barcha namunalar o'zi yo'qolib ketadi.");
+       return;
+    }
     if (confirm("Loyihani o'chirmoqchimisiz?")) {
       await deleteDoc(doc(db, "projects", project.id));
     }

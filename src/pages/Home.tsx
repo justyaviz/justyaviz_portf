@@ -151,16 +151,18 @@ export default function Home() {
                         </motion.div>
                         <motion.div
                           variants={{
-                            initial: { opacity: 0, x: -10, rotate: -15, scale: 0.8 },
+                            initial: { opacity: 0, y: 10, rotate: 0, scale: 0.5 },
                             animate: { opacity: 0 },
-                            hover: { opacity: 1, x: 0, rotate: -25, scale: 1 }
+                            hover: { opacity: 1, y: 0, rotate: -5, scale: 1.2 }
                           }}
-                          transition={{ duration: 0.4, ease: "backOut" }}
-                          className="absolute top-12 left-8 md:top-14 md:left-12 pointer-events-none z-[100]"
+                          transition={{ type: "spring", damping: 12, stiffness: 200 }}
+                          className="absolute -top-16 left-1/2 -translate-x-1/2 pointer-events-none z-[100]"
                         >
-                          <div className="bg-white text-black text-[10px] md:text-sm font-bold px-3 py-1.5 rounded-full shadow-[0_10px_30px_rgba(255,255,255,0.2)] whitespace-nowrap">
-                            {t("bio.sidebar.who")}
+                          <div className="bg-accent text-white text-sm md:text-base font-black px-6 py-3 rounded-2xl shadow-[0_20px_40px_rgba(var(--accent-rgb),0.4)] whitespace-nowrap uppercase italic tracking-tighter border-2 border-white/20">
+                            {t("bio.title")}
                           </div>
+                          {/* Triangle pointer */}
+                          <div className="w-4 h-4 bg-accent rotate-45 absolute -bottom-2 left-1/2 -translate-x-1/2 border-r-2 border-b-2 border-white/10" />
                         </motion.div>
                       </motion.div>
                     </Link>

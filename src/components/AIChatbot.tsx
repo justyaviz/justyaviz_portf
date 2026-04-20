@@ -5,7 +5,16 @@ import { GoogleGenAI } from "@google/genai";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY }); // Required to use process.env.GEMINI_API_KEY in this environment
+let aiClient: GoogleGenAI | null = null;
+
+function getAIClient() {
+  if (!aiClient) {
+    const key = process.env.GEMINI_API_KEY || "dummy_key_to_prevent_crash_if_missing";
+    aiClient = new GoogleGenAI({ apiKey: key });
+  }
+  return aiClient;
+}
+
 const SYSTEM_PROMPT = `Sen Yaviz Digital Agency'ning shaxsiy sun'iy intellekt sotuvchi va yordamchisisan.
 Sening isming "Yaviz AI". Ziyrak, professionallarga xos va ochiqko'ngilsan, asosan O'zbek tilida gapirasan.
 Maqsading: Saytga kirgan mijozlarni issiq kutib olish, Yaviz xizmatlarini (SMM, Branding, Web Dasturlash, Performance Marketing) tushuntirish va ularni 'buyurtma berishga' undash.
@@ -43,6 +52,7 @@ export default function AIChatbot() {
     setIsTyping(true);
 
     try {
+      const ai = getAIClient();
       // Use standard chat structure for Gemini API
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-pro',

@@ -2,8 +2,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Calculator, Plus, Minus, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 
 export default function PricingCalculator() {
+  const { t } = useAppContext();
   const [selectedServices, setSelectedServices] = useState<Record<string, boolean>>({
     smm: false,
     branding: false,
@@ -45,13 +47,14 @@ export default function PricingCalculator() {
       <div className="max-w-4xl mx-auto z-10 relative">
         <div className="mb-12 text-center space-y-4">
           <div className="badge-it mx-auto flex w-fit">
-            <Calculator size={12} /> Kalkulyator
+            <Calculator size={12} /> {t("calc.badge")}
           </div>
-          <h1 className="text-4xl md:text-5xl font-satoshi font-bold text-[var(--text-primary)]">
-            Loyihangiz <span className="text-accent italic">narxini</span> hisoblang.
-          </h1>
+          <h1 
+            className="text-4xl md:text-5xl font-satoshi font-bold text-[var(--text-primary)]"
+            dangerouslySetInnerHTML={{ __html: t("calc.title") }}
+          />
           <p className="text-[var(--text-secondary)] font-dm-sans max-w-2xl mx-auto">
-            Kerakli xizmatlarni tanlang va byudjetingizni taxminiy aniqlab oling.
+            {t("calc.desc")}
           </p>
         </div>
 
@@ -59,7 +62,7 @@ export default function PricingCalculator() {
           
           <div className="md:col-span-2 space-y-8">
             <div className="space-y-4">
-              <h3 className="font-satoshi font-bold text-xl">1. Qaysi xizmatlar kerak?</h3>
+              <h3 className="font-satoshi font-bold text-xl">{t("calc.s1")}</h3>
               <div className="grid sm:grid-cols-2 gap-4">
                 {services.map((service) => {
                   const isSelected = selectedServices[service.id];
@@ -84,12 +87,12 @@ export default function PricingCalculator() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="font-satoshi font-bold text-xl">2. Loyiha muddatini tanlang:</h3>
+              <h3 className="font-satoshi font-bold text-xl">{t("calc.s2")}</h3>
               <div className="flex flex-wrap gap-4">
                 {[
-                  { id: "normal", label: "Standart Muddat", desc: "Shoshilinch emas" },
-                  { id: "fast", label: "Tezroq", desc: "+25% ustama" },
-                  { id: "asap", label: "Juda shoshilinch", desc: "+50% ustama" }
+                  { id: "normal", label: t("calc.speed.normal"), desc: t("calc.speed.normal.desc") },
+                  { id: "fast", label: t("calc.speed.fast"), desc: t("calc.speed.fast.desc") },
+                  { id: "asap", label: t("calc.speed.asap"), desc: t("calc.speed.asap.desc") }
                 ].map((s) => (
                   <div
                     key={s.id}
@@ -108,7 +111,7 @@ export default function PricingCalculator() {
              <div className="sticky top-24 p-6 bg-[var(--glass-bg)] border border-[var(--border-primary)] rounded-3xl shadow-2xl space-y-6">
                 <div className="flex items-center gap-2 text-accent">
                   <Sparkles size={20} />
-                  <h3 className="font-bold font-satoshi text-lg uppercase tracking-wider">Hisobot</h3>
+                  <h3 className="font-bold font-satoshi text-lg uppercase tracking-wider">{t("calc.report")}</h3>
                 </div>
 
                 <div className="space-y-3 py-4 border-y border-[var(--border-primary)]">
@@ -119,19 +122,19 @@ export default function PricingCalculator() {
                     </div>
                   ))}
                   {!Object.values(selectedServices).some(Boolean) && (
-                    <div className="text-sm text-[var(--text-secondary)] italic">Hali xizmat tanlanmadi.</div>
+                    <div className="text-sm text-[var(--text-secondary)] italic">{t("calc.no_select")}</div>
                   )}
 
                   {speed !== "normal" && Object.values(selectedServices).some(Boolean) && (
                      <div className="flex justify-between items-center text-sm font-dm-sans text-accent">
-                       <span>Tezlik ustamasi</span>
+                       <span>{t("calc.speed_bonus")}</span>
                        <span className="font-medium">+{speed === 'fast' ? '25' : '50'}%</span>
                     </div>
                   )}
                 </div>
 
                 <div>
-                   <span className="text-sm text-[var(--text-secondary)] font-medium block mb-1">Taxminiy Narx:</span>
+                   <span className="text-sm text-[var(--text-secondary)] font-medium block mb-1">{t("calc.estimated")}</span>
                    <div className="text-4xl md:text-5xl font-black font-satoshi text-[var(--text-primary)]">
                      <AnimatePresence mode="popLayout">
                         <motion.span 
@@ -149,7 +152,7 @@ export default function PricingCalculator() {
 
                 <Link to="/contact" className="ui-btn-galaxy w-full !block text-center mt-4">
                    <div className="ui-btn-galaxy-inner justify-center w-full">
-                     Loyihani yuborish <ArrowRight size={16} />
+                     {t("calc.submit")} <ArrowRight size={16} />
                    </div>
                 </Link>
              </div>

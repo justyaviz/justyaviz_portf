@@ -205,7 +205,7 @@ export default function Home() {
                   transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
                   className="text-[44px] sm:text-[64px] md:text-[8vw] font-satoshi font-medium tracking-tighter flex items-center gap-x-4 md:gap-x-6 leading-[0.9] md:leading-tight whitespace-nowrap text-[var(--text-primary)]"
                 >
-                  <EditableText contentKey="heroTitle" defaultText="just.yaviz" as="span" />
+                  <EditableText contentKey="heroTitle" defaultText="YAVIZ DIGITAL" as="span" />
                   <Magnetic>
                     <Link to="/bio" className="relative shrink-0">
                       <motion.div 
@@ -323,7 +323,6 @@ export default function Home() {
                    <p className="text-[17px] font-dm-sans font-medium leading-relaxed pr-8 text-[var(--text-primary)]">
                     {t("hero.card1")}
                    </p>
-                   <div className="handle">just.yaviz</div>
                 </motion.div>
 
                 <motion.div 
@@ -340,7 +339,6 @@ export default function Home() {
                    <p className="text-[17px] font-dm-sans font-medium leading-relaxed pr-8 text-[var(--text-primary)]">
                     {t("hero.card2")}
                    </p>
-                   <div className="handle">just.yaviz</div>
                 </motion.div>
              </div>
           </div>

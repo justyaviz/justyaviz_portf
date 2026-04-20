@@ -4,8 +4,10 @@ import { Calendar, Clock, ChevronRight, ChevronLeft, Check, Send } from "lucide-
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase";
 import { toast } from "sonner";
+import { useAppContext } from "../context/AppContext";
 
 export default function BookingCalendar() {
+  const { t, lang } = useAppContext();
   const [step, setStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -71,8 +73,8 @@ export default function BookingCalendar() {
             <Calendar size={24} />
          </div>
          <div>
-            <h2 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">Konsultatsiya band qilish</h2>
-            <p className="text-[var(--text-secondary)] font-dm-sans text-sm font-medium">Loyiha bo'yicha bepul 30 daqiqalik muloqot.</p>
+            <h2 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">{t("book.hero.title")}</h2>
+            <p className="text-[var(--text-secondary)] font-dm-sans text-sm font-medium">{t("book.hero.desc")}</p>
          </div>
       </div>
 
@@ -87,7 +89,7 @@ export default function BookingCalendar() {
           >
             {/* Step 1: Date & Time */}
             <div>
-               <h3 className="font-bold text-lg mb-4 text-[var(--text-primary)]">1. Kunni tanlang: <span className="text-accent">{currentMonth}</span></h3>
+               <h3 className="font-bold text-lg mb-4 text-[var(--text-primary)]">{t("book.step1")} <span className="text-accent">{currentMonth}</span></h3>
                <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
                  {availableDates.map((date, i) => {
                     const isSelected = selectedDate?.toDateString() === date.toDateString();
@@ -133,7 +135,7 @@ export default function BookingCalendar() {
               onClick={() => setStep(2)}
               className="w-full py-4 bg-black dark:bg-white text-white dark:text-black font-bold rounded-2xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-[1.02] active:scale-95"
             >
-              Keyingi qadam <ChevronRight size={18} />
+              {t("book.btn.next")} <ChevronRight size={18} />
             </button>
           </motion.div>
         )}
@@ -146,14 +148,14 @@ export default function BookingCalendar() {
             exit={{ opacity: 0, x: 20 }}
           >
              <button onClick={() => setStep(1)} className="flex items-center gap-1 text-[var(--text-secondary)] text-sm mb-6 hover:text-[var(--text-primary)] transition-colors">
-               <ChevronLeft size={16} /> Ortga qaytish
+               <ChevronLeft size={16} /> {t("book.btn.back")}
              </button>
 
              <form onSubmit={handleBooking} className="space-y-5">
-               <h3 className="font-bold text-xl text-[var(--text-primary)] mb-2">3. Ma'lumotlaringizni qoldiring:</h3>
+               <h3 className="font-bold text-xl text-[var(--text-primary)] mb-2">{t("book.step3.title")}</h3>
                
                <div className="space-y-2">
-                 <label className="text-sm font-bold text-[var(--text-secondary)] ml-1">Ismingiz *</label>
+                 <label className="text-sm font-bold text-[var(--text-secondary)] ml-1">{t("book.form.name.label")}</label>
                  <input 
                    type="text" 
                    required 
@@ -165,7 +167,7 @@ export default function BookingCalendar() {
                </div>
 
                <div className="space-y-2">
-                 <label className="text-sm font-bold text-[var(--text-secondary)] ml-1">Telefon raqamingiz *</label>
+                 <label className="text-sm font-bold text-[var(--text-secondary)] ml-1">{t("book.form.phone.label")}</label>
                  <input 
                    type="tel" 
                    required 
@@ -177,7 +179,7 @@ export default function BookingCalendar() {
                </div>
 
                <div className="space-y-2 mb-8">
-                 <label className="text-sm font-bold text-[var(--text-secondary)] ml-1">Email manzilingiz (Ixtiyoriy)</label>
+                 <label className="text-sm font-bold text-[var(--text-secondary)] ml-1">{t("book.form.email.label")}</label>
                  <input 
                    type="email" 
                    value={email} 
@@ -190,8 +192,8 @@ export default function BookingCalendar() {
                <div className="p-4 rounded-xl bg-accent/5 border border-accent/20 flex items-start gap-3 mt-4 mb-6">
                  <Calendar className="text-accent shrink-0 mt-0.5" size={18} />
                  <div className="text-sm font-medium text-[var(--text-primary)] font-dm-sans">
-                   Siz tanlagan vaqt: <br/>
-                   <strong className="text-accent text-base">{selectedDate?.toLocaleDateString('uz-UZ')} kuni soat {selectedTime} da</strong>
+                   {t("book.selected_time")} <br/>
+                   <strong className="text-accent text-base">{selectedDate?.toLocaleDateString(lang === 'uz' ? 'uz-UZ' : lang === 'ru' ? 'ru-RU' : 'en-US')} {t("book.on_day")} soat {selectedTime} {t("book.at")}</strong>
                  </div>
                </div>
 
@@ -200,7 +202,7 @@ export default function BookingCalendar() {
                 disabled={loading || !name || !phone}
                 className="w-full py-4 bg-accent text-white font-bold rounded-2xl flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:scale-[1.02] active:scale-95 shadow-[0_15px_30px_rgba(var(--accent-rgb),0.3)]"
                >
-                 {loading ? "Band qilinmoqda..." : <>Tasdiqlash va Joy bron qilish <Send size={18} /></>}
+                 {loading ? t("book.loading") : <>{t("book.btn.submit")} <Send size={18} /></>}
                </button>
              </form>
           </motion.div>
@@ -216,9 +218,9 @@ export default function BookingCalendar() {
              <div className="w-20 h-20 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
                <Check size={40} strokeWidth={3} />
              </div>
-             <h3 className="text-3xl font-black text-[var(--text-primary)]">Muvaffaqiyatli!</h3>
+             <h3 className="text-3xl font-black text-[var(--text-primary)]">{t("book.success.title")}</h3>
              <p className="text-[var(--text-secondary)] font-dm-sans">
-               {name}, sizning <strong>{selectedDate?.toLocaleDateString('uz-UZ')} {selectedTime}</strong> uchun uchrashuvingiz band qilindi. Mutaxassislarimiz tez orada siz bilan bog'lanishadi.
+               {name}, {t("book.success.msg_start")} <strong>{selectedDate?.toLocaleDateString(lang === 'uz' ? 'uz-UZ' : lang === 'ru' ? 'ru-RU' : 'en-US')} {selectedTime}</strong> {t("book.success.msg_end")}
              </p>
           </motion.div>
         )}

@@ -20,7 +20,6 @@ import FloatingContact from "./components/FloatingContact";
 import PageTransition from "./components/PageTransition";
 import ScrollProgress from "./components/ScrollProgress";
 import AIChatbot from "./components/AIChatbot";
-import CustomCursor from "./components/CustomCursor";
 import PricingCalculator from "./pages/PricingCalculator";
 import Book from "./pages/Book";
 

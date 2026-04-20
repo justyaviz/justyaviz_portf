@@ -215,9 +215,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                <Logo className="w-full h-full relative z-10 p-2" />
                <div className="absolute inset-0 bg-linear-to-br from-white via-white to-accent opacity-20" />
             </div>
-            <div className={`text-[35px] font-satoshi font-normal tracking-tighter ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-              just.yaviz
-            </div>
+
           </div>
 
           <div className="flex gap-6">

@@ -4,17 +4,11 @@ import { MessageSquare, X, Send, Bot, User, Loader2, MessageCircle } from "lucid
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { GoogleGenAI } from "@google/genai";
+import { useAppContext } from "../context/AppContext";
 
 const generateChatId = () => Math.random().toString(36).substring(2, 9);
 
-let aiClient: GoogleGenAI | null = null;
-function getAIClient() {
-  if (!aiClient) {
-    const key = process.env.GEMINI_API_KEY || "dummy";
-    aiClient = new GoogleGenAI({ apiKey: key });
-  }
-  return aiClient;
-}
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 const SYSTEM_PROMPT = `Sen Yaviz Digital Agency'ning shaxsiy sun'iy intellekt sotuvchi va yordamchisisan.
 Sening isming "Yaviz AI". Ziyrak, professionallarga xos va ochiqko'ngilsan, asosan O'zbek tilida gapirasan.
@@ -46,10 +40,10 @@ export default function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [chatId] = useState(generateChatId());
+  const { t } = useAppContext();
   
-  // Start with empty, we'll listen to Firestore or use local state
   const [messages, setMessages] = useState<{ role: 'user' | 'model'; parts: {text: string}[] }[]>([
-    { role: 'model', parts: [{text: "Salom! Men Yaviz agentligining AI yordamchisiman 🤖. Bugun biznesingizni kuchaytirish bo'yicha qanday maslahat yoki xizmat soraaysiz?"}] }
+    { role: 'model', parts: [{text: t("ai.initial_msg") || "Salom! Men Yaviz agentligining AI yordamchisiman 🤖. Bugun biznesingizni kuchaytirish bo'yicha qanday maslahat yoki xizmat so'raysiz?"}] }
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -108,9 +102,8 @@ export default function AIChatbot() {
     setIsTyping(true);
 
     try {
-      const ai = getAIClient();
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: newHistory,
         config: {
           systemInstruction: SYSTEM_PROMPT,
@@ -138,7 +131,8 @@ export default function AIChatbot() {
          setMessages([...newHistory, { role: 'model', parts: [{text: aiResponse}] }]);
       }
     } catch (e: any) {
-       setMessages([...newHistory, { role: 'model', parts: [{text: `Kechirasiz, xatolik yuz berdi: ${e.message}`}] }]);
+       console.error("AI Error:", e);
+       setMessages([...newHistory, { role: 'model', parts: [{text: `Kechirasiz, xatolik yuz berdi. Iltimos keyinroq urinib ko'ring yoki biz bilan bog'laning.`}] }]);
     } finally {
       setIsTyping(false);
     }

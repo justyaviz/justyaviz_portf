@@ -149,6 +149,151 @@
   50% { opacity: 0.4; transform: scale(1.02); }
 }
 
+/* =========================================
+   UIVERSE ELEMENTS 
+========================================= */
+
+/* 1. Uiverse Element: Galaxy Rotating Border Button */
+.ui-btn-galaxy {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 999px;
+  overflow: hidden;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  cursor: pointer;
+}
+
+.ui-btn-galaxy:active {
+  transform: scale(0.95);
+}
+
+.ui-btn-galaxy::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    transparent 0deg,
+    var(--accent) 100deg,
+    var(--color-custom-gradient-end) 200deg,
+    transparent 280deg
+  );
+  animation: ui-conic-spin 4s linear infinite;
+}
+
+.ui-btn-galaxy-inner {
+  position: relative;
+  z-index: 10;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 12px 32px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.ui-btn-galaxy:hover .ui-btn-galaxy-inner {
+  background-color: transparent;
+  color: #fff;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.2);
+}
+
+@keyframes ui-conic-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* 2. Uiverse Element: Cyberpunk Shine Button */
+.ui-btn-shine {
+  position: relative;
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 999px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.ui-btn-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: 0s;
+}
+
+.ui-btn-shine:hover::after {
+  animation: ui-shine-sweep 0.7s ease-out forwards;
+}
+
+.ui-btn-shine:hover {
+  border-color: var(--accent);
+}
+
+@keyframes ui-shine-sweep {
+  100% {
+    left: 200%;
+  }
+}
+
+/* 3. Uiverse Loader: Pulse Rings */
+.ui-loader {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.ui-loader div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 4px solid var(--accent);
+  border-radius: 50%;
+  animation: ui-loader-pulse 1.5s ease-out infinite;
+  opacity: 0;
+}
+
+.ui-loader div:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+@keyframes ui-loader-pulse {
+  0% {
+    transform: scale(0.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+
 @keyframes rotate-neon {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

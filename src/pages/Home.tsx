@@ -194,11 +194,14 @@ export default function Home() {
               transition={{ delay: 0.5, duration: 0.8 }}
               className="flex flex-wrap items-center gap-6"
             >
-               <Link to="/projects" className="btn-download">
+               <Link to="/projects" className="ui-btn-shine">
                  {t("hero.cta.projects")}
                </Link>
-               <Link to="/contact" className="neon-btn">
-                 <div className="neon-btn-content">{t("hero.cta.contact")}</div>
+               <Link to="/contact" className="ui-btn-galaxy">
+                 <div className="ui-btn-galaxy-inner">
+                   {t("hero.cta.contact")}
+                   <Sparkles className="w-4 h-4 text-accent" />
+                 </div>
                </Link>
             </motion.div>
           </motion.div>

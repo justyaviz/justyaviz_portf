@@ -39,28 +39,24 @@ export default function App() {
                 filter: "blur(20px)",
                 transition: { duration: 0.8, ease: "easeInOut" } 
               }}
-              className="fixed inset-0 z-[200] bg-[#000] flex items-center justify-center overflow-hidden"
+              className="fixed inset-0 z-[200] bg-[var(--bg-primary)] flex items-center justify-center overflow-hidden"
             >
                <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="flex flex-col items-center gap-4"
+                className="flex flex-col items-center gap-8"
               >
-                <div className="text-5xl font-satoshi font-black tracking-tighter text-white">
-                  JUST <span className="text-white/20">YAVIZ</span>
+                <div className="ui-loader">
+                  <div></div>
+                  <div></div>
                 </div>
-                <div className="w-12 h-[1px] bg-white/20 relative overflow-hidden">
-                   <motion.div 
-                    initial={{ x: "-100%" }}
-                    animate={{ x: "100%" }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-0 bg-white"
-                   />
+                <div className="text-xl font-satoshi font-black tracking-tighter text-[var(--text-primary)]">
+                  JUST <span className="text-[var(--text-secondary)] opacity-50">YAVIZ</span>
                 </div>
               </motion.div>
               
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/[0.02] blur-[100px] rounded-full" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--accent)]/[0.05] blur-[100px] rounded-full" />
             </motion.div>
           ) : (
             <Layout>

@@ -20,6 +20,8 @@ const translations = {
     'nav.contact': 'Aloqa',
     'nav.portal': 'Mijoz',
     'nav.connect': "Hozir bog'lanish",
+    'nav.calculator': 'Narxlar',
+    'nav.book': 'Band qilish',
     
     // Hero Typewriter
     'hero.hello': 'Salom, men',
@@ -255,6 +257,8 @@ const translations = {
     'nav.contact': 'Контакты',
     'nav.portal': 'Клиент',
     'nav.connect': 'Связаться сейчас',
+    'nav.calculator': 'Цены',
+    'nav.book': 'Бронировать',
 
     // Hero Typewriter
     'hero.hello': 'Привет, я',
@@ -483,6 +487,8 @@ const translations = {
     'nav.contact': 'Contact',
     'nav.portal': 'Client',
     'nav.connect': 'Connect Now',
+    'nav.calculator': 'Pricing',
+    'nav.book': 'Book call',
 
     // Hero Typewriter
     'hero.hello': 'Hello, I am',

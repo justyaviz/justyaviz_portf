@@ -99,19 +99,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* REFINED NAVBAR - FLOATING PILL */}
       <nav className={`pill-nav transition-all ${isAdmin ? 'top-16' : 'top-6'}`}>
-        <div className="flex items-center">
-           <Link to="/" className="flex items-center gap-3 group pl-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40 hover:opacity-100 transition-opacity">just.yaviz</span>
-           </Link>
-        </div>
-
-        <div className="hidden lg:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-8 pl-4">
           {[
             { to: "/", label: t("nav.home") },
             { to: "/branding", label: t("nav.branding") },
             { to: "/projects", label: t("nav.projects") },
-            { to: "/calculator", label: "Narxlar" },
-            { to: "/book", label: "Band qilish" },
+            { to: "/calculator", label: t("nav.calculator") },
+            { to: "/book", label: t("nav.book") },
             { to: "/client-portal", label: t("nav.portal") }
           ].map(link => (
             <Link 
@@ -184,8 +178,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link to="/" onClick={() => setMobileMenuOpen(false)}>{t("nav.home")}</Link>
             <Link to="/branding" onClick={() => setMobileMenuOpen(false)}>{t("nav.branding")}</Link>
             <Link to="/projects" onClick={() => setMobileMenuOpen(false)}>{t("nav.projects")}</Link>
-            <Link to="/calculator" onClick={() => setMobileMenuOpen(false)}>Narxlar</Link>
-            <Link to="/book" onClick={() => setMobileMenuOpen(false)}>Band qilish</Link>
+            <Link to="/calculator" onClick={() => setMobileMenuOpen(false)}>{t("nav.calculator")}</Link>
+            <Link to="/book" onClick={() => setMobileMenuOpen(false)}>{t("nav.book")}</Link>
             <Link to="/client-portal" onClick={() => setMobileMenuOpen(false)}>{t("nav.portal")}</Link>
           </motion.div>
         )}

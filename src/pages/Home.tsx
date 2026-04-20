@@ -38,11 +38,86 @@ import Lottie from "lottie-react";
 import Magnetic from "../components/Magnetic";
 import { RevealText, CharReveal, ImageReveal } from "../components/Reveal";
 
+import jsPDF from "jspdf";
+
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
   transition: { duration: 0.6, ease: "easeOut" }
+};
+
+const handleDownloadProposal = () => {
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(24);
+    doc.setTextColor(47, 73, 224); // accent color
+    doc.text("YAVIZ DIGITAL AGENCY", 20, 30);
+    
+    doc.setFontSize(14);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Kammertsial Taklif & Narxnoma (Commercial Proposal)", 20, 40);
+
+    // Intro
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Biznesingizni yangi bosqichga olib chiqish uchun professional xizmatlar.", 20, 60);
+
+    // Services & Pricing
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("Xizmat Paketlari:", 20, 80);
+
+    let yPos = 95;
+    
+    // Package 1
+    doc.setFontSize(14);
+    doc.setTextColor(47, 73, 224);
+    doc.text("1. Basic SMM - Boshlang'ich $299/oy", 20, yPos);
+    yPos += 8;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(50, 50, 50);
+    doc.text("• 12 ta Post, 24 ta Storis, 4 ta Reels", 25, yPos); yPos += 6;
+    doc.text("• Target Reklama va Profil Upakovka", 25, yPos); yPos += 15;
+
+    // Package 2
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(47, 73, 224);
+    doc.text("2. Pro Marketing (Ommabop) - Boshlang'ich $599/oy", 20, yPos);
+    yPos += 8;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(50, 50, 50);
+    doc.text("• TikTok, YouTube, Instagram uchun Premium strategiya", 25, yPos); yPos += 6;
+    doc.text("• 8 ta Video/Reels (Professional montaj)", 25, yPos); yPos += 6;
+    doc.text("• Influencer Marketing va Masshtabli Target", 25, yPos); yPos += 15;
+
+    // Package 3
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(47, 73, 224);
+    doc.text("3. Full Branding & Web - Boshlang'ich $899", 20, yPos);
+    yPos += 8;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(50, 50, 50);
+    doc.text("• Logo, Identika va Brandbook", 25, yPos); yPos += 6;
+    doc.text("• Zamonaviy Landing Page (Web sayt)", 25, yPos); yPos += 6;
+
+    // Contact Footer
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    let footerY = 250;
+    doc.text("Bog'lanish: +998 93 194 92 00  |  Email: yahyobektohirjonov0@gmail.com", 20, footerY);
+    doc.text("Sayt: www.justyaviz.uz", 20, footerY + 8);
+
+    doc.save("YAVIZ_Commercial_Proposal.pdf");
 };
 
 const lottieAnimationUrl = "https://lottie.host/6ab4022a-0a75-47e0-90ba-068b5a0346d0/vB1KqC8k5p.json"; // Modern Abstract Digital Shape
@@ -722,9 +797,9 @@ export default function Home() {
                     {t("about.cta1")}
                  </div>
                </Link>
-               <a href="https://t.me/justyaviz_life" target="_blank" rel="noreferrer" className="ui-btn-shine flex justify-center items-center w-full sm:w-auto">
-                 {t("about.cta2")}
-               </a>
+               <button onClick={handleDownloadProposal} className="ui-btn-shine flex justify-center items-center w-full sm:w-auto">
+                 Tijorat taklifini yuklash (PDF)
+               </button>
             </div>
           </motion.div>
         </div>

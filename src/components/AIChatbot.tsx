@@ -1,0 +1,165 @@
+import { motion, AnimatePresence } from "motion/react";
+import { useState, useRef, useEffect } from "react";
+import { MessageSquare, X, Send, Bot, User, Loader2 } from "lucide-react";
+import { GoogleGenAI } from "@google/genai";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY }); // WARNING: VITE variables are exposed, this is okay for prototype inside applet.
+const SYSTEM_PROMPT = `Sen Yaviz Digital Agency'ning shaxsiy sun'iy intellekt sotuvchi va yordamchisisan.
+Sening isming "Yaviz AI". Ziyrak, professionallarga xos va ochiqko'ngilsan, asosan O'zbek tilida gapirasan.
+Maqsading: Saytga kirgan mijozlarni issiq kutib olish, Yaviz xizmatlarini (SMM, Branding, Web Dasturlash, Performance Marketing) tushuntirish va ularni 'buyurtma berishga' undash.
+Narxlar: 
+- Basic SMM: oyiga $299 dan.
+- Pro Marketing: oyiga $599 dan.
+- Full Branding: $899 dan boshlanadi.
+- Maxsus yechimlar - kelishilgan xolda.
+Agar mijoz portfolioni sorasa ularni /projects sahifasiga yo'naltir.
+Alohida loyihalar byudjeti mijozning biznes hajmiga qarab baholanadi.
+Javoblaring qisqa, tushunarli, tez va asosan ochiq qoladigan savol bilan tugasin (Masalan: 'Biznesingiz qanday sohada?', 'Sayt qilib beraylikmi?')`;
+
+export default function AIChatbot() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState<{ role: 'user' | 'model'; parts: {text: string}[] }[]>([
+    { role: 'model', parts: [{text: "Salom! Men Yaviz agentligining AI yordamchisiman 🤖. Bugun biznesingizni kuchaytirish bo'yicha qanday maslahat yoki xizmat soraaysiz?"}] }
+  ]);
+  const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const chatRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [messages, isTyping]);
+
+  const handleSend = async () => {
+    if (!input.trim()) return;
+    
+    const userMsg = input.trim();
+    setInput("");
+    const newHistory = [...messages, { role: 'user', parts: [{text: userMsg}] }] as { role: 'user' | 'model'; parts: {text: string}[] }[];
+    setMessages(newHistory);
+    setIsTyping(true);
+
+    try {
+      // Use standard chat structure for Gemini API
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-pro',
+        systemInstruction: SYSTEM_PROMPT,
+        contents: newHistory.map(h => ({
+          role: h.role, 
+          parts: h.parts
+        }))
+      });
+      
+      const aiResponse = response.text || "Uzur, ayni damda tushuna olmadim. Adminlarimizga /contact orqali yozishingizni so'rayman.";
+      setMessages([...newHistory, { role: 'model', parts: [{text: aiResponse}] }]);
+    } catch (e) {
+       setMessages([...newHistory, { role: 'model', parts: [{text: "Kechirasiz, xizmat ko'rsatishda xatolik yuzaga keldi. Operatorga yozing."}] }]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  return (
+    <>
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            onClick={() => setIsOpen(true)}
+            className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 p-4 bg-accent text-white rounded-full shadow-[0_15px_40px_rgba(var(--accent-rgb),0.5)] hover:scale-110 active:scale-95 transition-transform"
+          >
+            <Bot size={24} />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="fixed bottom-6 right-6 md:bottom-8 md:right-8 w-[90vw] max-w-[360px] h-[500px] max-h-[80vh] z-50 flex flex-col bg-[var(--glass-bg)] backdrop-blur-2xl border border-[var(--border-primary)] rounded-[2rem] overflow-hidden shadow-2xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-5 border-b border-[var(--border-primary)] bg-accent/5">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white">
+                    <Bot size={20} />
+                  </div>
+                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[var(--bg-primary)]"></div>
+                </div>
+                <div>
+                  <h3 className="font-satoshi font-bold text-[15px] leading-tight">Yaviz AI</h3>
+                  <p className="text-[11px] text-[var(--text-secondary)] font-medium">Satuvchi va yordamchi</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Chat Body */}
+            <div 
+              ref={chatRef}
+              className="flex-1 overflow-y-auto p-4 space-y-4 font-dm-sans"
+            >
+               {messages.map((m, i) => (
+                 <div key={i} className={`flex items-end gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                   {m.role === 'model' && (
+                     <div className="w-6 h-6 shrink-0 bg-accent/20 rounded-full flex items-center justify-center text-accent"><Bot size={12}/></div>
+                   )}
+                   <div className={`p-3 max-w-[80%] rounded-2xl text-[13px] leading-relaxed ${m.role === 'user' ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] rounded-br-sm' : 'bg-accent/10 text-[var(--text-primary)] rounded-bl-sm'}`}>
+                      {m.parts[0].text}
+                   </div>
+                 </div>
+               ))}
+               {isTyping && (
+                 <div className="flex items-end gap-2 text-[var(--text-secondary)]">
+                   <div className="w-6 h-6 shrink-0 bg-accent/20 rounded-full flex items-center justify-center text-accent"><Bot size={12}/></div>
+                   <div className="p-4 max-w-[80%] rounded-2xl bg-accent/5 rounded-bl-sm flex gap-1">
+                      <div className="w-1.5 h-1.5 bg-accent/50 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                      <div className="w-1.5 h-1.5 bg-accent/50 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                      <div className="w-1.5 h-1.5 bg-accent/50 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+                   </div>
+                 </div>
+               )}
+            </div>
+
+            {/* Input Footer */}
+            <div className="p-4 bg-[var(--bg-primary)] border-t border-[var(--border-primary)]">
+               <div className="flex items-center gap-2 p-1 pl-4 bg-[var(--glass-bg)] border border-[var(--border-primary)] rounded-full">
+                  <input 
+                    type="text" 
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                    placeholder="Savolingizni yozing..."
+                    disabled={isTyping}
+                    className="flex-1 bg-transparent border-none outline-none text-[13px] font-dm-sans placeholder:opacity-50"
+                  />
+                  <button 
+                    onClick={handleSend}
+                    disabled={!input.trim() || isTyping}
+                    className="w-10 h-10 flex shrink-0 items-center justify-center bg-accent text-white rounded-full transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
+                  >
+                    {isTyping ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} className="-ml-0.5" />}
+                  </button>
+               </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}

@@ -946,6 +946,56 @@ export default function Admin() {
                    </>
                  )}
 
+                 {modalType === "booking" && (
+                   <div className="space-y-6">
+                      <div className="p-8 bg-white/5 rounded-[2.5rem] border border-white/5 space-y-6">
+                         <p className="text-xs font-black uppercase text-accent tracking-[0.2em]">
+                            Booking Management
+                         </p>
+                         <div className="space-y-4">
+                            <div className="p-6 bg-white/5 rounded-2xl">
+                               <p className="text-[10px] font-black uppercase text-white/30 tracking-widest mb-1">Mijoz</p>
+                               <p className="font-black text-lg">{formData.name}</p>
+                               <p className="text-xs font-bold text-white/40">{formData.email}</p>
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Loyiha Holati (Status)</label>
+                               <select className="ui-input-glow p-5" value={formData.status} onChange={e=>setFormData({...formData, status: e.target.value})}>
+                                  <option value="pending">Kutilmoqda (Pending)</option>
+                                  <option value="confirmed">Tasdiqlandi (Confirmed)</option>
+                                  <option value="cancelled">Bekor qilindi (Cancelled)</option>
+                                  <option value="completed">Tamomlandi (Completed)</option>
+                               </select>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                 )}
+
+                 {modalType === "impactStat" && (
+                   <div className="space-y-6">
+                      <div className="p-8 bg-white/5 rounded-[2.5rem] border border-white/5 space-y-6">
+                         <p className="text-xs font-black uppercase text-accent tracking-[0.2em]">
+                            Impact Metric
+                         </p>
+                         <div className="space-y-4">
+                            <div className="space-y-2">
+                               <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Qiymat (Value) Masalan: 500+</label>
+                               <input className="ui-input-glow p-5 font-black text-xl italic" value={formData.value} onChange={e=>setFormData({...formData, value: e.target.value})} />
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Yorliq (Label)</label>
+                               <input className="ui-input-glow p-5" value={formData.label} onChange={e=>setFormData({...formData, label: e.target.value})} />
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Tartib No (Order)</label>
+                               <input type="number" className="ui-input-glow p-5" value={formData.order} onChange={e=>setFormData({...formData, order: Number(e.target.value)})} />
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                 )}
+
                  <div className="flex gap-4 pt-8">
                     <button onClick={handleSave} className="flex-1 py-5 bg-accent text-white font-black uppercase rounded-2xl shadow-xl shadow-accent/20 tracking-widest text-[11px]">Saqlash</button>
                     <button onClick={() => setIsModalOpen(false)} className="flex-1 py-5 bg-white/5 text-white font-black uppercase rounded-2xl tracking-widest text-[11px]">Bekor qilish</button>

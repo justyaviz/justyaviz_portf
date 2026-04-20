@@ -36,6 +36,7 @@ const translations = {
     'hero.desc': "Men faqat kontent yaratmayman, balki foydalanuvchini jalb qiladigan, ushlab turadigan va sotuvga olib keladigan to'liq tizimlar yarataman.",
     'hero.cta.projects': "Barcha loyihalarni ko'rish",
     'hero.cta.contact': 'Hozir murojaat qiling',
+    'hero.cta.cv': 'CVni ko\'rish',
     'hero.card1': 'Biznesingizga mos professional dizayn va aniq boshqaruv — natija kafolatlangan.',
     'hero.card2': 'Sifatli dizayn — bu tasodif emas, tizim.',
     'hero.card3': 'Innovatsion yechimlar va strategik yondashuv orqali natija.',
@@ -94,6 +95,8 @@ const translations = {
     // Static sections
     'section.projects': 'LOYIHALAR',
     'section.projects.title': 'Bizning so‘nggi ishlarimiz',
+    'section.resume': 'Tajriba va Ta\'lim',
+    'section.resume.title': 'Mening Professional Yo\'lim',
     'section.contact.title': 'Keling, birga ishlaymiz',
 
     // Branding Page
@@ -318,6 +321,7 @@ const translations = {
     'hero.desc': 'Я не просто создаю контент, я строю полноценные системы, которые привлекают, удерживают и конвертируют пользователей в клиентов.',
     'hero.cta.projects': 'Смотреть все проекты',
     'hero.cta.contact': 'Связаться сейчас',
+    'hero.cta.cv': 'Посмотреть CV',
     'hero.card1': 'Профессиональный дизайн и четкое управление для вашего бизнеса — результат гарантирован.',
     'hero.card2': 'Качественный дизайн — это не случайность, а система.',
     'hero.card3': 'Результат через инновационные решения и стратегический подход.',
@@ -376,6 +380,8 @@ const translations = {
     // Static sections
     'section.projects': 'ПРОЕКТЫ',
     'section.projects.title': 'Наши последние работы',
+    'section.resume': 'Опыт и Образование',
+    'section.resume.title': 'Мой Профессиональный Путь',
     'section.contact.title': 'Давайте работать вместе',
 
     // Branding Page
@@ -593,6 +599,7 @@ const translations = {
     'hero.desc': 'I don’t just create content, I build complete systems that attract, retain, and convert users into customers.',
     'hero.cta.projects': 'View all projects',
     'hero.cta.contact': 'Contact now',
+    'hero.cta.cv': 'View Resume',
     'hero.card1': 'Professional design and clear management for your business — result guaranteed.',
     'hero.card2': 'Quality design is not an accident, it is a system.',
     'hero.card3': 'Result through innovative solutions and strategic approach.',
@@ -651,6 +658,8 @@ const translations = {
     // Static sections
     'section.projects': 'PROJECTS',
     'section.projects.title': 'Our latest works',
+    'section.resume': 'Experience & Education',
+    'section.resume.title': 'My Professional Journey',
     'section.contact.title': "Let's work together",
 
     // Branding Page

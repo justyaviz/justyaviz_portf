@@ -23,7 +23,9 @@ import {
   Quote,
   ChevronDown,
   Users,
-  Database
+  Database,
+  GraduationCap,
+  FileDown
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -205,7 +207,7 @@ export default function Home() {
                   transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
                   className="text-[44px] sm:text-[64px] md:text-[8vw] font-satoshi font-medium tracking-tighter flex items-center gap-x-4 md:gap-x-6 leading-[0.9] md:leading-tight whitespace-nowrap text-[var(--text-primary)]"
                 >
-                  <EditableText contentKey="heroTitle" defaultText="just.yaviz" as="span" />
+                  <EditableText contentKey="heroTitle" defaultText="just.yaviz | Marketing Strategist" as="span" />
                   <Magnetic>
                     <Link to="/bio" className="relative shrink-0">
                       <motion.div 
@@ -283,6 +285,12 @@ export default function Home() {
                      {t("hero.cta.contact")}
                      <Sparkles className="w-4 h-4 text-accent" />
                    </div>
+                 </Link>
+               </Magnetic>
+               <Magnetic>
+                 <Link to="/bio" className="group flex items-center gap-3 px-6 py-3 bg-[var(--text-primary)]/[0.05] border border-[var(--border-primary)] rounded-full hover:bg-accent hover:text-black transition-all duration-500">
+                    <FileDown size={14} className="group-hover:translate-y-0.5 transition-transform" />
+                    <span className="font-bold uppercase tracking-widest text-[10px]">{t("hero.cta.cv")}</span>
                  </Link>
                </Magnetic>
             </motion.div>
@@ -534,6 +542,103 @@ export default function Home() {
                </motion.div>
             </div>
          </div>
+      </section>
+
+      {/* EXPERIENCE & EDUCATION */}
+      <section className="py-20 md:py-40 px-6 border-t border-[var(--border-primary)] bg-[var(--glass-bg)] relative">
+        <div className="max-w-7xl mx-auto space-y-16 md:space-y-32">
+          <div className="text-center space-y-6">
+            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">{t("section.resume")}</span>
+            <h2 className="text-[40px] md:text-9xl font-satoshi font-normal tracking-tighter leading-[0.8]">{t("section.resume.title")}</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+            {/* WORK EXPERIENCE */}
+            <div className="space-y-12">
+              <div className="flex items-center gap-4 text-accent">
+                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+                  <Briefcase size={20} />
+                </div>
+                <h3 className="text-2xl font-bold font-satoshi tracking-tight">{t("bio.exp.title")}</h3>
+              </div>
+
+              <div className="space-y-12 relative border-l-2 border-[var(--border-primary)] ml-5 pl-8">
+                {[
+                  {
+                    title: "Founder & Creative Director",
+                    company: "just.yaviz digital agency",
+                    date: "2023 - Present",
+                    desc: "Digital marketing tizimlari va kreativ kontent ishlab chiqish strategiyasini boshqarish."
+                  },
+                  {
+                    title: "Freelance SMM Strategist",
+                    company: "Various Brands",
+                    date: "2021 - 2023",
+                    desc: "Brendlar imidjini yaratish, auditoriyani o'stirish va sotuv voronkalarini optimallashtirish."
+                  }
+                ].map((item, i) => (
+                  <motion.div 
+                    key={i}
+                    {...fadeIn}
+                    className="relative"
+                  >
+                    {/* Dot on line */}
+                    <div className="absolute -left-[41px] top-1.5 w-4 h-4 rounded-full bg-accent border-4 border-black" />
+                    
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-accent/60">{item.date}</span>
+                      <h4 className="text-xl font-bold font-satoshi">{item.title}</h4>
+                      <p className="text-sm font-bold text-[var(--text-secondary)]">{item.company}</p>
+                      <p className="text-sm text-[var(--text-secondary)]/70 max-w-sm leading-relaxed">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* EDUCATION */}
+            <div className="space-y-12">
+              <div className="flex items-center gap-4 text-accent">
+                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+                  <GraduationCap size={20} />
+                </div>
+                <h3 className="text-2xl font-bold font-satoshi tracking-tight">{t("bio.edu.title")}</h3>
+              </div>
+
+              <div className="space-y-12 relative border-l-2 border-[var(--border-primary)] ml-5 pl-8">
+                {[
+                  {
+                    title: "Marketing & Media",
+                    school: "Dang'ara Politexnikum",
+                    date: "2022 - 2024",
+                    desc: "Marketing asoslari, media ishlab chiqarish va texnik boshqaruv yo'nalishida ta'lim."
+                  },
+                  {
+                    title: "International Certifications",
+                    school: "Google & Meta",
+                    date: "2021 - Present",
+                    desc: "Digital Marketing, Data Analysis va Professional Ads menejment bo'yicha xalqaro kurslar."
+                  }
+                ].map((item, i) => (
+                  <motion.div 
+                    key={i}
+                    {...fadeIn}
+                    className="relative"
+                  >
+                    <div className="absolute -left-[41px] top-1.5 w-4 h-4 rounded-full bg-accent border-4 border-black" />
+                    
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-accent/60">{item.date}</span>
+                      <h4 className="text-xl font-bold font-satoshi">{item.title}</h4>
+                      <p className="text-sm font-bold text-[var(--text-secondary)]">{item.school}</p>
+                      <p className="text-sm text-[var(--text-secondary)]/70 max-w-sm leading-relaxed">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* PROJECTS PREVIEW */}

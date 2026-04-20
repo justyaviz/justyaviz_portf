@@ -111,6 +111,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             { to: "/", label: t("nav.home") },
             { to: "/branding", label: t("nav.branding") },
             { to: "/projects", label: t("nav.projects") },
+            { to: "/client-portal", label: "Mijoz Portali" },
             { to: "/blog", label: "Blog" },
             { to: "/contact", label: t("nav.contact") }
           ].map(link => (
@@ -184,6 +185,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link to="/" onClick={() => setMobileMenuOpen(false)}>{t("nav.home")}</Link>
             <Link to="/branding" onClick={() => setMobileMenuOpen(false)}>{t("nav.branding")}</Link>
             <Link to="/projects" onClick={() => setMobileMenuOpen(false)}>{t("nav.projects")}</Link>
+            <Link to="/client-portal" onClick={() => setMobileMenuOpen(false)}>Mijoz Portali</Link>
             <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
             <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>{t("nav.contact")}</Link>
           </motion.div>
@@ -229,6 +231,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {t("footer.rights")}
             </div>
             <div className="flex gap-8 text-[14px] font-space-grotesk text-[var(--text-primary)] font-medium uppercase tracking-widest">
+               <Link to="/client-portal" className="text-accent hover:text-[var(--text-primary)] transition-colors">Portafol (Mijozlar)</Link>
                <Link to="/admin" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Admin</Link>
                <Link to="#" className="hover:text-accent transition-colors">{t("footer.privacy")}</Link>
                <Link to="#" className="hover:text-accent transition-colors">{t("footer.terms")}</Link>

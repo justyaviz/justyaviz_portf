@@ -12,8 +12,11 @@ import AI from "./pages/AI";
 import Bio from "./pages/Bio";
 import Admin from "./pages/Admin";
 import Blog from "./pages/Blog";
+import ProjectDetail from "./pages/ProjectDetail";
+import ClientPortal from "./pages/ClientPortal";
 import NotFound from "./pages/NotFound";
 import AnalyticsTracker from "./components/AnalyticsTracker";
+import FloatingContact from "./components/FloatingContact";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -59,20 +62,25 @@ export default function App() {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--accent)]/[0.05] blur-[100px] rounded-full" />
             </motion.div>
           ) : (
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/old-home" element={<Home />} />
-                <Route path="/branding" element={<Branding />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/ai" element={<AI />} />
-                <Route path="/bio" element={<Bio />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
+            <>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/old-home" element={<Home />} />
+                  <Route path="/branding" element={<Branding />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/project/:id" element={<ProjectDetail />} />
+                  <Route path="/client-portal" element={<ClientPortal />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/ai" element={<AI />} />
+                  <Route path="/bio" element={<Bio />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+              <FloatingContact />
+            </>
           )}
         </AnimatePresence>
         </AdminProvider>

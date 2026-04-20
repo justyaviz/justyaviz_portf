@@ -1,4 +1,5 @@
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "motion/react";
+import Counter from "../components/Counter";
 import { 
   ArrowUpRight, 
   MousePointer2, 
@@ -461,6 +462,122 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SERVICES SECTION */}
+      <section className="py-20 md:py-40 px-6 border-t border-[var(--border-primary)]">
+        <div className="max-w-7xl mx-auto space-y-24">
+           <div className="text-center space-y-6">
+              <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">{t("services.badge")}</span>
+              <h2 className="text-[40px] md:text-8xl font-satoshi font-normal tracking-tighter leading-[0.8]">{t("services.title")}</h2>
+           </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6">
+              {/* Basic Package */}
+              <motion.div 
+                {...fadeIn}
+                className="md:col-span-3 lg:col-span-4 p-10 bg-[var(--text-primary)]/[0.03] border border-[var(--border-primary)] rounded-[3rem] space-y-8 flex flex-col justify-between"
+              >
+                 <div className="space-y-6">
+                    <div className="w-12 h-12 bg-accent/20 rounded-2xl flex items-center justify-center text-accent">
+                       <Megaphone size={24} />
+                    </div>
+                    <h3 className="text-3xl font-black uppercase italic tracking-tighter">Basic SMM</h3>
+                    <p className="text-sm text-[var(--text-secondary)]">Kichik bizneslar va shaxsiy brendlar uchun ideal boshlang'ich paket.</p>
+                    <ul className="space-y-3">
+                       {["12 ta Post", "24 ta Storis", "4 ta Reels", "Target Reklama", "Profil Upakovka"].map(f => (
+                         <li key={f} className="flex items-center gap-3 text-xs font-bold text-[var(--text-primary)]/60">
+                            <CheckCircle2 size={14} className="text-accent" /> {f}
+                         </li>
+                       ))}
+                    </ul>
+                 </div>
+                 <div className="pt-8 border-t border-[var(--border-primary)] flex items-center justify-between">
+                    <div className="text-2xl font-black text-accent">$299<span className="text-[10px] text-white/20 ml-1">/oy</span></div>
+                    <Link to="/contact" className="text-[10px] font-black uppercase underline tracking-widest">{t("services.order")}</Link>
+                 </div>
+              </motion.div>
+
+              {/* Pro Package - BIG BENTO */}
+              <motion.div 
+                {...fadeIn}
+                transition={{ delay: 0.2 }}
+                className="md:col-span-3 lg:col-span-8 p-12 bg-accent border border-accent rounded-[3.5rem] space-y-12 flex flex-col justify-between relative overflow-hidden group shadow-2xl shadow-accent/20"
+              >
+                 <div className="relative z-10 space-y-8">
+                    <div className="flex items-center justify-between">
+                       <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-accent shadow-xl">
+                          <Rocket size={32} />
+                       </div>
+                       <span className="px-6 py-2 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-white">{t("services.popular")}</span>
+                    </div>
+                    <div className="space-y-2">
+                       <h3 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter text-white">Pro Marketing</h3>
+                       <p className="text-lg text-white/70 max-w-lg">Biznesingizni to'liq raqamlashtirish va sotuvlarni tizimli oshirish uchun mukammal yechim.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                       {["Professional SMM", "TikTok & YouTube Strategiya", "8 ta Reels (Premium)", "Professional Video Montaj", "Target Ads (Masshtablash)", "Influencer Marketing", "Oylik Tahlis (Report)"].map(f => (
+                         <div key={f} className="flex items-center gap-3 text-sm font-black text-white">
+                            <CheckCircle2 size={18} className="text-white" /> {f}
+                         </div>
+                       ))}
+                    </div>
+                 </div>
+                 <div className="relative z-10 pt-12 border-t border-white/20 flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] font-black uppercase text-white/50 tracking-widest mb-1">{t("services.start_price")}</p>
+                      <div className="text-5xl font-black text-white">$599<span className="text-xs text-white/40 ml-2">/oy</span></div>
+                    </div>
+                    <Link to="/contact" className="px-12 py-6 bg-white text-accent font-black uppercase rounded-[2rem] text-sm tracking-widest hover:scale-105 transition-transform">{t("about.cta1")}</Link>
+                 </div>
+
+                 <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 blur-[100px] -mr-40 -mt-40 rounded-full" />
+                 <div className="absolute bottom-0 left-0 w-60 h-60 bg-white/5 blur-[80px] -ml-30 -mb-30 rounded-full" />
+              </motion.div>
+
+              {/* Branding Package */}
+              <motion.div 
+                {...fadeIn}
+                transition={{ delay: 0.3 }}
+                className="md:col-span-6 lg:col-span-6 p-10 bg-[#121212] border border-white/5 rounded-[3rem] space-y-8 flex flex-col md:flex-row gap-12"
+              >
+                 <div className="flex-1 space-y-6">
+                    <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-white">
+                       <Palette size={24} />
+                    </div>
+                    <h3 className="text-3xl font-black uppercase italic tracking-tighter text-white">Full Branding</h3>
+                    <p className="text-sm text-white/40">Noldan professional brend imidjini yaratish.</p>
+                    <ul className="space-y-3">
+                       {["Logo & Identika", "Brend Book", "Web Sayt (Landing)", "Social Kit"].map(f => (
+                         <li key={f} className="flex items-center gap-3 text-xs font-bold text-white/60">
+                            <CheckCircle2 size={14} className="text-white" /> {f}
+                         </li>
+                       ))}
+                    </ul>
+                 </div>
+                 <div className="flex-1 flex flex-col justify-end items-end text-right space-y-6">
+                    <div className="text-4xl font-black text-white">$899<span className="text-[10px] text-white/20 ml-1">START</span></div>
+                    <Link to="/contact" className="px-8 py-4 bg-white/5 border border-white/10 text-white font-black uppercase rounded-2xl text-[10px] tracking-widest hover:bg-white hover:text-black transition-all">{t("about.cta1")}</Link>
+                 </div>
+              </motion.div>
+
+              {/* Custom Package */}
+              <motion.div 
+                {...fadeIn}
+                transition={{ delay: 0.4 }}
+                className="md:col-span-6 lg:col-span-6 p-10 bg-white border border-[var(--border-primary)] rounded-[3rem] space-y-8 flex flex-col justify-center items-center text-center group active:scale-95 transition-transform"
+              >
+                 <div className="w-20 h-20 bg-[var(--text-primary)] rounded-[2rem] flex items-center justify-center text-white mb-4 group-hover:rotate-12 transition-transform">
+                    <Users size={32} />
+                 </div>
+                 <div className="space-y-4">
+                    <h3 className="text-4xl font-black uppercase italic tracking-tighter text-black">{t("services.custom_title")}</h3>
+                    <p className="text-black/60 max-w-sm">{t("services.custom_desc")}</p>
+                 </div>
+                 <Link to="/contact" className="px-10 py-5 bg-black text-white font-black uppercase rounded-2xl text-[10px] tracking-[0.2em] hover:bg-accent transition-colors">{t("services.contact_us")}</Link>
+              </motion.div>
+           </div>
+        </div>
+      </section>
+
       {/* TESTIMONIALS */}
       <section className="py-20 md:py-40 px-6 bg-[var(--text-primary)]/[0.02] border-t border-[var(--border-primary)] overflow-hidden">
         <div className="max-w-7xl mx-auto space-y-20">
@@ -581,10 +698,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
             {[
-              { label: t("stats.projects"), value: "100+", icon: <Rocket size={20} /> },
-              { label: t("stats.clients"), value: "50+", icon: <Users size={20} /> },
-              { label: t("stats.campaigns"), value: "150+", icon: <Target size={20} /> },
-              { label: t("stats.web"), value: "20+", icon: <Database size={20} /> }
+              { label: t("stats.projects"), value: 100, suffix: "+", icon: <Rocket size={20} /> },
+              { label: t("stats.clients"), value: 50, suffix: "+", icon: <Users size={20} /> },
+              { label: t("stats.campaigns"), value: 150, suffix: "+", icon: <Target size={20} /> },
+              { label: t("stats.web"), value: 20, suffix: "+", icon: <Database size={20} /> }
             ].map((stat, i) => (
               <motion.div 
                 key={i} 
@@ -595,7 +712,9 @@ export default function Home() {
                 <div className="flex items-center justify-center md:justify-start gap-3 text-accent/60">
                   {stat.icon}
                 </div>
-                <div className="text-[32px] md:text-5xl font-satoshi font-bold tracking-tighter text-[var(--text-primary)]">{stat.value}</div>
+                <div className="text-[32px] md:text-5xl font-satoshi font-bold tracking-tighter text-[var(--text-primary)]">
+                  <Counter value={stat.value} suffix={stat.suffix} />
+                </div>
                 <p className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-70">{stat.label}</p>
               </motion.div>
             ))}

@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { useAppContext } from "../context/AppContext";
 import { ProjectControls, AddProjectBtn } from "../components/ProjectEditor";
@@ -39,6 +40,7 @@ const defaultProjects = [
 
 export default function Projects() {
   const { t, theme } = useAppContext();
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("all");
   const [dbProjects, setDbProjects] = useState<any[]>([]);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
@@ -70,17 +72,8 @@ export default function Projects() {
     ? projects 
     : projects.filter(p => p.type === activeCategory);
 
-   const handleProjectClick = (p: any) => {
-    if ((p.type === "YouTube" || p.type === "Reels") && p.video) {
-      const ytId = getYoutubeId(p.video);
-      if (ytId) {
-        setActiveVideo(ytId);
-      } else if (p.video.startsWith('http')) {
-        window.open(p.video, '_blank');
-      }
-    } else if (p.link) {
-      window.open(p.link, '_blank');
-    }
+  const handleProjectClick = (p: any) => {
+    navigate(`/project/${p.id}`);
   };
 
   return (

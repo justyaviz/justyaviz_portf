@@ -41,6 +41,19 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    // Services
+    match /services/{serviceId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Client Projects
+    match /clientProjects/{projId} {
+      // Allow user to read if email matches
+      allow read: if isSignedIn() && (request.auth.token.email.toLowerCase() == resource.data.clientEmail.toLowerCase() || isAdmin());
+      allow write: if isAdmin();
+    }
+
     // Analytics
     match /analytics/{dateId} {
       allow read: if isAdmin();

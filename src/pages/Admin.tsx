@@ -25,16 +25,18 @@ export default function Admin() {
     logoutAdmin 
   } = useAdmin();
 
-  const [activeTab, setActiveTab] = useState<"dashboard" | "projects" | "content" | "leads" | "blog" | "testimonials">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "projects" | "content" | "leads" | "blog" | "testimonials" | "services" | "clients">("dashboard");
   const [projects, setProjects] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState<any[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
   const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [services, setServices] = useState<any[]>([]);
+  const [clientProjects, setClientProjects] = useState<any[]>([]);
   
   // Modals & Editing
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<"project" | "blog" | "testimonial" | null>(null);
+  const [modalType, setModalType] = useState<"project" | "blog" | "testimonial" | "service" | "clientProject" | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<any>({});
 
@@ -57,29 +59,53 @@ export default function Admin() {
     const unsubTestimonials = onSnapshot(query(collection(db, "testimonials"), orderBy("createdAt", "desc")), snap => {
       setTestimonials(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
+    const unsubServices = onSnapshot(query(collection(db, "services"), orderBy("order", "asc")), snap => {
+      setServices(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
+    const unsubClients = onSnapshot(query(collection(db, "clientProjects"), orderBy("updatedAt", "desc")), snap => {
+      setClientProjects(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
 
     return () => { 
-      unsubProjects(); unsubMessages(); unsubAnalytics(); unsubBlogs(); unsubTestimonials(); 
+      unsubProjects(); unsubMessages(); unsubAnalytics(); unsubBlogs(); unsubTestimonials(); unsubServices(); unsubClients();
     };
   }, [isAdmin]);
 
-  const openModal = (type: "project" | "blog" | "testimonial", data: any = null) => {
+  const openModal = (type: "project" | "blog" | "testimonial" | "service" | "clientProject", data: any = null) => {
     setModalType(type);
     setEditingId(data?.id || null);
-    setFormData(data || (type === "project" ? { title: "", category: "", image: "", type: "all", link: "", video: "" } : 
-                         type === "blog" ? { title: "", slug: "", excerpt: "", content: "", image: "", published: true } :
-                         { name: "", role: "", content: "", rating: 5 }));
+    if (data) {
+      setFormData(data);
+    } else {
+      switch(type) {
+        case "project": setFormData({ title: "", category: "", image: "", type: "all", link: "", video: "", problem: "", solution: "", result: "", gallery: [] }); break;
+        case "blog": setFormData({ title: "", slug: "", excerpt: "", content: "", image: "", published: true }); break;
+        case "testimonial": setFormData({ name: "", role: "", content: "", rating: 5 }); break;
+        case "service": setFormData({ title: "", price: "", features: "", isPopular: false, bentoSize: "medium", order: 0 }); break;
+        case "clientProject": setFormData({ clientEmail: "", projectName: "", status: "Boshlanmoqda", progress: 0, files: [] }); break;
+      }
+    }
     setIsModalOpen(true);
   };
 
   const handleSave = async () => {
     try {
-      const collectionName = modalType === "project" ? "projects" : modalType === "blog" ? "blogPosts" : "testimonials";
+      const collectionName = modalType === "project" ? "projects" : 
+                             modalType === "blog" ? "blogPosts" : 
+                             modalType === "testimonial" ? "testimonials" :
+                             modalType === "service" ? "services" : "clientProjects";
+      
       const dataToSave = { ...formData };
+      
+      // Handle features array for service
+      if (modalType === "service" && typeof dataToSave.features === "string") {
+        dataToSave.features = dataToSave.features.split("\n").filter((f: string) => f.trim());
+      }
       
       if (!editingId) {
         dataToSave.createdAt = new Date().toISOString();
-        if (modalType === "project") dataToSave.order = Date.now();
+        dataToSave.updatedAt = new Date().toISOString();
+        if (modalType === "project" || modalType === "service") dataToSave.order = Date.now();
         await addDoc(collection(db, collectionName), dataToSave);
       } else {
         dataToSave.updatedAt = new Date().toISOString();
@@ -91,7 +117,7 @@ export default function Admin() {
       setFormData({});
     } catch (e) {
       console.error("Save error:", e);
-      alert("Saqlashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+      alert("Saqlashda xatolik yuz berdi.");
     }
   };
 
@@ -173,6 +199,12 @@ export default function Admin() {
               <SidebarItem icon={<Newspaper size={18} />} label="Maqolalar" active={activeTab === "blog"} onClick={() => setActiveTab("blog")} />
               <SidebarItem icon={<Star size={18} />} label="Mijozlar Fikri" active={activeTab === "testimonials"} onClick={() => setActiveTab("testimonials")} />
               <SidebarItem icon={<FileText size={18} />} label="Sayt Matnlari" active={activeTab === "content"} onClick={() => setActiveTab("content")} />
+           </div>
+
+           <div className="space-y-1">
+              <p className="px-6 text-[10px] font-black uppercase text-white/20 mb-4 tracking-[0.2em]">Biznes</p>
+              <SidebarItem icon={<Smartphone size={18} />} label="Xizmatlar" active={activeTab === "services"} onClick={() => setActiveTab("services")} />
+              <SidebarItem icon={<Users size={18} />} label="Mijozlar Portali" active={activeTab === "clients"} onClick={() => setActiveTab("clients")} />
            </div>
 
            <div className="space-y-1">
@@ -458,6 +490,64 @@ export default function Admin() {
                  ))}
                </div>
              </motion.div>
+          ) : activeTab === "services" ? (
+             <motion.div key="serv" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+                <div className="flex items-center justify-between">
+                   <h3 className="font-black uppercase italic text-2xl tracking-tighter">Xizmat Paketlari</h3>
+                   <button onClick={() => openModal("service")} className="px-8 py-4 bg-accent text-white font-black uppercase rounded-2xl text-[10px] tracking-widest">Yangi Paket</button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {services.map(s => (
+                    <div key={s.id} className="p-8 bg-white/[0.03] border border-white/5 rounded-[2rem] space-y-4">
+                       <h4 className="font-black text-xl uppercase italic tracking-tighter">{s.title}</h4>
+                       <p className="text-2xl font-black text-accent">{s.price}</p>
+                       <div className="space-y-2">
+                          {s.features.map((f: string, i: number) => (
+                            <div key={i} className="flex items-center gap-2 text-xs text-white/50">
+                               <CheckCircle2 size={12} className="text-accent" /> {f}
+                            </div>
+                          ))}
+                       </div>
+                       <div className="flex gap-4 pt-4">
+                          <button onClick={() => openModal("service", s)} className="text-[10px] font-black uppercase text-white/40 hover:text-white underline">Edit</button>
+                          <button onClick={() => handleDelete("services", s.id)} className="text-[10px] font-black uppercase text-rose-500/50 hover:text-rose-500 underline">Delete</button>
+                       </div>
+                    </div>
+                  ))}
+                </div>
+             </motion.div>
+          ) : activeTab === "clients" ? (
+             <motion.div key="clie" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+                <div className="flex items-center justify-between">
+                   <h3 className="font-black uppercase italic text-2xl tracking-tighter">Mijozlar Portali</h3>
+                   <button onClick={() => openModal("clientProject")} className="px-8 py-4 bg-accent text-white font-black uppercase rounded-2xl text-[10px] tracking-widest">Yangi Loyiha Holati</button>
+                </div>
+                <div className="space-y-4">
+                  {clientProjects.map(cp => (
+                    <div key={cp.id} className="p-6 bg-white/[0.03] border border-white/5 rounded-3xl flex items-center justify-between">
+                       <div className="flex items-center gap-6">
+                          <div className="w-12 h-12 bg-accent/20 rounded-xl flex items-center justify-center text-accent font-black">{cp.projectName[0]}</div>
+                          <div>
+                             <h4 className="font-black uppercase text-sm">{cp.projectName}</h4>
+                             <p className="text-xs text-white/40">{cp.clientEmail}</p>
+                          </div>
+                       </div>
+                       <div className="flex items-center gap-8">
+                          <div className="text-right">
+                             <p className="text-[10px] font-black uppercase text-accent">{cp.status}</p>
+                             <div className="w-24 h-1.5 bg-white/10 rounded-full mt-1 overflow-hidden">
+                                <div className="h-full bg-accent" style={{ width: `${cp.progress}%` }} />
+                             </div>
+                          </div>
+                          <div className="flex gap-4">
+                             <button onClick={() => openModal("clientProject", cp)} className="p-2 text-white/40 hover:text-white"><Edit2 size={18} /></button>
+                             <button onClick={() => handleDelete("clientProjects", cp.id)} className="p-2 text-rose-500/50 hover:text-rose-500"><Trash2 size={18} /></button>
+                          </div>
+                       </div>
+                    </div>
+                  ))}
+                </div>
+             </motion.div>
           ) : null}
         </AnimatePresence>
       </main>
@@ -470,7 +560,7 @@ export default function Admin() {
                initial={{ opacity: 0, scale: 0.9, y: 20 }}
                animate={{ opacity: 1, scale: 1, y: 0 }}
                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-               className="w-full max-w-2xl bg-[#0d0d0d] border border-white/10 p-12 rounded-[3.5rem] shadow-2xl relative overflow-hidden"
+               className="w-full max-w-2xl bg-[#0d0d0d] border border-white/10 p-12 rounded-[3.5rem] shadow-2xl relative overflow-y-auto max-h-[90vh]"
             >
                <button onClick={() => setIsModalOpen(false)} className="absolute top-8 right-8 text-white/20 hover:text-white transition-all"><X size={32} /></button>
                <h2 className="text-3xl font-black uppercase italic mb-8 tracking-tighter">{editingId ? "Tahrirlash" : "Yangi qo'shish"}: {modalType}</h2>
@@ -507,6 +597,25 @@ export default function Admin() {
                            <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Rasm URL</label>
                            <input className="ui-input-glow p-5" value={formData.image} onChange={e=>setFormData({...formData, image: e.target.value})} />
                         </div>
+                        
+                        <div className="p-6 bg-white/5 rounded-3xl space-y-4">
+                           <p className="text-[10px] font-black uppercase text-accent tracking-widest">Case Study Tafsilotlari</p>
+                           <div className="space-y-4">
+                              <div className="space-y-2">
+                                <label className="text-[9px] font-black uppercase text-white/20 tracking-widest ml-1">Muammo (Problem)</label>
+                                <textarea className="ui-input-glow p-4 text-sm min-h-[80px]" value={formData.problem} onChange={e=>setFormData({...formData, problem: e.target.value})} />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[9px] font-black uppercase text-white/20 tracking-widest ml-1">Yechim (Solution)</label>
+                                <textarea className="ui-input-glow p-4 text-sm min-h-[80px]" value={formData.solution} onChange={e=>setFormData({...formData, solution: e.target.value})} />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[9px] font-black uppercase text-white/20 tracking-widest ml-1">Natija (Result)</label>
+                                <textarea className="ui-input-glow p-4 text-sm min-h-[80px]" value={formData.result} onChange={e=>setFormData({...formData, result: e.target.value})} />
+                              </div>
+                           </div>
+                        </div>
+
                         <div className="grid grid-cols-2 gap-6">
                            <div className="space-y-2">
                               <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Video URL (YouTube)</label>
@@ -519,6 +628,62 @@ export default function Admin() {
                         </div>
                      </div>
                    </>
+                 )}
+
+                 {modalType === "service" && (
+                   <div className="space-y-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Paket Nomi</label>
+                        <input className="ui-input-glow p-5" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} />
+                      </div>
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Narxi</label>
+                           <input className="ui-input-glow p-5" value={formData.price} onChange={e=>setFormData({...formData, price: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Bento Hajmi</label>
+                           <select className="ui-input-glow p-5" value={formData.bentoSize} onChange={e=>setFormData({...formData, bentoSize: e.target.value})}>
+                              <option value="small">Small</option>
+                              <option value="medium">Medium</option>
+                              <option value="large">Large</option>
+                           </select>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Funksiyalar (Har bir qatorga bitta)</label>
+                        <textarea className="ui-input-glow p-5 min-h-[150px]" value={Array.isArray(formData.features) ? formData.features.join("\n") : formData.features} onChange={e=>setFormData({...formData, features: e.target.value})} />
+                      </div>
+                      <div className="flex items-center gap-2 px-4">
+                         <input type="checkbox" checked={formData.isPopular} onChange={e=>setFormData({...formData, isPopular: e.target.checked})} className="accent-accent" />
+                         <span className="text-xs font-black uppercase text-white/50">Ommabop Paket</span>
+                      </div>
+                   </div>
+                 )}
+
+                 {modalType === "clientProject" && (
+                   <div className="space-y-6">
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Mijoz Email</label>
+                           <input className="ui-input-glow p-5" value={formData.clientEmail} onChange={e=>setFormData({...formData, clientEmail: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Loyiha Nomi</label>
+                           <input className="ui-input-glow p-5" value={formData.projectName} onChange={e=>setFormData({...formData, projectName: e.target.value})} />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Holati (Status)</label>
+                           <input className="ui-input-glow p-5" value={formData.status} onChange={e=>setFormData({...formData, status: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Progress (%)</label>
+                           <input type="number" className="ui-input-glow p-5" value={formData.progress} onChange={e=>setFormData({...formData, progress: Number(e.target.value)})} />
+                        </div>
+                      </div>
+                   </div>
                  )}
 
                  {modalType === "blog" && (

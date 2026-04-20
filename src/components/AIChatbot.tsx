@@ -1,34 +1,8 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState, useRef, useEffect } from "react";
 import { MessageSquare, X, Send, Bot, User, Loader2, MessageCircle } from "lucide-react";
-import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
-
-let aiClient: GoogleGenAI | null = null;
-
-function getAIClient() {
-  if (!aiClient) {
-    const key = process.env.GEMINI_API_KEY || "dummy_key_to_prevent_crash_if_missing";
-    aiClient = new GoogleGenAI({ apiKey: key });
-  }
-  return aiClient;
-}
-
-const SYSTEM_PROMPT = `Sen Yaviz Digital Agency'ning shaxsiy sun'iy intellekt sotuvchi va yordamchisisan.
-Sening isming "Yaviz AI". Ziyrak, professionallarga xos va ochiqko'ngilsan, asosan O'zbek tilida gapirasan.
-Maqsading: Saytga kirgan mijozlarni issiq kutib olish, Yaviz xizmatlarini tushuntirish va ularni 'buyurtma berishga' undash.
-Mijoz admin bilan gaplashmoqchi bo'lsa yoki telefon raqamini, kontaktini qoldirsa darxol "forward_to_agent" funksiyasini chaqir!
-Javoblaring qisqa, tushunarli bo'lsin.`;
-
-const forwardSchema: Schema = {
-  type: Type.OBJECT,
-  properties: {
-    phoneOrContact: { type: Type.STRING, description: "Mijoz qoldirgan telefon raqami yoki kontakt ma'lumoti." },
-    query: { type: Type.STRING, description: "Mijozning asosiy savoli yoki maqsadi." }
-  },
-  required: ["query"]
-};
 
 const generateChatId = () => Math.random().toString(36).substring(2, 9);
 
@@ -63,12 +37,9 @@ export default function AIChatbot() {
       if (d.exists()) {
         const data = d.data();
         if (data.messages && Array.isArray(data.messages)) {
-          // Sync messages if there are new ones from admin
           const adminMessages = data.messages.filter((m: any) => m.isAgent);
           if (adminMessages.length > 0) {
              setMessages(prev => {
-                // Find messages that aren't already in our state (by some simple matching, or just replacing the history if we strictly tracked it)
-                // For simplicity, let's just append the latest admin messages if they aren't already in the list
                 const newMsgs = [...prev];
                 adminMessages.forEach((am: any) => {
                    const exists = newMsgs.find(m => m.parts[0]?.text === am.parts[0]?.text);
@@ -101,28 +72,16 @@ export default function AIChatbot() {
     setIsTyping(true);
 
     try {
-      const ai = getAIClient();
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-pro',
-        contents: newHistory.map(h => ({
-          role: h.role, 
-          parts: h.parts
-        })),
-        config: {
-          systemInstruction: SYSTEM_PROMPT,
-          tools: [{
-            functionDeclarations: [{
-              name: "forward_to_agent",
-              description: "Agentga (Adminga) ulanish yoki mijoz raqamini adminga yuborish",
-              parameters: forwardSchema
-            }]
-          }]
-        }
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ history: newHistory, userMsg })
       });
-      
-      const funcCall = response.functionCalls?.[0];
-      if (funcCall && funcCall.name === "forward_to_agent") {
-         const args = funcCall.args as any;
+
+      const data = await response.json();
+
+      if (data.type === "function_call" && data.name === "forward_to_agent") {
+         const args = data.args;
          // Send to backend which forwards to Telegram
          await fetch("/api/telegram", {
             method: "POST",
@@ -135,11 +94,11 @@ export default function AIChatbot() {
          });
          setMessages([...newHistory, { role: 'model', parts: [{text: "Xabaringiz javobgar xodimlarga yetkazildi! Telegram orqali mutaxassislarimiz shu yerning o'zida sizga javob yozishadi. Iltimos biroz kuting..."}] }]);
       } else {
-         const aiResponse = response.text || "Uzur, ayni damda tushuna olmadim. Adminlarimizga /contact orqali yozishingizni so'rayman.";
+         const aiResponse = data.text || "Uzur, ayni damda tushuna olmadim. Adminlarimizga /contact orqali yozishingizni so'rayman.";
          setMessages([...newHistory, { role: 'model', parts: [{text: aiResponse}] }]);
       }
     } catch (e) {
-       setMessages([...newHistory, { role: 'model', parts: [{text: "Kechirasiz, xizmat ko'rsatishda xatolik yuzaga keldi. Operatorga yozing."}] }]);
+       setMessages([...newHistory, { role: 'model', parts: [{text: "Kechirasiz, xizmat ko'rsatishda xatolik yuzaga keldi."}] }]);
     } finally {
       setIsTyping(false);
     }

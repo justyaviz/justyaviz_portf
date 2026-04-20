@@ -18,6 +18,7 @@ const translations = {
     'nav.branding': 'Brending',
     'nav.projects': 'Loyihalar',
     'nav.contact': 'Aloqa',
+    'nav.portal': 'Mijoz',
     'nav.connect': "Hozir bog'lanish",
     
     // Hero Typewriter
@@ -242,6 +243,7 @@ const translations = {
     'nav.branding': 'Брендинг',
     'nav.projects': 'Проекты',
     'nav.contact': 'Контакты',
+    'nav.portal': 'Клиент',
     'nav.connect': 'Связаться сейчас',
 
     // Hero Typewriter
@@ -467,6 +469,7 @@ const translations = {
     'nav.branding': 'Branding',
     'nav.projects': 'Projects',
     'nav.contact': 'Contact',
+    'nav.portal': 'Client',
     'nav.connect': 'Connect Now',
 
     // Hero Typewriter

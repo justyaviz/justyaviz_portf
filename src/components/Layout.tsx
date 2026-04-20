@@ -96,13 +96,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* REFINED NAVBAR - FLOATING PILL */}
       <nav className={`pill-nav transition-all ${isAdmin ? 'top-16' : 'top-6'}`}>
         <div className="flex items-center">
-           <Link to="/" className="flex items-center gap-3 group pl-1">
-              <div className="flex flex-col items-center justify-center -rotate-90 hidden sm:flex -ml-2">
-                 <span className="text-[7px] font-bold uppercase tracking-[0.3em] opacity-30 group-hover:opacity-100 transition-opacity">just.yaviz</span>
-              </div>
-              <div className={`w-10 h-10 flex items-center justify-center font-black rounded-xl overflow-hidden p-2.5 transition-colors shadow-md ${theme === 'dark' ? 'bg-white text-black' : 'bg-black text-white'}`}>
-                 <Logo className="w-full h-full" />
-              </div>
+           <Link to="/" className="flex items-center gap-3 group pl-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40 hover:opacity-100 transition-opacity">just.yaviz</span>
            </Link>
         </div>
 
@@ -111,7 +106,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             { to: "/", label: t("nav.home") },
             { to: "/branding", label: t("nav.branding") },
             { to: "/projects", label: t("nav.projects") },
-            { to: "/client-portal", label: "Mijoz Portali" },
+            { to: "/client-portal", label: t("nav.portal") },
             { to: "/blog", label: "Blog" },
             { to: "/contact", label: t("nav.contact") }
           ].map(link => (
@@ -185,9 +180,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link to="/" onClick={() => setMobileMenuOpen(false)}>{t("nav.home")}</Link>
             <Link to="/branding" onClick={() => setMobileMenuOpen(false)}>{t("nav.branding")}</Link>
             <Link to="/projects" onClick={() => setMobileMenuOpen(false)}>{t("nav.projects")}</Link>
-            <Link to="/client-portal" onClick={() => setMobileMenuOpen(false)}>Mijoz Portali</Link>
             <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
             <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>{t("nav.contact")}</Link>
+            <Link to="/client-portal" onClick={() => setMobileMenuOpen(false)}>{t("nav.portal")}</Link>
           </motion.div>
         )}
       </AnimatePresence>
@@ -203,7 +198,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-20">
           <div className="flex flex-col items-center gap-8">
             <div className={`w-16 h-16 flex items-center justify-center font-black rounded-2xl overflow-hidden relative rotate-[-5deg] hover:rotate-0 transition-transform cursor-pointer ${theme === 'dark' ? 'bg-white text-black' : 'bg-black text-white'}`}>
-               <Logo className="w-full h-full relative z-10 p-3" />
+               <Logo className="w-full h-full relative z-10 p-2" />
                <div className="absolute inset-0 bg-linear-to-br from-white via-white to-accent opacity-20" />
             </div>
             <div className={`text-[35px] font-satoshi font-normal tracking-tighter ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
@@ -231,7 +226,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {t("footer.rights")}
             </div>
             <div className="flex gap-8 text-[14px] font-space-grotesk text-[var(--text-primary)] font-medium uppercase tracking-widest">
-               <Link to="/client-portal" className="text-accent hover:text-[var(--text-primary)] transition-colors">Portafol (Mijozlar)</Link>
+               <Link to="/client-portal" className="text-accent hover:text-[var(--text-primary)] transition-colors">{t("nav.portal")}</Link>
                <Link to="/admin" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Admin</Link>
                <Link to="#" className="hover:text-accent transition-colors">{t("footer.privacy")}</Link>
                <Link to="#" className="hover:text-accent transition-colors">{t("footer.terms")}</Link>

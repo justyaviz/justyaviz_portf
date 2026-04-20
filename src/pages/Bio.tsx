@@ -18,7 +18,11 @@ import {
   Calendar,
   Languages,
   BookOpen,
-  Rocket
+  Rocket,
+  Send,
+  Youtube,
+  Instagram,
+  Facebook
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
@@ -303,6 +307,46 @@ export default function Bio() {
                     <p className="text-accent text-xs font-black uppercase tracking-widest">Digital Innovator</p>
                  </div>
               </div>
+           </div>
+        </section>
+
+        {/* DIGITAL ECOSYSTEM */}
+        <section className="space-y-12 py-10 border-t border-[var(--border-primary)]">
+           <div className="space-y-4">
+              <h3 className="text-3xl font-black uppercase italic tracking-tighter flex items-center gap-4">
+                 <Globe className="text-accent" size={28} />
+                 Digital Ecosystem
+              </h3>
+              <div className="h-1 w-24 bg-accent rounded-full" />
+              <p className="text-[var(--text-secondary)] font-medium max-w-2xl">Mening barcha rasmiy sahifalarim va ijodiy loyihalarim ekotizimi.</p>
+           </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { label: "Telegram Direct", desc: "Shaxsiy aloqa uchun", url: "https://t.me/justyaviz7", icon: <Send size={20} />, color: "#229ED9" },
+                { label: "Ijodiy Kanal", desc: "Telegramda yangiliklar", url: "https://t.me/just_yaviz", icon: <Send size={20} />, color: "#229ED9" },
+                { label: "Instagram", desc: "Asosiy profil", url: "https://www.instagram.com/just_yaviz/", icon: <Instagram size={20} />, color: "#E4405F" },
+                { label: "Family Channel", desc: "Instagram kanal", url: "https://www.instagram.com/channel/AbbequAW_AP3Oqko/", icon: <Instagram size={20} />, color: "#E4405F" },
+                { label: "YouTube Ijod", desc: "Asosiy kanal", url: "https://www.youtube.com/@just_yaviz", icon: <Youtube size={20} />, color: "#FF0000" },
+                { label: "REVAVA MUSIC", desc: "Mening brendim", url: "https://www.youtube.com/@revavamusic", icon: <Youtube size={20} />, color: "#FF0000" },
+                { label: "Facebook", desc: "Rasmiy sahifa", url: "https://www.facebook.com/justyaviz", icon: <Facebook size={20} />, color: "#1877F2" }
+              ].map((item, i) => (
+                <a 
+                  key={i} 
+                  href={item.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="glass p-6 rounded-3xl border-[var(--border-primary)] hover:border-accent group transition-all hover:bg-accent/5 flex items-center gap-4 shadow-lg shadow-black/5"
+                >
+                   <div style={{ color: item.color }} className="w-12 h-12 rounded-2xl bg-[var(--text-primary)]/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      {item.icon}
+                   </div>
+                   <div className="space-y-1">
+                      <h4 className="font-black italic uppercase text-sm tracking-tight">{item.label}</h4>
+                      <p className="text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-widest">{item.desc}</p>
+                   </div>
+                </a>
+              ))}
            </div>
         </section>
 

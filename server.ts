@@ -5,9 +5,13 @@ import path from "path";
 import TelegramBot from "node-telegram-bot-api";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, updateDoc, arrayUnion, setDoc, getDoc } from "firebase/firestore";
+import { GoogleGenAI } from "@google/genai";
 
 const TELEGRAM_TOKEN = "8656425083:AAG-On9SnWgfztJEMbvUEoEv9BBb4zaMFtI";
 const ADMIN_ID = "7539384945";
+
+// Gemini AI Setup
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 // Initialize Firebase Admin (using Client SDK in Node)
 const firebaseConfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), './firebase-applet-config.json'), 'utf-8'));
@@ -111,6 +115,71 @@ async function startServer() {
   const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
   app.use(express.json());
+
+  // API Route for AI Chat
+  app.post("/api/chat", async (req, res) => {
+    const { message, history } = req.body;
+    
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ error: "AI logic is currently disabled. Please provide a GEMINI_API_KEY." });
+    }
+
+    const SYSTEM_PROMPT = `
+You are the personal AI assistant of Yahyobek Tohirjonov (known as Just Yaviz). 
+Your goal is to help visitors understand Yahyobek's expertise, services, and how he can help their business.
+
+ABOUT YAHYOBEK:
+- Full Name: Yahyobek Tohirjonov Rashidjon o‘g‘li
+- Brand Name: Just Yaviz
+- Roles: Digital Creator, SMM Strategist, Product Builder.
+- Philosophy: "I build marketing systems, not just content." He focuses on systems that attract, retain, and convert users.
+- Main Projects: 
+  1. Aloofest: A referral marketing system for Telegram (viral growth platform).
+  2. Aloo SMM Panel: A management system for SMM teams (automation & reports).
+- Education: Graduate of Dangara Poly-technicum.
+- Skills: Digital Marketing, SMM, IT/Startup Development, Graphic Design, Video Storytelling.
+- Languages: Uzbek (Native), Russian (Fluent), English (Advanced).
+- Contact: justyaviz@gmail.com
+- Location: Tashkent, Uzbekistan.
+
+SERVICES:
+1. SMM Strategy: Building end-to-end systems for brand growth.
+2. Content Production: Viral Reels, Shorts, and storytelling.
+3. Web Automation: Building custom admin panels and dashboards (like Aloo SMM Panel).
+4. Performance Marketing: Meta Ads and conversion optimization.
+
+PACKAGES:
+- Starter: Basic SMM & visual identity.
+- Professional: Complete marketing system + automation.
+- Enterprise: Custom full-stack marketing & IT solutions.
+
+TONE:
+Professional, innovative, tech-forward, and helpful. You should sound like you're part of Yahyobek's high-tech digital world. 
+Keep responses concise and prioritize Uzbek if the user speaks it, otherwise English or Russian.
+
+IF ASKED ABOUT PRICE:
+Suggest that they book a free "Discovery Call" via the website or contact via email for a custom quote.
+`;
+
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: [
+          ...history,
+          { role: 'user', parts: [{ text: message }] }
+        ],
+        config: {
+          systemInstruction: SYSTEM_PROMPT,
+          temperature: 0.7,
+        }
+      });
+
+      res.json({ text: response.text });
+    } catch (e: any) {
+      console.error("Gemini Server Error:", e);
+      res.status(500).json({ error: "Something went wrong in my digital brain." });
+    }
+  });
 
   // API Route to send a message to telegram
   app.post("/api/telegram", async (req, res) => {

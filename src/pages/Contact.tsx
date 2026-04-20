@@ -14,7 +14,8 @@ import {
   Megaphone,
   Palette,
   Rocket,
-  CheckCircle2
+  CheckCircle2,
+  Facebook
 } from "lucide-react";
 import { EditableText } from "../components/EditableText";
 import { useAppContext } from "../context/AppContext";
@@ -336,13 +337,14 @@ export default function Contact() {
 
              <div className="pt-10 space-y-6 px-4">
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-secondary)] opacity-50">{t("contact.info.social")}</p>
-                <div className="flex gap-6">
+                <div className="flex flex-wrap gap-4">
                    {[
-                     { icon: <Instagram size={20} />, url: "https://instagram.com/just_yaviz" },
-                     { icon: <Youtube size={20} />, url: "https://youtube.com/@just_yaviz" },
-                     { icon: <Github size={20} />, url: "https://github.com/justyaviz" }
+                     { icon: <Instagram size={20} />, url: "https://www.instagram.com/just_yaviz/" },
+                     { icon: <Send size={20} />, url: "https://t.me/justyaviz7" },
+                     { icon: <Youtube size={20} />, url: "https://www.youtube.com/@just_yaviz" },
+                     { icon: <Facebook size={20} />, url: "https://www.facebook.com/justyaviz" }
                    ].map((social, i) => (
-                     <a key={i} href={social.url} target="_blank" className="ui-social-icon">
+                     <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="ui-social-icon">
                        {social.icon}
                      </a>
                    ))}

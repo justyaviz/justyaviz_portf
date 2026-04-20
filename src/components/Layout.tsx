@@ -4,6 +4,7 @@ import {
   Send, 
   Github, 
   Youtube, 
+  Facebook,
   Menu, 
   X,
   ArrowRight,
@@ -219,16 +220,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex gap-6">
-            <a href="https://instagram.com/just_yaviz" className="ui-social-icon">
+            <a href="https://www.instagram.com/just_yaviz/" className="ui-social-icon" target="_blank" rel="noopener noreferrer">
               <Instagram size={24} />
             </a>
-            <a href="https://t.me/justyaviz_life" className="ui-social-icon">
+            <a href="https://t.me/justyaviz7" className="ui-social-icon" target="_blank" rel="noopener noreferrer">
               <Send size={24} />
             </a>
-            <a href="https://github.com/justyaviz" className="ui-social-icon">
-              <Github size={24} />
+            <a href="https://www.facebook.com/justyaviz" className="ui-social-icon" target="_blank" rel="noopener noreferrer">
+              <Facebook size={24} />
             </a>
-            <a href="https://youtube.com/@just_yaviz" className="ui-social-icon">
+            <a href="https://www.youtube.com/@just_yaviz" className="ui-social-icon" target="_blank" rel="noopener noreferrer">
               <Youtube size={24} />
             </a>
           </div>

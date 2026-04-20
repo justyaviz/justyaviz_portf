@@ -24,8 +24,7 @@ import {
   ChevronDown,
   Users,
   Database,
-  GraduationCap,
-  FileDown
+  GraduationCap
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -287,12 +286,7 @@ export default function Home() {
                    </div>
                  </Link>
                </Magnetic>
-               <Magnetic>
-                 <Link to="/bio" className="group flex items-center gap-3 px-6 py-3 bg-[var(--text-primary)]/[0.05] border border-[var(--border-primary)] rounded-full hover:bg-accent hover:text-black transition-all duration-500">
-                    <FileDown size={14} className="group-hover:translate-y-0.5 transition-transform" />
-                    <span className="font-bold uppercase tracking-widest text-[10px]">{t("hero.cta.cv")}</span>
-                 </Link>
-               </Magnetic>
+
             </motion.div>
           </motion.div>
 

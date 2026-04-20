@@ -8,7 +8,8 @@ import {
   Bell, Layers, FileText, Smartphone, Zap, Rocket, Users, Target,
   Database, ChartBar, MessageSquare, Moon, Sun, Newspaper, Star,
   ChevronRight, ArrowUpRight, CheckCircle2, AlertCircle, Clock,
-  MoreVertical, Filter, Download, ExternalLink, Activity, Briefcase, Award
+  MoreVertical, Filter, Download, ExternalLink, Activity, Briefcase, Award,
+  Calendar
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
@@ -25,7 +26,7 @@ export default function Admin() {
     logoutAdmin 
   } = useAdmin();
 
-  const [activeTab, setActiveTab] = useState<"dashboard" | "projects" | "content" | "leads" | "blog" | "testimonials" | "services" | "clients" | "bio">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "projects" | "content" | "leads" | "blog" | "testimonials" | "services" | "clients" | "bio" | "bookings" | "impact">("dashboard");
   const [projects, setProjects] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState<any[]>([]);
@@ -35,10 +36,13 @@ export default function Admin() {
   const [clientProjects, setClientProjects] = useState<any[]>([]);
   const [experience, setExperience] = useState<any[]>([]);
   const [certificates, setCertificates] = useState<any[]>([]);
+  const [leads, setLeads] = useState<any[]>([]);
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [impactStats, setImpactStats] = useState<any[]>([]);
   
   // Modals & Editing
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<"project" | "blog" | "testimonial" | "service" | "clientProject" | "experience" | "certificate" | null>(null);
+  const [modalType, setModalType] = useState<"project" | "blog" | "testimonial" | "service" | "clientProject" | "experience" | "certificate" | "booking" | "impactStat" | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<any>({});
 
@@ -73,27 +77,38 @@ export default function Admin() {
     const unsubCertificates = onSnapshot(query(collection(db, "certificates"), orderBy("order", "asc")), snap => {
       setCertificates(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
+    const unsubLeads = onSnapshot(query(collection(db, "leads"), orderBy("createdAt", "desc")), snap => {
+      setLeads(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
+    const unsubBookings = onSnapshot(query(collection(db, "bookings"), orderBy("createdAt", "desc")), snap => {
+      setBookings(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
+    const unsubImpact = onSnapshot(query(collection(db, "impactStats"), orderBy("order", "asc")), snap => {
+      setImpactStats(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
 
     return () => { 
       unsubProjects(); unsubMessages(); unsubAnalytics(); unsubBlogs(); unsubTestimonials(); unsubServices(); unsubClients();
-      unsubExperience(); unsubCertificates();
+      unsubExperience(); unsubCertificates(); unsubLeads(); unsubBookings(); unsubImpact();
     };
   }, [isAdmin]);
 
-  const openModal = (type: "project" | "blog" | "testimonial" | "service" | "clientProject" | "experience" | "certificate", data: any = null) => {
+  const openModal = (type: "project" | "blog" | "testimonial" | "service" | "clientProject" | "experience" | "certificate" | "booking" | "impactStat", data: any = null) => {
     setModalType(type);
     setEditingId(data?.id || null);
     if (data) {
       setFormData(data);
     } else {
       switch(type) {
-        case "project": setFormData({ title: "", category: "", image: "", type: "all", link: "", video: "", problem: "", solution: "", result: "", gallery: [] }); break;
-        case "blog": setFormData({ title: "", slug: "", excerpt: "", content: "", image: "", published: true }); break;
+        case "project": setFormData({ title: "", category: "", image: "", type: "all", link: "", video: "", problem: "", solution: "", result: "", metrics: [], beforeImage: "", afterImage: "", gallery: [] }); break;
+        case "blog": setFormData({ title: "", slug: "", excerpt: "", content: "", image: "", published: true, category: "Marketing", readingTime: "5 min", tags: [] }); break;
         case "testimonial": setFormData({ name: "", role: "", content: "", rating: 5 }); break;
         case "service": setFormData({ title: "", price: "", features: "", isPopular: false, bentoSize: "medium", order: 0 }); break;
         case "clientProject": setFormData({ clientEmail: "", projectName: "", status: "Boshlanmoqda", progress: 0, files: [] }); break;
         case "experience": setFormData({ company: "", role: "", description: "", order: experience.length }); break;
         case "certificate": setFormData({ title: "", provider: "", image: "", order: certificates.length }); break;
+        case "booking": setFormData({ name: "", email: "", date: "", time: "", service: "SMM Strategy", status: "pending" }); break;
+        case "impactStat": setFormData({ label: "", value: "", icon: "trending-up", order: impactStats.length }); break;
       }
     }
     setIsModalOpen(true);
@@ -122,7 +137,9 @@ export default function Admin() {
                              modalType === "testimonial" ? "testimonials" :
                              modalType === "service" ? "services" :
                              modalType === "experience" ? "experience" :
-                             modalType === "certificate" ? "certificates" : "clientProjects";
+                             modalType === "certificate" ? "certificates" :
+                             modalType === "booking" ? "bookings" :
+                             modalType === "impactStat" ? "impactStats" : "clientProjects";
       
       const dataToSave = { ...formData };
       
@@ -219,7 +236,7 @@ export default function Admin() {
            <div className="space-y-1">
               <p className="px-6 text-[10px] font-black uppercase text-white/20 mb-4 tracking-[0.2em]">Asosiy</p>
               <SidebarItem icon={<LayoutGrid size={18} />} label="Boshqaruv" active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} />
-              <SidebarItem icon={<Activity size={18} />} label="Analitika" active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} />
+              <SidebarItem icon={<ChartBar size={18} />} label="Impact Dashboard" active={activeTab === "impact"} onClick={() => setActiveTab("impact")} />
            </div>
 
            <div className="space-y-1">
@@ -234,12 +251,14 @@ export default function Admin() {
            <div className="space-y-1">
               <p className="px-6 text-[10px] font-black uppercase text-white/20 mb-4 tracking-[0.2em]">Biznes</p>
               <SidebarItem icon={<Smartphone size={18} />} label="Xizmatlar" active={activeTab === "services"} onClick={() => setActiveTab("services")} />
-              <SidebarItem icon={<Users size={18} />} label="Mijozlar Portali" active={activeTab === "clients"} onClick={() => setActiveTab("clients")} />
+              <SidebarItem icon={<Calendar size={18} />} label="Bookings" active={activeTab === "bookings"} onClick={() => setActiveTab("bookings")} />
+              <SidebarItem icon={<Users size={18} />} label="Lead Magnet" active={activeTab === "leads"} onClick={() => setActiveTab("leads")} />
+              <SidebarItem icon={<Database size={18} />} label="Mijozlar Portali" active={activeTab === "clients"} onClick={() => setActiveTab("clients")} />
            </div>
 
            <div className="space-y-1">
               <p className="px-6 text-[10px] font-black uppercase text-white/20 mb-4 tracking-[0.2em]">Aloqa</p>
-              <SidebarItem icon={<MessageSquare size={18} />} label={`Xabarlar (${messages.length})`} active={activeTab === "leads"} onClick={() => setActiveTab("leads")} />
+              <SidebarItem icon={<MessageSquare size={18} />} label="Xabarlar" active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} />
            </div>
         </nav>
 
@@ -420,37 +439,81 @@ export default function Admin() {
                  ))}
                </div>
              </motion.div>
+          ) : activeTab === "bookings" ? (
+            <motion.div key="book" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+               <div className="flex items-center justify-between">
+                  <h3 className="font-black uppercase italic text-2xl tracking-tighter">Consultation Bookings</h3>
+               </div>
+               <div className="space-y-4">
+                  {bookings.length === 0 ? (
+                    <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-[2.5rem]">
+                       <p className="font-black uppercase text-white/20 tracking-widest italic animate-pulse">Hozircha band qilishlar yo'q</p>
+                    </div>
+                  ) : (
+                    bookings.map(b => (
+                      <div key={b.id} className="p-8 bg-white/[0.03] border border-white/5 rounded-[2.5rem] flex items-center justify-between">
+                         <div className="flex gap-6 items-center">
+                            <div className="w-14 h-14 bg-accent/20 rounded-2xl flex items-center justify-center text-accent">
+                               <Calendar size={28} />
+                            </div>
+                            <div>
+                               <h4 className="font-black uppercase text-lg">{b.name}</h4>
+                               <p className="text-xs font-bold text-white/40">{b.email} • {b.service}</p>
+                               <div className="flex gap-4 mt-2">
+                                  <span className="text-[10px] font-black uppercase text-accent tracking-widest flex items-center gap-1">
+                                     <Calendar size={12} /> {b.date}
+                                  </span>
+                                  <span className="text-[10px] font-black uppercase text-accent tracking-widest flex items-center gap-1">
+                                     <Clock size={12} /> {b.time}
+                                  </span>
+                               </div>
+                            </div>
+                         </div>
+                         <div className="flex items-center gap-6">
+                            <span className={`px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
+                              b.status === 'confirmed' ? 'bg-green-500/20 text-green-500' : 'bg-orange-500/20 text-orange-500'
+                            }`}>
+                              {b.status}
+                            </span>
+                            <div className="flex gap-2">
+                               <button onClick={() => openModal("booking", b)} className="w-10 h-10 bg-white/5 text-white/40 rounded-xl flex items-center justify-center hover:text-white"><Edit2 size={18} /></button>
+                               <button onClick={() => handleDelete("bookings", b.id)} className="w-10 h-10 bg-rose-500/10 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500/20"><Trash2 size={18} /></button>
+                            </div>
+                         </div>
+                      </div>
+                    ))
+                  )}
+               </div>
+            </motion.div>
           ) : activeTab === "leads" ? (
              <motion.div key="leads" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
-               <h3 className="font-black uppercase italic text-2xl tracking-tighter">Incoming Messages</h3>
-               <div className="space-y-4">
-                 {messages.length === 0 ? (
-                   <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-[2.5rem]">
-                      <p className="font-black uppercase text-white/20 tracking-widest italic animate-pulse">Hozircha xabarlar yo'q</p>
+               <h3 className="font-black uppercase italic text-2xl tracking-tighter">Lead Magnet Subscribers</h3>
+               <div className="flex items-center justify-between mb-8">
+                  <div className="px-6 py-3 bg-white/5 rounded-2xl border border-white/5">
+                     <p className="text-[10px] font-black uppercase text-white/30 tracking-widest">Total Leads</p>
+                     <p className="font-mono text-xl">{leads.length}</p>
+                  </div>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 {leads.length === 0 ? (
+                   <div className="col-span-full py-20 text-center border-2 border-dashed border-white/5 rounded-[2.5rem]">
+                      <p className="font-black uppercase text-white/20 tracking-widest italic animate-pulse">Hozircha obunachilar yo'q</p>
                    </div>
                  ) : (
-                   messages.map(m => (
-                     <div key={m.id} className="p-8 bg-white/[0.03] border border-white/5 rounded-[2rem] space-y-6 group">
-                        <div className="flex justify-between items-start">
-                           <div className="flex items-center gap-4">
-                              <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center font-black text-2xl text-accent">{m.name[0]}</div>
-                              <div>
-                                 <h4 className="font-black text-lg uppercase tracking-tight">{m.name}</h4>
-                                 <p className="text-xs font-bold text-accent">{m.email}</p>
-                              </div>
+                   leads.map(l => (
+                     <div key={l.id} className="p-8 bg-white/[0.03] border border-white/5 rounded-3xl space-y-4 group">
+                        <div className="flex items-center gap-4">
+                           <div className="w-12 h-12 bg-accent/20 rounded-xl flex items-center justify-center text-accent">
+                              <Users size={24} />
                            </div>
-                           <div className="text-right">
-                              <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">{new Date(m.createdAt).toLocaleTimeString()}</p>
-                              <p className="text-xs font-bold text-white/40">{new Date(m.createdAt).toLocaleDateString()}</p>
+                           <div className="flex-1 min-w-0">
+                              <p className="text-sm font-black truncate">{l.email}</p>
+                              <p className="text-[9px] font-bold text-accent uppercase tracking-widest">{l.type}</p>
                            </div>
                         </div>
-                        <div className="p-6 bg-white/5 rounded-2xl italic font-medium text-[15px] leading-relaxed text-white/70">
-                           "{m.content}"
-                        </div>
-                        <div className="flex justify-end gap-2 pr-2">
-                           <a href={`mailto:${m.email}`} className="text-[10px] font-black uppercase text-white/40 hover:text-accent transition-colors flex items-center gap-2">Javob berish <ArrowUpRight size={14} /></a>
-                           <div className="w-px h-3 bg-white/10 mx-2 self-center" />
-                           <button onClick={() => handleDelete("messages", m.id)} className="text-[10px] font-black uppercase text-rose-500/50 hover:text-rose-500 transition-colors">Ma'lumotni o'chirish</button>
+                        <div className="flex justify-between items-center pt-4 border-t border-white/5">
+                           <p className="text-[10px] text-white/30 font-mono italic">{new Date(l.createdAt).toLocaleDateString()}</p>
+                           <button onClick={() => handleDelete("leads", l.id)} className="p-2 text-rose-500/50 hover:text-rose-500 transition-colors"><Trash2 size={16} /></button>
                         </div>
                      </div>
                    ))
@@ -580,6 +643,30 @@ export default function Admin() {
                        </div>
                     </div>
                   ))}
+                </div>
+             </motion.div>
+          ) : activeTab === "impact" ? (
+             <motion.div key="impact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+                <div className="flex items-center justify-between">
+                   <h3 className="font-black uppercase italic text-2xl tracking-tighter">Impact Statistics</h3>
+                   <button onClick={() => openModal("impactStat")} className="px-8 py-4 bg-accent text-white font-black uppercase rounded-2xl text-[10px] tracking-widest shadow-xl shadow-accent/20">Add New Stat</button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                   {impactStats.map(stat => (
+                     <div key={stat.id} className="p-8 bg-white/[0.03] border border-white/5 rounded-[2.5rem] space-y-4 group">
+                        <div className="w-12 h-12 bg-accent/20 rounded-xl flex items-center justify-center text-accent">
+                           <Zap size={24} />
+                        </div>
+                        <div>
+                           <h4 className="text-3xl font-black italic tracking-tighter">{stat.value}</h4>
+                           <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{stat.label}</p>
+                        </div>
+                        <div className="flex gap-4 pt-4 border-t border-white/5">
+                           <button onClick={() => openModal("impactStat", stat)} className="text-[10px] font-black uppercase text-white/40 hover:text-white underline">Edit</button>
+                           <button onClick={() => handleDelete("impactStats", stat.id)} className="text-[10px] font-black uppercase text-rose-500/50 hover:text-rose-500 underline">Delete</button>
+                        </div>
+                     </div>
+                   ))}
                 </div>
              </motion.div>
           ) : activeTab === "bio" ? (

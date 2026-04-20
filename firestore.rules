@@ -71,5 +71,36 @@ service cloud.firestore {
       allow create: if true; 
       allow read, update, delete: if isAdmin();
     }
+
+    // Leads (Lead Magnet)
+    match /leads/{leadId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Bookings
+    match /bookings/{bookingId} {
+      allow create: if true;
+      allow read: if isAdmin() || (isSignedIn() && request.auth.token.email.toLowerCase() == resource.data.email.toLowerCase());
+      allow update, delete: if isAdmin();
+    }
+
+    // Impact Stats
+    match /impactStats/{statId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Experience
+    match /experience/{expId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Certificates
+    match /certificates/{certId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }

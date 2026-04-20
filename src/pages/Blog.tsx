@@ -1,76 +1,146 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { 
+  Search, 
+  ArrowRight, 
+  Clock, 
+  Calendar, 
+  Tag, 
+  ChevronRight,
+  TrendingUp,
+  Newspaper
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import { db } from "../firebase";
-import { MoveRight } from "lucide-react";
+import { collection, onSnapshot, query, orderBy, where } from "firebase/firestore";
+import { useAppContext } from "../context/AppContext";
 
 export default function Blog() {
-  const [blogs, setBlogs] = useState<any[]>([]);
+  const { t } = useAppContext();
+  const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const q = query(collection(db, "blogPosts"), orderBy("createdAt", "desc"));
+    const q = query(
+      collection(db, "blogPosts"), 
+      where("published", "==", true),
+      orderBy("createdAt", "desc")
+    );
+    
     const unsub = onSnapshot(q, (snapshot) => {
-      setBlogs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setPosts(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
       setLoading(false);
     });
-    return () => unsub();
+    return unsub;
   }, []);
 
+  const filteredPosts = posts.filter(p => 
+    p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    p.excerpt?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="pt-32 pb-20 px-6 min-h-screen">
-      <div className="max-w-7xl mx-auto space-y-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
-        >
-          <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">Blog & Yangiliklar</span>
-          <h1 className="text-5xl md:text-8xl font-satoshi font-medium tracking-tighter text-[var(--text-primary)]">
-            So'nggi Maqolalar
-          </h1>
-        </motion.div>
+    <div className="min-h-screen bg-[var(--bg-primary)] py-20 px-6">
+      <div className="max-w-7xl mx-auto space-y-20">
+        {/* Header */}
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+           <div className="space-y-4">
+              <span className="text-accent text-[10px] font-black uppercase tracking-[0.5em]">{t("blog.badge") || "Insights & Knowledge"}</span>
+              <h1 className="text-5xl md:text-8xl font-black tracking-tighter italic uppercase leading-none">
+                 Marketolog <br /> <span className="text-accent">Kundaligi</span>
+              </h1>
+           </div>
+           <div className="relative w-full md:w-96">
+              <input 
+                type="text" 
+                placeholder="Maqola qidirish..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-[var(--text-primary)]/5 border border-[var(--border-primary)] rounded-full px-8 py-5 text-sm font-medium focus:border-accent focus:outline-none pl-14 shadow-lg"
+              />
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-accent" size={20} />
+           </div>
+        </header>
 
         {loading ? (
-           <div className="flex justify-center py-20">
-             <div className="ui-loader">
-               <div></div>
-               <div></div>
-             </div>
-           </div>
-        ) : blogs.length === 0 ? (
-           <div className="py-20 text-center"><p className="text-xl text-[var(--text-secondary)] font-medium">Hozircha maqolalar qo'shilmagan.</p></div>
-        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogs.map((post, i) => (
-              <motion.div 
-                key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="group cursor-pointer ui-magic-card"
-              >
-                 <div className="flex flex-col h-full bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-[2.5rem] overflow-hidden m-px">
-                   <div className="aspect-[4/3] overflow-hidden bg-white/5 shrink-0">
-                      {post.image ? <img src={post.image} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={post.title} /> : <div className="w-full h-full bg-accent/10" />}
-                   </div>
-                   <div className="p-8 space-y-4 flex-1 flex flex-col items-start relative z-10 transition-all">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)]">
-                        {new Date(post.createdAt).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' })}
-                      </p>
-                      <h3 className="text-2xl font-bold font-satoshi tracking-tight text-[var(--text-primary)] leading-snug">
-                        {post.title}
-                      </h3>
-                      <p className="text-[15px] font-medium text-[var(--text-secondary)] line-clamp-3">
-                        {post.excerpt}
-                      </p>
-                      <div className="mt-auto pt-4 flex items-center gap-2 text-accent font-bold text-sm uppercase tracking-widest group-hover:gap-4 transition-all">
-                         O'qish <MoveRight size={16} />
+            {[1, 2, 3].map(i => (
+              <div key={i} className="h-96 rounded-[3rem] bg-[var(--text-primary)]/5 animate-pulse" />
+            ))}
+          </div>
+        ) : filteredPosts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+             {filteredPosts.map((post, i) => (
+                <motion.article 
+                   key={post.id}
+                   initial={{ opacity: 0, y: 20 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   transition={{ delay: i * 0.1 }}
+                   className="group relative flex flex-col h-full bg-[var(--bg-primary)] border border-[var(--border-primary)] rounded-[3rem] overflow-hidden hover:border-accent/40 hover:shadow-2xl transition-all"
+                >
+                   <Link to={`/blog/${post.slug || post.id}`} className="absolute inset-0 z-20" />
+                   
+                   <div className="relative aspect-[16/10] overflow-hidden">
+                      {post.image ? (
+                        <img 
+                          src={post.image} 
+                          alt={post.title} 
+                          className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-accent text-white flex items-center justify-center">
+                           <Newspaper size={48} />
+                        </div>
+                      )}
+                      <div className="absolute top-6 left-6 px-4 py-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-2">
+                         <Tag size={12} className="text-accent" />
+                         <span className="text-[10px] font-black uppercase tracking-widest text-white">{post.category || "Marketing"}</span>
                       </div>
                    </div>
-                 </div>
-              </motion.div>
-            ))}
+
+                   <div className="p-10 flex-1 flex flex-col space-y-4">
+                      <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] opacity-60">
+                         <div className="flex items-center gap-1">
+                            <Calendar size={12} />
+                            {post.createdAt ? new Date(post.createdAt.toDate()).toLocaleDateString() : 'Yaqinda'}
+                         </div>
+                         <div className="flex items-center gap-1">
+                            <Clock size={12} />
+                            {post.readingTime || '5 min'} o'qish
+                         </div>
+                      </div>
+                      
+                      <h2 className="text-2xl font-black tracking-tight uppercase italic group-hover:text-accent transition-colors leading-tight">
+                         {post.title}
+                      </h2>
+                      
+                      <p className="text-sm text-[var(--text-secondary)] font-medium leading-relaxed opacity-80 line-clamp-3">
+                         {post.excerpt}
+                      </p>
+
+                      <div className="pt-6 mt-auto border-t border-[var(--border-primary)] flex items-center justify-between">
+                         <span className="text-[11px] font-black uppercase tracking-widest text-accent flex items-center gap-2 group-hover:gap-4 transition-all">
+                            O‘qish <ArrowRight size={14} />
+                         </span>
+                         <div className="w-8 h-8 rounded-full border border-[var(--border-primary)] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <ChevronRight size={14} className="text-[var(--text-secondary)]" />
+                         </div>
+                      </div>
+                   </div>
+                </motion.article>
+             ))}
+          </div>
+        ) : (
+          <div className="text-center py-40 space-y-6">
+             <div className="w-20 h-20 bg-accent/10 text-accent rounded-3xl flex items-center justify-center mx-auto">
+                <TrendingUp size={32} />
+             </div>
+             <div className="space-y-2">
+                <h3 className="text-2xl font-black italic uppercase tracking-tighter">Maqolalar Topilmadi</h3>
+                <p className="text-[var(--text-secondary)] font-bold text-sm tracking-widest uppercase">Qidiring yoki keyinroq keling.</p>
+             </div>
           </div>
         )}
       </div>

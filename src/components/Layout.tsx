@@ -21,6 +21,8 @@ import { useAdmin } from "./AdminProvider";
 import { useAppContext } from "../context/AppContext";
 import { auth } from "../firebase";
 import { Logo } from "./Logo";
+import SmoothScroll from "./SmoothScroll";
+import CustomCursor from "./CustomCursor";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -42,8 +44,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-accent/40 selection:text-white overflow-hidden ${theme === 'dark' ? 'bg-[#000] text-white' : 'bg-[#fff] text-[#0f172a]'}`}>
-      {/* ADMIN BAR */}
+    <SmoothScroll>
+      <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-accent/40 selection:text-white overflow-hidden ${theme === 'dark' ? 'bg-[#000] text-white' : 'bg-[#fff] text-[#0f172a]'}`}>
+        <CustomCursor />
+        {/* ADMIN BAR */}
       {isAdmin && (
         <div className="fixed top-0 left-0 right-0 h-12 bg-accent text-black z-[200] flex items-center justify-between px-6 font-space-grotesk text-[10px] font-bold uppercase tracking-widest shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)]">
           <div className="flex items-center gap-6">
@@ -235,5 +239,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </footer>
     </div>
+    </SmoothScroll>
   );
 }

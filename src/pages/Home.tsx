@@ -33,6 +33,7 @@ import { useAppContext } from "../context/AppContext";
 import { db } from "../firebase";
 import { doc, onSnapshot, collection, query, limit, orderBy } from "firebase/firestore";
 import { Typewriter } from "../components/Typewriter";
+import Lottie from "lottie-react";
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -41,16 +42,25 @@ const fadeIn = {
   transition: { duration: 0.6, ease: "easeOut" }
 };
 
+const lottieAnimationUrl = "https://lottie.host/6ab4022a-0a75-47e0-90ba-068b5a0346d0/vB1KqC8k5p.json"; // Modern Abstract Digital Shape
+
 export default function Home() {
   const [content, setContent] = useState<any>(null);
   const [projects, setProjects] = useState<any[]>([]);
   const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [lottieData, setLottieData] = useState<any>(null);
   const { t, lang, theme } = useAppContext();
 
   useEffect(() => {
+    fetch(lottieAnimationUrl)
+      .then(res => res.json())
+      .then(data => setLottieData(data));
+
     const unsubContent = onSnapshot(doc(db, "siteContent", "main"), (d) => {
       if (d.exists()) setContent(d.data());
     });
+    
+    // ... rest of useEffect
 
     const q = query(collection(db, "projects"), limit(4));
     const unsubProjects = onSnapshot(q, (snapshot) => {
@@ -89,26 +99,11 @@ export default function Home() {
 
   return (
     <>
-      {/* MOUSE FOLLOWING ORB */}
-      <motion.div 
-        style={{ 
-          x: springX, 
-          y: springY,
-          translateX: "-50%",
-          translateY: "-50%"
-        }}
-        className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference hidden md:block"
-      >
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className={`w-4 h-4 rounded-full shadow-[0_0_20px_white,0_0_50px_white] ${theme === 'dark' ? 'bg-white' : 'bg-black'}`}
-        />
-      </motion.div>
-
       {/* HERO SECTION */}
       <section className="relative min-h-[90vh] md:min-h-screen flex items-center pt-32 md:pt-24 px-6 md:px-20 overflow-hidden">
         <div className="absolute top-[20%] left-[-10%] w-[40vw] h-[40vw] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-[-10%] right-[-10%] w-[30vw] h-[30vw] bg-accent/10 blur-[150px] rounded-full pointer-events-none" />
+        
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
           <motion.div 
             style={{ opacity: heroOpacity }}
@@ -207,19 +202,37 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          <div className="relative hidden lg:block h-[700px]">
-             <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative h-[500px] md:h-[700px] flex items-center justify-center">
+             <div className="absolute inset-0 pointer-events-none overflow-visible">
+                {/* 3D LOTTIE ANIMATION */}
+                {lottieData && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1, delay: 0.5 }}
+                    className="w-full h-full"
+                  >
+                    <Lottie 
+                      animationData={lottieData} 
+                      className="w-full h-full scale-125 md:scale-150 opacity-40 dark:opacity-60"
+                      loop={true}
+                    />
+                  </motion.div>
+                )}
+             </div>
+
+             <div className="relative z-10 flex items-center justify-center w-full h-full">
                 {/* THE CARDS */}
                 <motion.div 
                   drag
-                  dragConstraints={{ left: -150, right: 150, top: -150, bottom: 150 }}
+                  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
                   style={{ 
                     x: useTransform(springX, [0, 2000], [-30, 30]), 
                     y: useTransform(springY, [0, 1000], [-20, 20]),
                     rotate: -8
                   }}
-                  whileHover={{ scale: 1.02, rotate: -6, zIndex: 100 }}
-                  className="hero-note z-20 cursor-grab active:cursor-grabbing"
+                  whileHover={{ scale: 1.05, rotate: -4, zIndex: 100 }}
+                  className="hero-note z-20 cursor-grab active:cursor-grabbing border-accent/20"
                 >
                    <p className="text-[17px] font-dm-sans font-medium leading-relaxed pr-8 text-[var(--text-primary)]">
                     {t("hero.card1")}
@@ -229,34 +242,17 @@ export default function Home() {
 
                 <motion.div 
                   drag
-                  dragConstraints={{ left: -150, right: 150, top: -150, bottom: 150 }}
+                  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
                   style={{ 
                     x: useTransform(springX, [0, 2000], [80, -80]), 
                     y: useTransform(springY, [0, 1000], [120, 80]),
                     rotate: 6
                   }}
-                  whileHover={{ scale: 1.02, rotate: 4, zIndex: 100 }}
-                  className="hero-note absolute z-10 cursor-grab active:cursor-grabbing"
+                  whileHover={{ scale: 1.05, rotate: 4, zIndex: 100 }}
+                  className="hero-note absolute z-10 cursor-grab active:cursor-grabbing border-accent/20"
                 >
                    <p className="text-[17px] font-dm-sans font-medium leading-relaxed pr-8 text-[var(--text-primary)]">
                     {t("hero.card2")}
-                   </p>
-                   <div className="handle">just.yaviz</div>
-                </motion.div>
-
-                <motion.div 
-                  drag
-                  dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
-                  style={{ 
-                    x: useTransform(springX, [0, 2000], [0, 0]), 
-                    y: useTransform(springY, [0, 1000], [250, 200]),
-                    rotate: -2
-                  }}
-                  whileHover={{ scale: 1.02, rotate: 0, zIndex: 100 }}
-                  className="hero-note absolute z-0 opacity-20 blur-[2px] transition-all hover:opacity-100 hover:blur-0 cursor-grab active:cursor-grabbing hidden xl:block"
-                >
-                   <p className="text-[15px] font-dm-sans font-medium leading-relaxed pr-8 text-[var(--text-primary)]">
-                    {t("hero.card3")}
                    </p>
                    <div className="handle">just.yaviz</div>
                 </motion.div>
@@ -350,61 +346,84 @@ export default function Home() {
                </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+            <div className="bento-grid">
                {[
                  { 
                    title: t("skills.smm"), 
                    items: ["Instagram & Telegram", "Reels strategy", "Visual packing", "Audience management"],
-                   icon: <Megaphone className="text-accent" /> 
+                   icon: <Megaphone className="text-accent" />,
+                   span: "md:col-span-2 md:row-span-2",
+                   color: "bg-accent/5"
                  },
                  { 
                    title: t("skills.performance"), 
-                   items: ["Ads setup", "Retargeting", "Conversion funnel", "Analytics"],
-                   icon: <Target className="text-accent" /> 
+                   items: ["Ads setup", "Retargeting", "Conversion funnel"],
+                   icon: <Target className="text-accent" />,
+                   span: "md:col-span-1 md:row-span-1",
+                   color: "bg-white/[0.02]"
                  },
                  { 
                    title: t("skills.content"), 
-                   items: ["Reels & Shorts", "Photography", "Premium editing", "Viral Hook creation"],
-                   icon: <Video className="text-accent" /> 
+                   items: ["Reels & Shorts", "Photography", "Premium editing"],
+                   icon: <Video className="text-accent" />,
+                   span: "md:col-span-1 md:row-span-1",
+                   color: "bg-white/[0.02]"
                  },
                  { 
                    title: t("skills.design"), 
-                   items: ["Identity design", "Graphic UI", "Typography", "Logo systems"],
-                   icon: <Palette className="text-accent" /> 
+                   items: ["Identity design", "Graphic UI", "Logo systems"],
+                   icon: <Palette className="text-accent" />,
+                   span: "md:col-span-1 md:row-span-1",
+                   color: "bg-white/[0.02]"
                  },
                  { 
                    title: t("skills.web"), 
-                   items: ["React & Framer", "E-commerce apps", "Custom Admin", "SEO Ready sites"],
-                   icon: <Rocket className="text-accent" /> 
+                   items: ["React & Framer", "E-commerce apps", "Custom Admin"],
+                   icon: <Rocket className="text-accent" />,
+                   span: "md:col-span-2 md:row-span-1",
+                   color: "bg-accent/10"
                  },
                  { 
                    title: t("skills.strategy"), 
-                   items: ["Market research", "Scaling plan", "Profit analysis", "System growth"],
-                   icon: <Globe className="text-accent" /> 
+                   items: ["Market research", "Scaling plan", "System growth"],
+                   icon: <Globe className="text-accent" />,
+                   span: "md:col-span-1 md:row-span-1",
+                   color: "bg-white/[0.02]"
                  }
                ].map((service, idx) => (
                  <motion.div 
                    key={idx}
-                   initial={{ opacity: 0, y: 30 }}
-                   whileInView={{ opacity: 1, y: 0 }}
+                   initial={{ opacity: 0, scale: 0.95 }}
+                   whileInView={{ opacity: 1, scale: 1 }}
                    viewport={{ once: true }}
-                   transition={{ delay: idx * 0.05 }}
-                   className="ui-magic-card group"
+                   transition={{ delay: idx * 0.1, duration: 0.5 }}
+                   className={`group relative overflow-hidden rounded-[2.5rem] border border-[var(--border-primary)] ${service.color} backdrop-blur-xl transition-all duration-500 hover:border-accent/30 ${service.span}`}
                  >
-                    <div className="p-8 md:p-10 h-full space-y-6 md:space-y-8 relative z-10 transition-all">
-                      <div className="w-12 h-12 md:w-14 md:h-14 bg-accent/5 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                         {service.icon}
+                    <div className="p-8 md:p-10 h-full flex flex-col justify-between relative z-10">
+                      <div className="space-y-6">
+                        <div className="w-12 h-12 md:w-14 md:h-14 bg-accent/10 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-accent group-hover:text-black transition-all duration-500">
+                           {service.icon}
+                        </div>
+                        <div>
+                          <h4 className="text-xl md:text-2xl font-satoshi font-bold tracking-tight mb-2">{service.title}</h4>
+                          <ul className="space-y-2">
+                             {service.items.map((item, i) => (
+                               <li key={i} className="flex items-center gap-3 text-[var(--text-secondary)] text-[12px] md:text-[13px] font-medium opacity-70 group-hover:opacity-100 transition-opacity">
+                                  <div className="w-1 h-1 rounded-full bg-accent/40 group-hover:bg-accent transition-colors" />
+                                  {item}
+                               </li>
+                             ))}
+                          </ul>
+                        </div>
                       </div>
-                      <h4 className="text-xl md:text-2xl font-satoshi font-bold tracking-tight">{service.title}</h4>
-                      <ul className="space-y-3 md:space-y-4">
-                         {service.items.map((item, i) => (
-                           <li key={i} className="flex items-center gap-3 text-[var(--text-secondary)] text-[13px] md:text-sm font-medium">
-                              <div className="w-1.5 h-1.5 rounded-full bg-accent/40 group-hover:bg-accent transition-colors" />
-                              {item}
-                           </li>
-                         ))}
-                      </ul>
+                      
+                      <div className="pt-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-accent">Batafsil ma'lumot →</span>
+                      </div>
                     </div>
+
+                    {/* DECORATIVE ELEMENT */}
+                    <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-accent/5 blur-3xl rounded-full group-hover:bg-accent/10 transition-all duration-700" />
                  </motion.div>
                ))}
             </div>

@@ -302,33 +302,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AI SECTION */}
-      <section className="py-20 px-6 relative z-30">
-        <motion.div {...fadeIn} className="max-w-7xl mx-auto">
-          <div className="glass p-10 md:p-14 rounded-[4rem] border-[var(--border-primary)] flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden group shadow-sm">
-             <div className="space-y-6 max-w-xl relative z-10">
-                <h3 className="text-[35px] font-satoshi font-normal tracking-tighter leading-none">
-                   <EditableText contentKey="aiTitle" defaultText="AI just.yaviz" as="span" />
-                </h3>
-                <div className="font-dm-sans text-[16px] text-[var(--text-primary)] leading-relaxed font-medium">
-                   <EditableText contentKey="aiDesc" defaultText={t("hero.desc")} type="textarea" />
-                </div>
-                <div className="pt-4">
-                   <Link to="/ai" className="px-8 py-3 bg-[var(--border-primary)] border border-[var(--border-primary)] rounded-full text-[10px] font-black uppercase tracking-[0.3em] hover:bg-accent hover:text-white transition-all">
-                      {t("ai.cta")}
-                   </Link>
-                </div>
-             </div>
-             <div className="relative z-10">
-                <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
-                  <img src="https://picsum.photos/seed/yaviz-bot/400/400" alt="AI Bot" className="w-40 md:w-56 object-contain mix-blend-difference brightness-110" />
-                </motion.div>
-                <div className="absolute -inset-10 bg-accent/10 blur-[60px] rounded-full z-[-1]" />
-             </div>
-          </div>
-        </motion.div>
-      </section>
-
       {/* WORKFLOW SECTION */}
       <section className="py-20 md:py-40 px-6 relative overflow-hidden">
         <div className="max-w-7xl mx-auto space-y-20">
@@ -339,18 +312,20 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--border-primary)] border border-[var(--border-primary)] rounded-3xl md:rounded-[4rem] overflow-hidden shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { step: "01", title: t("flow.1.title"), desc: t("flow.1.desc") },
               { step: "02", title: t("flow.2.title"), desc: t("flow.2.desc") },
               { step: "03", title: t("flow.3.title"), desc: t("flow.3.desc") },
               { step: "04", title: t("flow.4.title"), desc: t("flow.4.desc") }
             ].map((item, i) => (
-              <div key={i} className={`p-10 md:p-14 space-y-8 backdrop-blur-xl border-[var(--border-primary)] border-r last:border-0 hover:bg-accent/5 transition-all group ${theme === 'dark' ? 'bg-black/40' : 'bg-white/80'}`}>
-                <span className="text-4xl md:text-6xl font-satoshi font-black text-accent/10 group-hover:text-accent/20 transition-all leading-none">{item.step}</span>
-                <div className="space-y-4">
-                  <h4 className="text-xl md:text-2xl font-satoshi font-bold leading-tight">{item.title}</h4>
-                  <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{item.desc}</p>
+              <div key={i} className={`ui-magic-card group`}>
+                <div className={`p-10 md:p-14 space-y-8 h-full relative z-10 ${theme === 'dark' ? 'bg-black/40' : 'bg-white/80'}`}>
+                  <span className="text-4xl md:text-6xl font-satoshi font-black text-accent/10 group-hover:text-accent/20 transition-all leading-none">{item.step}</span>
+                  <div className="space-y-4">
+                    <h4 className="text-xl md:text-2xl font-satoshi font-bold leading-tight">{item.title}</h4>
+                    <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{item.desc}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -369,8 +344,8 @@ export default function Home() {
                 </h2>
                 <p className="font-dm-sans text-[15px] md:text-[16px] text-[var(--text-secondary)] max-w-lg">Sizning g'oyangizni real natijalarga aylantiruvchi kompleks xizmatlar to'plami.</p>
                </motion.div>
-               <Link to="/contact" className="neon-btn w-full md:w-auto">
-                 <div className="neon-btn-content text-center">{t("hero.cta.contact")}</div>
+               <Link to="/contact" className="ui-btn-galaxy w-full md:w-auto">
+                 <div className="ui-btn-galaxy-inner text-center w-full justify-center px-12 py-5 uppercase text-xs tracking-widest">{t("hero.cta.contact")}</div>
                </Link>
             </div>
 
@@ -413,20 +388,22 @@ export default function Home() {
                    whileInView={{ opacity: 1, y: 0 }}
                    viewport={{ once: true }}
                    transition={{ delay: idx * 0.05 }}
-                   className="p-8 md:p-10 glass border-[var(--border-primary)] rounded-3xl md:rounded-[3.5rem] space-y-6 md:space-y-8 hover:border-accent transition-all shadow-sm"
+                   className="ui-magic-card group"
                  >
-                    <div className="w-12 h-12 md:w-14 md:h-14 bg-accent/5 rounded-2xl flex items-center justify-center">
-                       {service.icon}
+                    <div className="p-8 md:p-10 h-full space-y-6 md:space-y-8 relative z-10 transition-all">
+                      <div className="w-12 h-12 md:w-14 md:h-14 bg-accent/5 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                         {service.icon}
+                      </div>
+                      <h4 className="text-xl md:text-2xl font-satoshi font-bold tracking-tight">{service.title}</h4>
+                      <ul className="space-y-3 md:space-y-4">
+                         {service.items.map((item, i) => (
+                           <li key={i} className="flex items-center gap-3 text-[var(--text-secondary)] text-[13px] md:text-sm font-medium">
+                              <div className="w-1.5 h-1.5 rounded-full bg-accent/40 group-hover:bg-accent transition-colors" />
+                              {item}
+                           </li>
+                         ))}
+                      </ul>
                     </div>
-                    <h4 className="text-xl md:text-2xl font-satoshi font-bold">{service.title}</h4>
-                    <ul className="space-y-3 md:space-y-4">
-                       {service.items.map((item, i) => (
-                         <li key={i} className="flex items-center gap-3 text-[var(--text-secondary)] text-[13px] md:text-sm font-medium">
-                            <div className="w-1.5 h-1.5 rounded-full bg-accent/40" />
-                            {item}
-                         </li>
-                       ))}
-                    </ul>
                  </motion.div>
                ))}
             </div>
@@ -504,15 +481,17 @@ export default function Home() {
                 key={i} 
                 {...fadeIn} 
                 transition={{ delay: i * 0.1 }}
-                className="p-10 md:p-14 glass border-[var(--border-primary)] rounded-3xl md:rounded-[4rem] space-y-8 relative group hover:border-accent transition-all"
+                className="ui-magic-card group"
               >
-                <div className="text-accent/20 absolute top-10 right-10 group-hover:text-accent/60 transition-all">
-                  <Quote size={40} />
-                </div>
-                <p className="text-[var(--text-secondary)] text-lg md:text-xl font-dm-sans leading-relaxed italic">"{test.text || test.content}"</p>
-                <div className="pt-6 border-t border-[var(--border-primary)]">
-                  <h5 className="text-lg md:text-xl font-satoshi font-bold">{test.name}</h5>
-                  <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-70">{test.Role || test.role}</span>
+                <div className="p-10 md:p-14 h-full space-y-8 relative z-10 transition-all">
+                  <div className="text-accent/20 absolute top-10 right-10 group-hover:text-accent/60 transition-all">
+                    <Quote size={40} />
+                  </div>
+                  <p className="text-[var(--text-secondary)] text-lg md:text-xl font-dm-sans leading-relaxed italic relative z-10">"{test.text || test.content}"</p>
+                  <div className="pt-6 border-t border-[var(--border-primary)] relative z-10 mt-auto">
+                    <h5 className="text-lg md:text-xl font-satoshi font-bold">{test.name}</h5>
+                    <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-70">{test.Role || test.role}</span>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -537,17 +516,19 @@ export default function Home() {
             ].map((faq, i) => (
               <motion.div 
                 key={i}
-                className="glass border-[var(--border-primary)] rounded-3xl overflow-hidden shadow-sm"
+                className="ui-magic-card overflow-hidden"
               >
-                <details className="group">
-                  <summary className="flex items-center justify-between p-8 md:p-10 cursor-pointer list-none">
-                    <span className="text-lg md:text-xl font-satoshi font-bold pr-8 text-[var(--text-primary)]">{faq.q}</span>
-                    <ChevronDown className="shrink-0 transition-transform group-open:rotate-180 text-accent/60" />
-                  </summary>
-                  <div className="px-8 md:px-10 pb-8 md:pb-10 pt-2 border-t border-[var(--border-primary)]">
-                    <p className="text-[var(--text-secondary)] leading-relaxed font-dm-sans">{faq.a}</p>
-                  </div>
-                </details>
+                <div className="relative z-10 transition-all">
+                  <details className="group">
+                    <summary className="flex items-center justify-between p-8 md:p-10 cursor-pointer list-none">
+                      <span className="text-lg md:text-xl font-satoshi font-bold pr-8 text-[var(--text-primary)]">{faq.q}</span>
+                      <ChevronDown className="shrink-0 transition-transform group-open:rotate-180 text-accent/60" />
+                    </summary>
+                    <div className="px-8 md:px-10 pb-8 md:pb-10 pt-2 border-t border-[var(--border-primary)]">
+                      <p className="text-[var(--text-secondary)] leading-relaxed font-dm-sans">{faq.a}</p>
+                    </div>
+                  </details>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -582,11 +563,13 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-               <Link to="/contact" className="brand-btn-skromniy text-center px-10 py-5 uppercase bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold rounded-full hover:scale-105 transition-transform">{t("about.cta1")}</Link>
-               <a href="https://t.me/justyaviz_life" className="text-center px-10 py-5 uppercase border border-[var(--border-primary)] text-[var(--text-primary)] font-bold rounded-full hover:bg-accent/5 transition-all">{t("about.cta2")}</a>
-               <a href="/resume.pdf" download className="text-center px-10 py-5 uppercase border border-accent text-accent font-bold rounded-full hover:bg-accent hover:text-black transition-all flex justify-center items-center gap-2">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> 
-                 Resume Download
+               <Link to="/contact" className="ui-btn-galaxy w-full sm:w-auto">
+                 <div className="ui-btn-galaxy-inner px-12 py-5 uppercase text-xs tracking-widest w-full justify-center">
+                    {t("about.cta1")}
+                 </div>
+               </Link>
+               <a href="https://t.me/justyaviz_life" target="_blank" rel="noreferrer" className="ui-btn-shine flex justify-center items-center w-full sm:w-auto">
+                 {t("about.cta2")}
                </a>
             </div>
           </motion.div>

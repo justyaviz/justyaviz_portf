@@ -1,50 +1,54 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { useAdmin } from "../components/AdminProvider";
-import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, serverTimestamp } from "firebase/firestore";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Plus, Trash2, Edit2, X, Settings, LayoutGrid, LogOut, Search,
   Bell, Layers, FileText, Smartphone, Zap, Rocket, Users, Target,
-  Database, ChartBar, MessageSquare, Moon, Sun, Newspaper, Star
+  Database, ChartBar, MessageSquare, Moon, Sun, Newspaper, Star,
+  ChevronRight, ArrowUpRight, CheckCircle2, AlertCircle, Clock,
+  MoreVertical, Filter, Download, ExternalLink, Activity
 } from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 export default function Admin() {
-  const { user, isAdmin, isEditMode, setEditMode, updateContent, siteContent, loading, loginWithPhone, logoutAdmin } = useAdmin();
+  const { 
+    user, 
+    isAdmin, 
+    isEditMode, 
+    setEditMode, 
+    updateContent, 
+    siteContent, 
+    loading, 
+    loginWithGoogle, 
+    logoutAdmin 
+  } = useAdmin();
+
   const [activeTab, setActiveTab] = useState<"dashboard" | "projects" | "content" | "leads" | "blog" | "testimonials">("dashboard");
   const [projects, setProjects] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState<any[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
   const [testimonials, setTestimonials] = useState<any[]>([]);
-  const [phone, setPhone] = useState("+998");
-  const [showOtp, setShowOtp] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
-
-  // Form States
-  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ title: "", category: "", image: "", video: "", link: "", type: "Marketing" });
-
-  const [isBlogModalOpen, setIsBlogModalOpen] = useState(false);
-  const [blogData, setBlogData] = useState({ title: "", slug: "", content: "", excerpt: "", image: "", published: true });
-
-  const [isTestimonialModalOpen, setIsTestimonialModalOpen] = useState(false);
-  const [testimonialData, setTestimonialData] = useState({ name: "", role: "", content: "", rating: 5 });
+  
+  // Modals & Editing
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<"project" | "blog" | "testimonial" | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<any>({});
 
   useEffect(() => {
     if (!isAdmin) return;
     
+    // Subscriptions
     const unsubProjects = onSnapshot(query(collection(db, "projects"), orderBy("order", "desc")), snap => {
       setProjects(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
-    const unsubMessages = onSnapshot(query(collection(db, "messages"), orderBy("createdAt", "desc")), snap => {
+    const unsubMessages = onSnapshot(query(collection(db, "messages"), orderBy("createdAt", "desc"), limit(50)), snap => {
       setMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
-    const unsubAnalytics = onSnapshot(query(collection(db, "analytics"), orderBy("date", "asc")), snap => {
+    const unsubAnalytics = onSnapshot(query(collection(db, "analytics"), orderBy("date", "asc"), limit(30)), snap => {
       setAnalytics(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
     const unsubBlogs = onSnapshot(query(collection(db, "blogPosts"), orderBy("createdAt", "desc")), snap => {
@@ -54,313 +58,543 @@ export default function Admin() {
       setTestimonials(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
 
-    return () => { unsubProjects(); unsubMessages(); unsubAnalytics(); unsubBlogs(); unsubTestimonials(); };
+    return () => { 
+      unsubProjects(); unsubMessages(); unsubAnalytics(); unsubBlogs(); unsubTestimonials(); 
+    };
   }, [isAdmin]);
 
-  const handleSaveProject = async () => {
+  const openModal = (type: "project" | "blog" | "testimonial", data: any = null) => {
+    setModalType(type);
+    setEditingId(data?.id || null);
+    setFormData(data || (type === "project" ? { title: "", category: "", image: "", type: "all", link: "", video: "" } : 
+                         type === "blog" ? { title: "", slug: "", excerpt: "", content: "", image: "", published: true } :
+                         { name: "", role: "", content: "", rating: 5 }));
+    setIsModalOpen(true);
+  };
+
+  const handleSave = async () => {
     try {
-      if (isEditing) await updateDoc(doc(db, "projects", isEditing), formData);
-      else await addDoc(collection(db, "projects"), { ...formData, order: Date.now() });
-      setIsProjectModalOpen(false); setIsEditing(null);
-    } catch (e) { alert(e); }
+      const collectionName = modalType === "project" ? "projects" : modalType === "blog" ? "blogPosts" : "testimonials";
+      const dataToSave = { ...formData };
+      
+      if (!editingId) {
+        dataToSave.createdAt = new Date().toISOString();
+        if (modalType === "project") dataToSave.order = Date.now();
+        await addDoc(collection(db, collectionName), dataToSave);
+      } else {
+        dataToSave.updatedAt = new Date().toISOString();
+        await updateDoc(doc(db, collectionName, editingId), dataToSave);
+      }
+      
+      setIsModalOpen(false);
+      setEditingId(null);
+      setFormData({});
+    } catch (e) {
+      console.error("Save error:", e);
+      alert("Saqlashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.");
+    }
   };
 
-  const handleSaveBlog = async () => {
-    try {
-      if (isEditing) await updateDoc(doc(db, "blogPosts", isEditing), blogData);
-      else await addDoc(collection(db, "blogPosts"), { ...blogData, createdAt: new Date().toISOString() });
-      setIsBlogModalOpen(false); setIsEditing(null);
-    } catch (e) { alert(e); }
+  const handleDelete = async (col: string, id: string) => {
+    if (window.confirm("Haqiqatdan ham ushbu ma'lumotni o'chirmoqchimisiz?")) {
+      try {
+        await deleteDoc(doc(db, col, id));
+      } catch (e) {
+        alert("O'chirishda xatolik!");
+      }
+    }
   };
 
-  const handleSaveTestimonial = async () => {
-    try {
-      if (isEditing) await updateDoc(doc(db, "testimonials", isEditing), testimonialData);
-      else await addDoc(collection(db, "testimonials"), { ...testimonialData, createdAt: new Date().toISOString() });
-      setIsTestimonialModalOpen(false); setIsEditing(null);
-    } catch (e) { alert(e); }
-  };
-
-  const deleter = async (col: string, id: string) => {
-    if (confirm("Rostdan ham o'chirmoqchimisiz?")) await deleteDoc(doc(db, col, id));
-  };
-
-  if (loading) return <div className="min-h-screen flex items-center justify-center bg-white"><div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0a0a0a] text-white">
+        <div className="ui-loader mb-8">
+          <div></div>
+          <div></div>
+        </div>
+        <p className="font-mono text-xs uppercase tracking-widest opacity-50 animate-pulse">Admin Panel Yuklanmoqda...</p>
+      </div>
+    );
+  }
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] p-6 font-inter">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-md w-full bg-white p-12 rounded-[2.5rem] shadow-2xl shadow-blue-500/10 text-center space-y-10">
-          <div className="w-24 h-24 bg-blue-50 rounded-[2.5rem] flex items-center justify-center mx-auto text-blue-600"><Smartphone size={48} /></div>
-          <div className="space-y-3"><h1 className="text-3xl font-black text-slate-900 uppercase">Admin Kirish</h1><p className="text-slate-400 text-sm font-medium">Boshqaruv paneliga kiring.</p></div>
-          <div className="space-y-4">
-            {!showOtp ? (
-              <div className="space-y-4">
-                <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-5 px-6 font-bold text-lg outline-none" placeholder="+998 90 000 00 00" />
-                <button onClick={() => setShowOtp(true)} className="w-full py-5 bg-blue-600 text-white font-black uppercase rounded-2xl shadow-xl shadow-blue-500/20 text-xs">Kod yuborish</button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <input type="text" value={otp} onChange={e => setOtp(e.target.value)} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-5 px-6 font-bold text-center text-3xl tracking-[1em] text-blue-600 outline-none" placeholder="0000" maxLength={4} />
-                <button onClick={() => loginWithPhone(phone)} className="w-full py-5 bg-blue-600 text-white font-black uppercase rounded-2xl shadow-xl shadow-blue-500/20 text-xs">Tasdiqlash</button>
-              </div>
-            )}
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] p-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          className="max-w-md w-full bg-[#141414] border border-white/5 p-12 rounded-[2.5rem] shadow-2xl text-center space-y-8"
+        >
+          <div className="w-20 h-20 bg-accent/10 border border-accent/20 rounded-[2rem] flex items-center justify-center mx-auto text-accent">
+            <Rocket size={40} />
           </div>
+          <div className="space-y-2">
+            <h1 className="text-3xl font-black text-white italic uppercase tracking-tighter">Admin Panel</h1>
+            <p className="text-white/40 text-sm font-medium">Faqat Yahyobek Tohirjonov uchun ruxsat etilgan.</p>
+          </div>
+          <button 
+            onClick={loginWithGoogle}
+            className="w-full py-5 bg-accent text-white font-black uppercase rounded-2xl shadow-xl shadow-accent/20 text-xs tracking-widest hover:scale-[1.02] active:scale-95 transition-all"
+          >
+            Google orqali kirish
+          </button>
+          {user && !isAdmin && (
+            <p className="text-rose-500 text-xs font-bold bg-rose-500/10 py-3 rounded-xl border border-rose-500/20">
+              Sizning hisobingizga ruxsat yo'q: {user.email}
+            </p>
+          )}
         </motion.div>
       </div>
     );
   }
 
-  const unreadMessagesCount = messages.length; // Simplified for demo
-  const themeClasses = darkMode 
-    ? "bg-slate-950 text-white border-white/10" 
-    : "bg-[#f8fafc] text-slate-900 border-slate-200";
-  const boxClasses = darkMode ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200";
-  const textTitleClasses = darkMode ? "text-white" : "text-slate-800";
-  const inputClasses = darkMode ? "bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" : "bg-slate-50 border-slate-100 text-slate-700";
-
   return (
-    <div className={`flex min-h-screen font-inter ${themeClasses} transition-colors duration-300 overflow-x-hidden`}>
+    <div className="flex min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-accent selection:text-white">
       {/* SIDEBAR */}
-      <aside className="w-72 bg-[#021431] text-white flex flex-col fixed inset-y-0 left-0 z-50">
-        <div className="p-8 border-b border-white/5 space-y-6">
-          <div className="flex items-center gap-3">
-             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg shadow-blue-600/30">J</div>
-             <div><h2 className="font-black text-lg leading-none uppercase italic">Just Yaviz</h2><p className="text-[10px] text-white/40 uppercase">Boshqaruv</p></div>
-          </div>
+      <aside className="w-72 border-r border-white/5 flex flex-col fixed inset-y-0 left-0 bg-[#0a0a0a] z-50">
+        <div className="p-8 flex items-center gap-3 border-b border-white/5">
+           <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-accent/30">J</div>
+           <div>
+             <h2 className="font-black text-lg leading-none uppercase italic tracking-tighter">Just Yaviz</h2>
+             <p className="text-[10px] text-white/30 uppercase font-bold mt-1 tracking-widest">Master Panel v2.0</p>
+           </div>
         </div>
-        <nav className="flex-1 overflow-y-auto p-4 space-y-8 custom-scrollbar">
-          <div className="space-y-1">
-             <SidebarItem icon={<LayoutGrid size={18} />} label="Asosiy" active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} />
-             <SidebarItem icon={<ChartBar size={18} />} label="Analitika" active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} />
-             <SidebarItem icon={<Layers size={18} />} label="Loyihalar" active={activeTab === "projects"} onClick={() => setActiveTab("projects")} />
-             <SidebarItem icon={<Newspaper size={18} />} label="Blog" active={activeTab === "blog"} onClick={() => setActiveTab("blog")} />
-             <SidebarItem icon={<Star size={18} />} label="Fikrlar (Testimonials)" active={activeTab === "testimonials"} onClick={() => setActiveTab("testimonials")} />
-             <SidebarItem icon={<FileText size={18} />} label="Matnlar" active={activeTab === "content"} onClick={() => setActiveTab("content")} />
-             <SidebarItem icon={<MessageSquare size={18} />} label={`Xabarlar (${unreadMessagesCount})`} active={activeTab === "leads"} onClick={() => setActiveTab("leads")} />
-          </div>
+        
+        <nav className="flex-1 overflow-y-auto p-4 space-y-8 py-8 scrollbar-hide">
+           <div className="space-y-1">
+              <p className="px-6 text-[10px] font-black uppercase text-white/20 mb-4 tracking-[0.2em]">Asosiy</p>
+              <SidebarItem icon={<LayoutGrid size={18} />} label="Boshqaruv" active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} />
+              <SidebarItem icon={<Activity size={18} />} label="Analitika" active={activeTab === "dashboard"} onClick={() => setActiveTab("dashboard")} />
+           </div>
+
+           <div className="space-y-1">
+              <p className="px-6 text-[10px] font-black uppercase text-white/20 mb-4 tracking-[0.2em]">Kontent</p>
+              <SidebarItem icon={<Layers size={18} />} label="Loyihalar" active={activeTab === "projects"} onClick={() => setActiveTab("projects")} />
+              <SidebarItem icon={<Newspaper size={18} />} label="Maqolalar" active={activeTab === "blog"} onClick={() => setActiveTab("blog")} />
+              <SidebarItem icon={<Star size={18} />} label="Mijozlar Fikri" active={activeTab === "testimonials"} onClick={() => setActiveTab("testimonials")} />
+              <SidebarItem icon={<FileText size={18} />} label="Sayt Matnlari" active={activeTab === "content"} onClick={() => setActiveTab("content")} />
+           </div>
+
+           <div className="space-y-1">
+              <p className="px-6 text-[10px] font-black uppercase text-white/20 mb-4 tracking-[0.2em]">Aloqa</p>
+              <SidebarItem icon={<MessageSquare size={18} />} label={`Xabarlar (${messages.length})`} active={activeTab === "leads"} onClick={() => setActiveTab("leads")} />
+           </div>
         </nav>
-        <div className="p-6 border-t border-white/5 space-y-4">
-           <button onClick={() => setDarkMode(!darkMode)} className="w-full flex justify-between p-4 bg-white/5 rounded-xl uppercase text-[10px] font-black items-center">
-              Rejim <div className="flex gap-2">{darkMode ? <Moon size={14} className="text-blue-400" /> : <Sun size={14} className="text-yellow-400" />}</div>
+
+        <div className="p-6 border-t border-white/5 space-y-4 bg-white/[0.02]">
+           <button 
+             onClick={() => setEditMode(!isEditMode)} 
+             className={`w-full flex justify-between p-4 rounded-xl items-center transition-all ${isEditMode ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'bg-white/5 text-white/40 border border-white/5'}`}
+           >
+              <span className="text-[10px] font-black uppercase tracking-widest">Live Edit</span>
+              <div className="flex gap-2">
+                {isEditMode ? <CheckCircle2 size={16} /> : <div className="w-4 h-4 border-2 border-current/20 rounded-full" />}
+              </div>
            </button>
-           <button onClick={logoutAdmin} className="w-full flex items-center gap-3 px-4 py-3 text-red-500/60 uppercase text-[10px] font-black"><LogOut size={16} /> Chiqish</button>
+           
+           <div className="flex items-center gap-4 px-4 py-2">
+              <img src={user.photoURL || ""} className="w-8 h-8 rounded-full border border-white/10" alt="" />
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] font-black truncate uppercase">{user.displayName || "Admin"}</p>
+                <button onClick={logoutAdmin} className="text-[9px] font-bold text-rose-500 uppercase hover:underline">Chiqish</button>
+              </div>
+           </div>
         </div>
       </aside>
 
-      {/* MAIN CONTENT */}
-      <main className="ml-72 flex-1 p-8 space-y-8 min-h-screen">
+      {/* MAIN CONTENT AREA */}
+      <main className="ml-72 flex-1 p-8 md:p-12 space-y-12">
         <header className="flex items-center justify-between">
-           <div className="flex gap-4 items-center">
-              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center"><LayoutGrid size={24} /></div>
-              <div><p className="text-[10px] uppercase tracking-widest text-slate-400">Markaz</p><h1 className={`text-2xl font-black uppercase italic ${textTitleClasses}`}>{activeTab}</h1></div>
+           <div className="space-y-1">
+              <p className="text-[10px] uppercase font-black tracking-[0.4em] text-accent">Admin / {activeTab}</p>
+              <h1 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter">
+                {activeTab === "dashboard" ? "Management" : activeTab}
+              </h1>
            </div>
-           <div className="flex gap-4">
-              <button className={`p-3 rounded-2xl ${boxClasses} shadow-sm relative`} onClick={() => setActiveTab("leads")}>
-                 <Bell size={20} className="text-slate-400" />
-                 {unreadMessagesCount > 0 && <span className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />}
+           
+           <div className="flex items-center gap-4">
+              <div className="hidden lg:flex items-center gap-8 px-8 py-4 bg-white/5 border border-white/5 rounded-2xl">
+                 <div className="text-center">
+                    <p className="text-[10px] font-black uppercase text-white/30 tracking-widest">Online</p>
+                    <p className="font-mono text-sm">24.04.2026</p>
+                 </div>
+                 <div className="w-px h-6 bg-white/10" />
+                 <div className="text-center">
+                    <p className="text-[10px] font-black uppercase text-white/30 tracking-widest">Status</p>
+                    <p className="text-green-500 text-xs font-black uppercase">Active</p>
+                 </div>
+              </div>
+              <button className="w-12 h-12 bg-white/5 border border-white/5 rounded-xl flex items-center justify-center text-white/60 hover:text-white transition-all">
+                 <Bell size={20} />
               </button>
            </div>
         </header>
 
         <AnimatePresence mode="wait">
           {activeTab === "dashboard" ? (
-             <motion.div key="dash" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
-               <div className={`p-8 rounded-[2rem] border shadow-sm ${boxClasses}`}>
-                 <h2 className={`text-xl font-black uppercase italic mb-6 ${textTitleClasses}`}>Haqiqiy Analitika (Traffic)</h2>
-                 <div className="h-80 w-full font-sans text-xs">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={analytics}>
-                        <defs>
-                          <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <XAxis dataKey="date" stroke={darkMode ? "#475569" : "#cbd5e1"} />
-                        <YAxis stroke={darkMode ? "#475569" : "#cbd5e1"} />
-                        <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#334155" : "#f1f5f9"} />
-                        <Tooltip />
-                        <Area type="monotone" dataKey="visitors" stroke="#3b82f6" fillOpacity={1} fill="url(#colorVisits)" />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                 </div>
+             <motion.div key="dash" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-12">
+               {/* ANALYTICS CHART */}
+               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-2 p-8 bg-white/[0.03] border border-white/5 rounded-[2.5rem] space-y-8">
+                     <div className="flex items-center justify-between">
+                        <h3 className="font-black uppercase italic text-lg tracking-tight">Visitors Activity</h3>
+                        <div className="flex gap-2">
+                           <div className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-lg text-[10px] font-black text-accent uppercase">30 Days</div>
+                        </div>
+                     </div>
+                     <div className="h-80 w-full font-mono text-[10px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={analytics}>
+                            <defs>
+                              <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.3}/>
+                                <stop offset="95%" stopColor="var(--accent)" stopOpacity={0}/>
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                            <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" axisLine={false} tickLine={false} dy={10} />
+                            <YAxis stroke="rgba(255,255,255,0.2)" axisLine={false} tickLine={false} dx={-10} />
+                            <Tooltip contentStyle={{ background: '#141414', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem', fontSize: '12px' }} />
+                            <Area type="monotone" dataKey="visitors" stroke="var(--accent)" strokeWidth={3} fillOpacity={1} fill="url(#colorVisits)" />
+                          </AreaChart>
+                        </ResponsiveContainer>
+                     </div>
+                  </div>
+
+                  <div className="space-y-6">
+                     <StatCard icon={<Rocket className="text-blue-500" />} label="Projects" value={projects.length} delta="+2 this month" />
+                     <StatCard icon={<MessageSquare className="text-orange-500" />} label="Leads" value={messages.length} delta={`${messages.filter(m => !m.read).length} Unread`} />
+                     <StatCard icon={<Activity className="text-green-500" />} label="Visits" value={analytics.reduce((a,b)=>a+b.visitors, 0)} delta="+12.4%" />
+                     <div className="p-8 bg-accent rounded-[2.5rem] text-white space-y-4 shadow-xl shadow-accent/20">
+                        <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center"><Zap size={24} /></div>
+                        <h4 className="font-black text-xl leading-tight">Pro Admin System</h4>
+                        <p className="text-white/80 text-xs font-medium leading-relaxed">Saytingizni real vaqtda boshqaring va yangilang.</p>
+                     </div>
+                  </div>
                </div>
 
-               <div className="grid grid-cols-4 gap-6">
-                 <div className={`p-8 rounded-3xl ${boxClasses}`}>
-                   <p className="text-[10px] uppercase text-slate-400 font-bold mb-2">Jami Tashriflar</p>
-                   <h3 className={`text-4xl font-black ${textTitleClasses}`}>{analytics.reduce((a,b)=>a+b.visitors, 0)}</h3>
-                 </div>
-                 <div className={`p-8 rounded-3xl ${boxClasses}`}>
-                   <p className="text-[10px] uppercase text-slate-400 font-bold mb-2">Umumiy Pageview</p>
-                   <h3 className={`text-4xl font-black ${textTitleClasses}`}>{analytics.reduce((a,b)=>a+b.pageviews, 0)}</h3>
-                 </div>
-                 <div className={`p-8 rounded-3xl ${boxClasses}`}>
-                   <p className="text-[10px] uppercase text-slate-400 font-bold mb-2">Aktiv Loyihalar</p>
-                   <h3 className={`text-4xl font-black ${textTitleClasses}`}>{projects.length}</h3>
-                 </div>
-                 <div className={`p-8 rounded-3xl ${boxClasses}`}>
-                   <p className="text-[10px] uppercase text-slate-400 font-bold mb-2">O'qilmagan Xabarlar</p>
-                   <h3 className={`text-4xl font-black text-rose-500`}>{unreadMessagesCount}</h3>
-                 </div>
+               {/* RECENT MESSAGES */}
+               <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                     <h3 className="font-black uppercase italic text-2xl tracking-tighter">Recent Messages</h3>
+                     <button onClick={() => setActiveTab("leads")} className="text-xs font-black uppercase text-accent hover:underline">View All</button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     {messages.slice(0, 4).map(m => (
+                        <div key={m.id} className="p-6 bg-white/[0.03] border border-white/5 rounded-3xl flex items-start gap-4">
+                           <div className="w-12 h-12 rounded-2xl bg-white/5 shrink-0 flex items-center justify-center font-black text-lg text-white/20">{m.name[0]}</div>
+                           <div className="flex-1 space-y-1">
+                              <div className="flex justify-between items-center">
+                                 <h5 className="font-black text-sm uppercase">{m.name}</h5>
+                                 <p className="text-[9px] font-bold text-white/20">{new Date(m.createdAt).toLocaleDateString()}</p>
+                              </div>
+                              <p className="text-[11px] text-white/50 line-clamp-1">{m.content}</p>
+                           </div>
+                        </div>
+                     ))}
+                  </div>
                </div>
              </motion.div>
           ) : activeTab === "projects" ? (
-             <motion.div key="proj" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-               <button onClick={() => { setIsEditing(null); setIsProjectModalOpen(true); }} className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl text-sm">Yangi loyiha</button>
-               <div className="grid grid-cols-3 gap-6">
+             <motion.div key="proj" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+               <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-black uppercase italic text-2xl tracking-tighter">Portfel Loyihalari</h3>
+                    <p className="text-white/40 text-xs font-medium mt-1">Siz qo'shgan barcha loyihalar ro'yxati.</p>
+                  </div>
+                  <button onClick={() => openModal("project")} className="px-8 py-4 bg-accent text-white font-black uppercase rounded-2xl text-[10px] tracking-widest shadow-xl shadow-accent/20">Yangi Loyiha</button>
+               </div>
+
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                  {projects.map(p => (
-                   <div key={p.id} className={`p-6 rounded-3xl border ${boxClasses}`}>
-                      <img src={p.image} className="w-full h-40 object-cover rounded-xl mb-4" />
-                      <h4 className={`font-black text-lg ${textTitleClasses}`}>{p.title}</h4>
-                      <p className="text-xs text-slate-400">{p.category}</p>
-                      <div className="flex gap-2 mt-4">
-                        <button onClick={() => { setIsEditing(p.id); setFormData(p); setIsProjectModalOpen(true); }} className="text-blue-500 font-bold text-xs bg-blue-500/10 px-3 py-1 rounded">Edit</button>
-                        <button onClick={() => deleter("projects", p.id)} className="text-red-500 font-bold text-xs bg-red-500/10 px-3 py-1 rounded">Delete</button>
+                   <div key={p.id} className="group ui-magic-card">
+                      <div className="relative z-10 space-y-4">
+                        <div className="aspect-video rounded-2xl overflow-hidden bg-white/5">
+                           <img src={p.image} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" alt="" />
+                        </div>
+                        <div className="px-1 space-y-1">
+                           <h4 className="font-black text-sm uppercase truncate">{p.title}</h4>
+                           <p className="text-[10px] font-black uppercase text-accent tracking-widest">{p.category}</p>
+                        </div>
+                        <div className="flex gap-2 pt-2 pb-1">
+                           <button onClick={() => openModal("project", p)} className="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl font-bold text-[10px] uppercase transition-all">Edit</button>
+                           <button onClick={() => handleDelete("projects", p.id)} className="w-12 py-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 rounded-xl flex items-center justify-center transition-all"><Trash2 size={16} /></button>
+                        </div>
                       </div>
                    </div>
                  ))}
                </div>
              </motion.div>
           ) : activeTab === "blog" ? (
-             <motion.div key="blog" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-               <button onClick={() => { setIsEditing(null); setIsBlogModalOpen(true); }} className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl text-sm">Yangi Maqola</button>
-               <div className="grid grid-cols-2 gap-6">
+             <motion.div key="blog" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+               <div className="flex items-center justify-between">
+                  <h3 className="font-black uppercase italic text-2xl tracking-tighter">Maqolalar (Blog)</h3>
+                  <button onClick={() => openModal("blog")} className="px-8 py-4 bg-accent text-white font-black uppercase rounded-2xl text-[10px] tracking-widest">Yangi Maqola</button>
+               </div>
+               
+               <div className="grid grid-cols-1 gap-4">
                  {blogs.map(b => (
-                   <div key={b.id} className={`p-6 rounded-3xl border ${boxClasses} flex gap-4`}>
-                      <img src={b.image} className="w-24 h-24 object-cover rounded-xl" />
-                      <div>
-                        <h4 className={`font-black text-lg ${textTitleClasses}`}>{b.title}</h4>
-                        <p className="text-xs text-slate-400 line-clamp-2">{b.excerpt}</p>
-                        <div className="flex gap-2 mt-2">
-                          <button onClick={() => { setIsEditing(b.id); setBlogData(b); setIsBlogModalOpen(true); }} className="text-blue-500 text-xs font-bold">Tahrirlash</button>
-                          <button onClick={() => deleter("blogPosts", b.id)} className="text-red-500 text-xs font-bold">O'chirish</button>
+                   <div key={b.id} className="p-6 bg-white/[0.03] border border-white/5 rounded-3xl flex flex-col md:flex-row gap-6 items-center">
+                      <img src={b.image} className="w-24 h-24 object-cover rounded-2xl" alt="" />
+                      <div className="flex-1 space-y-2">
+                        <h4 className="font-black text-xl uppercase italic tracking-tighter">{b.title}</h4>
+                        <p className="text-xs text-white/40 line-clamp-2">{b.excerpt}</p>
+                        <div className="flex gap-4 items-center">
+                           <span className="text-[9px] font-black uppercase px-2 py-1 bg-white/5 rounded-md text-white/30">{new Date(b.createdAt).toLocaleDateString()}</span>
+                           <span className={`text-[9px] font-black uppercase px-2 py-1 rounded-md ${b.published ? 'bg-green-500/10 text-green-500' : 'bg-orange-500/10 text-orange-500'}`}>
+                             {b.published ? "Published" : "Draft"}
+                           </span>
                         </div>
                       </div>
-                   </div>
-                 ))}
-               </div>
-             </motion.div>
-          ) : activeTab === "testimonials" ? (
-             <motion.div key="test" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-               <button onClick={() => { setIsEditing(null); setIsTestimonialModalOpen(true); }} className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl text-sm">Yangi Fikr qo'shish</button>
-               <div className="grid grid-cols-2 gap-6">
-                 {testimonials.map(t => (
-                   <div key={t.id} className={`p-6 rounded-3xl border ${boxClasses}`}>
-                      <h4 className={`font-black text-lg ${textTitleClasses}`}>{t.name} <span className="text-xs font-normal text-slate-400">({t.role})</span></h4>
-                      <p className="text-sm mt-2 font-medium italic opacity-80">"{t.content}"</p>
-                      <div className="flex gap-2 mt-4">
-                        <button onClick={() => { setIsEditing(t.id); setTestimonialData(t); setIsTestimonialModalOpen(true); }} className="text-blue-500 text-xs font-bold">Edit</button>
-                        <button onClick={() => deleter("testimonials", t.id)} className="text-red-500 text-xs font-bold">Delete</button>
+                      <div className="flex gap-2 w-full md:w-auto">
+                        <button onClick={() => openModal("blog", b)} className="flex-1 md:w-24 py-3 bg-white/5 rounded-xl font-bold text-[10px] uppercase">Edit</button>
+                        <button onClick={() => handleDelete("blogPosts", b.id)} className="w-12 h-12 bg-rose-500/10 text-rose-500 rounded-xl flex items-center justify-center transition-all"><Trash2 size={16} /></button>
                       </div>
                    </div>
                  ))}
                </div>
              </motion.div>
           ) : activeTab === "leads" ? (
-             <motion.div key="leads" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-               <div className="grid grid-cols-1 gap-4">
-                 {messages.map(m => (
-                   <div key={m.id} className={`p-6 rounded-3xl border ${boxClasses}`}>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className={`font-black text-lg ${textTitleClasses}`}>{m.name}</h4>
-                          <p className="text-sm text-blue-500 font-bold">{m.email}</p>
-                        </div>
-                        <p className="text-xs text-slate-400">{new Date(m.createdAt).toLocaleString()}</p>
-                      </div>
-                      <p className={`mt-4 ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>{m.content}</p>
-                      <button onClick={() => deleter("messages", m.id)} className="mt-4 text-xs font-bold text-red-500">O'chirish</button>
+             <motion.div key="leads" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+               <h3 className="font-black uppercase italic text-2xl tracking-tighter">Incoming Messages</h3>
+               <div className="space-y-4">
+                 {messages.length === 0 ? (
+                   <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-[2.5rem]">
+                      <p className="font-black uppercase text-white/20 tracking-widest italic animate-pulse">Hozircha xabarlar yo'q</p>
                    </div>
-                 ))}
+                 ) : (
+                   messages.map(m => (
+                     <div key={m.id} className="p-8 bg-white/[0.03] border border-white/5 rounded-[2rem] space-y-6 group">
+                        <div className="flex justify-between items-start">
+                           <div className="flex items-center gap-4">
+                              <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center font-black text-2xl text-accent">{m.name[0]}</div>
+                              <div>
+                                 <h4 className="font-black text-lg uppercase tracking-tight">{m.name}</h4>
+                                 <p className="text-xs font-bold text-accent">{m.email}</p>
+                              </div>
+                           </div>
+                           <div className="text-right">
+                              <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">{new Date(m.createdAt).toLocaleTimeString()}</p>
+                              <p className="text-xs font-bold text-white/40">{new Date(m.createdAt).toLocaleDateString()}</p>
+                           </div>
+                        </div>
+                        <div className="p-6 bg-white/5 rounded-2xl italic font-medium text-[15px] leading-relaxed text-white/70">
+                           "{m.content}"
+                        </div>
+                        <div className="flex justify-end gap-2 pr-2">
+                           <a href={`mailto:${m.email}`} className="text-[10px] font-black uppercase text-white/40 hover:text-accent transition-colors flex items-center gap-2">Javob berish <ArrowUpRight size={14} /></a>
+                           <div className="w-px h-3 bg-white/10 mx-2 self-center" />
+                           <button onClick={() => handleDelete("messages", m.id)} className="text-[10px] font-black uppercase text-rose-500/50 hover:text-rose-500 transition-colors">Ma'lumotni o'chirish</button>
+                        </div>
+                     </div>
+                   ))
+                 )}
                </div>
              </motion.div>
           ) : activeTab === "content" ? (
-             <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`p-8 rounded-[2rem] border ${boxClasses}`}>
-               <h3 className={`text-2xl font-black uppercase italic mb-8 ${textTitleClasses}`}>Sayt Matnlari</h3>
-               <div className="space-y-6">
+             <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-10 bg-white/[0.03] border border-white/5 rounded-[3rem] space-y-12">
+               <div className="space-y-2">
+                 <h3 className="font-black uppercase italic text-2xl tracking-tighter">Global Site Content</h3>
+                 <p className="text-white/40 text-xs font-medium">Saytning asosiy matnlarini shu yerdan tahrirlashingiz mumkin.</p>
+               </div>
+               <div className="grid grid-cols-1 gap-0 border-t border-white/5">
                  {[
-                    { key: "heroTitle", label: "Asosiy Sarlavha", val: siteContent?.heroTitle },
-                    { key: "heroDesc", label: "Asosiy Ta'rif", val: siteContent?.heroDesc }
-                 ].map(item => (
-                   <div key={item.key} className="flex justify-between items-center pb-4 border-b border-slate-200/20">
-                     <div><p className="text-xs text-slate-400 uppercase font-black">{item.label}</p><p className={`font-bold mt-1 ${textTitleClasses}`}>{item.val || "Kiritilmagan"}</p></div>
-                     <button onClick={() => { const v = prompt('Yangi:', item.val); if(v) updateContent(item.key, v); }} className="text-blue-500 font-bold text-xs hover:underline">Tahrirlash</button>
+                    { key: "heroTitle", label: "Hero: Asosiy Sarlavha", section: "Hero" },
+                    { key: "heroDesc", label: "Hero: Ta'rif Matni", section: "Hero" },
+                    { key: "heroTitleFullName", label: "About: Ism-Sharif", section: "About" },
+                    { key: "aboutTextExtended", label: "About: Batafsil Ma'lumot", section: "About" },
+                    { key: "brandingTitle", label: "Services: Branding Sarlavha", section: "Services" },
+                    { key: "brandingDesc", label: "Services: Branding Ta'rif", section: "Services" },
+                    { key: "footerDesc", label: "Footer: Qisqa Ta'rif", section: "Footer" }
+                 ].map((item, idx) => (
+                   <div key={item.key} className="flex flex-col md:flex-row items-start md:items-center py-8 border-b border-white/5 group hover:bg-white/[0.01] px-4 transition-all">
+                      <div className="w-32 mb-2 md:mb-0"><span className="text-[11px] font-black uppercase text-accent tracking-widest">{item.section}</span></div>
+                      <div className="flex-1 pr-12">
+                         <p className="text-[10px] font-black uppercase text-white/20 mb-1 tracking-widest">{item.label}</p>
+                         <p className="font-medium text-white/80 line-clamp-1">{siteContent?.[item.key] || "Standart matn ishlatilmoqda"}</p>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          const val = prompt(`${item.label} uchun yangi qiymat:`, siteContent?.[item.key] || "");
+                          if (val !== null) updateContent(item.key, val);
+                        }}
+                        className="text-white/40 hover:text-white transition-all"
+                      >
+                         <Edit2 size={20} />
+                      </button>
                    </div>
                  ))}
-                 <p className="text-xs text-slate-400">Saytdagi hamma o'zgarishlarni sidebar dagi "Tahrirlash: ON" (Live Edit) rejimi orqali to'g'ridan to'g'ri sayt o'zida ham qila olasiz!</p>
+               </div>
+               <div className="p-8 bg-white/5 rounded-3xl border border-white/5 flex gap-6 items-center">
+                  <div className="w-12 h-12 bg-accent/20 rounded-[1.5rem] flex items-center justify-center text-accent"><AlertCircle size={24} /></div>
+                  <div className="flex-1">
+                     <h5 className="font-black text-sm uppercase">Pro Maslahat</h5>
+                     <p className="text-xs text-white/40 font-medium leading-relaxed">Sidebar dagi "Live Edit" ni yoqsangiz, saytning o'zida ham matnlarni ustiga bosib tahrirlay olasiz!</p>
+                  </div>
+               </div>
+             </motion.div>
+          ) : activeTab === "testimonials" ? (
+             <motion.div key="test" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+               <div className="flex items-center justify-between">
+                  <h3 className="font-black uppercase italic text-2xl tracking-tighter">Client Feedback</h3>
+                  <button onClick={() => openModal("testimonial")} className="px-8 py-4 bg-accent text-white font-black uppercase rounded-2xl text-[10px] tracking-widest">Yangi Fikr</button>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 {testimonials.map(t => (
+                   <div key={t.id} className="p-8 bg-white/[0.03] border border-white/5 rounded-[2rem] space-y-4">
+                      <div className="flex justify-between items-center">
+                         <h4 className="font-black text-xl uppercase italic tracking-tighter">{t.name}</h4>
+                         <div className="flex gap-1 text-accent">
+                            {[...Array(t.rating || 5)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
+                         </div>
+                      </div>
+                      <p className="text-[11px] font-black uppercase text-accent/60 tracking-widest">{t.role}</p>
+                      <p className="text-sm font-medium italic text-white/60 leading-relaxed">"{t.content}"</p>
+                      <div className="flex gap-4 pt-4">
+                         <button onClick={() => openModal("testimonial", t)} className="text-[10px] font-black uppercase text-white/40 hover:text-white underline">Edit</button>
+                         <button onClick={() => handleDelete("testimonials", t.id)} className="text-[10px] font-black uppercase text-rose-500/50 hover:text-rose-500 underline">Delete</button>
+                      </div>
+                   </div>
+                 ))}
                </div>
              </motion.div>
           ) : null}
         </AnimatePresence>
       </main>
 
-      {/* MODALS */}
-      {isBlogModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/50 backdrop-blur-md">
-           <div className={`w-full max-w-2xl p-8 rounded-3xl ${boxClasses}`}>
-              <h2 className={`text-2xl font-black mb-6 ${textTitleClasses}`}>Blog Qo'shish</h2>
-              <div className="space-y-4">
-                <input placeholder="Sarlavha" value={blogData.title} onChange={e=>setBlogData({...blogData, title: e.target.value})} className={`w-full p-4 rounded-xl outline-none ${inputClasses}`} />
-                <input placeholder="Rasm URL" value={blogData.image} onChange={e=>setBlogData({...blogData, image: e.target.value})} className={`w-full p-4 rounded-xl outline-none ${inputClasses}`} />
-                <input placeholder="Qisqacha (Excerpt)" value={blogData.excerpt} onChange={e=>setBlogData({...blogData, excerpt: e.target.value})} className={`w-full p-4 rounded-xl outline-none ${inputClasses}`} />
-                <textarea placeholder="Maqola matni" value={blogData.content} onChange={e=>setBlogData({...blogData, content: e.target.value})} className={`w-full p-4 rounded-xl outline-none h-32 ${inputClasses}`} />
-                <div className="flex gap-4 pt-4">
-                  <button onClick={handleSaveBlog} className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl flex-1">Saqlash</button>
-                  <button onClick={()=>setIsBlogModalOpen(false)} className={`px-6 py-3 border font-bold rounded-xl flex-1 ${darkMode ? 'border-slate-700 text-white' : 'border-slate-200'}`}>Bekor qilish</button>
-                </div>
-              </div>
-           </div>
-        </div>
-      )}
+      {/* GLOBAL MODAL */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl">
+            <motion.div 
+               initial={{ opacity: 0, scale: 0.9, y: 20 }}
+               animate={{ opacity: 1, scale: 1, y: 0 }}
+               exit={{ opacity: 0, scale: 0.9, y: 20 }}
+               className="w-full max-w-2xl bg-[#0d0d0d] border border-white/10 p-12 rounded-[3.5rem] shadow-2xl relative overflow-hidden"
+            >
+               <button onClick={() => setIsModalOpen(false)} className="absolute top-8 right-8 text-white/20 hover:text-white transition-all"><X size={32} /></button>
+               <h2 className="text-3xl font-black uppercase italic mb-8 tracking-tighter">{editingId ? "Tahrirlash" : "Yangi qo'shish"}: {modalType}</h2>
+               
+               <div className="space-y-6">
+                 {modalType === "project" && (
+                   <>
+                     <div className="space-y-4">
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Loyiha Nomi</label>
+                           <input className="ui-input-glow p-5" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-6">
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Kategoriya (Display)</label>
+                              <input className="ui-input-glow p-5" placeholder="Masalan: Web Design" value={formData.category} onChange={e=>setFormData({...formData, category: e.target.value})} />
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Turi (Filter)</label>
+                              <select className="ui-input-glow p-5" value={formData.type} onChange={e=>setFormData({...formData, type: e.target.value})}>
+                                 <option value="all">Barchasi</option>
+                                 <option value="Web site">Web site</option>
+                                 <option value="SMM">SMM</option>
+                                 <option value="CRM">CRM</option>
+                                 <option value="YouTube">YouTube (Video)</option>
+                                 <option value="Banner">Banner</option>
+                                 <option value="Infografik">Infografik</option>
+                                 <option value="Brend book">Brend book</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Rasm URL</label>
+                           <input className="ui-input-glow p-5" value={formData.image} onChange={e=>setFormData({...formData, image: e.target.value})} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-6">
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Video URL (YouTube)</label>
+                              <input className="ui-input-glow p-5" placeholder="https://youtube.com/..." value={formData.video} onChange={e=>setFormData({...formData, video: e.target.value})} />
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Havola (Link)</label>
+                              <input className="ui-input-glow p-5" placeholder="https://..." value={formData.link} onChange={e=>setFormData({...formData, link: e.target.value})} />
+                           </div>
+                        </div>
+                     </div>
+                   </>
+                 )}
 
-      {isTestimonialModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/50 backdrop-blur-md">
-           <div className={`w-full max-w-lg p-8 rounded-3xl ${boxClasses}`}>
-              <h2 className={`text-2xl font-black mb-6 ${textTitleClasses}`}>Fikr Qo'shish</h2>
-              <div className="space-y-4">
-                <input placeholder="Ism" value={testimonialData.name} onChange={e=>setTestimonialData({...testimonialData, name: e.target.value})} className={`w-full p-4 rounded-xl outline-none ${inputClasses}`} />
-                <input placeholder="Kasbi / Rol" value={testimonialData.role} onChange={e=>setTestimonialData({...testimonialData, role: e.target.value})} className={`w-full p-4 rounded-xl outline-none ${inputClasses}`} />
-                <textarea placeholder="Fikr matni" value={testimonialData.content} onChange={e=>setTestimonialData({...testimonialData, content: e.target.value})} className={`w-full p-4 rounded-xl outline-none h-24 ${inputClasses}`} />
-                <div className="flex gap-4 pt-4">
-                  <button onClick={handleSaveTestimonial} className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl flex-1">Saqlash</button>
-                  <button onClick={()=>setIsTestimonialModalOpen(false)} className={`px-6 py-3 border font-bold rounded-xl flex-1 ${darkMode ? 'border-slate-700 text-white' : 'border-slate-200'}`}>Bekor qilish</button>
-                </div>
-              </div>
-           </div>
-        </div>
-      )}
-      
-      {/* (Projects Modal logic identical but abbreviated for space or integrated into the single form) */}
-      {isProjectModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/50 backdrop-blur-md">
-           <div className={`w-full max-w-2xl p-8 rounded-3xl ${boxClasses}`}>
-              <h2 className={`text-2xl font-black mb-6 ${textTitleClasses}`}>Loyiha Qo'shish</h2>
-              <div className="space-y-4">
-                <input placeholder="Nomlanishi" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} className={`w-full p-4 rounded-xl outline-none ${inputClasses}`} />
-                <input placeholder="Kategoriya" value={formData.category} onChange={e=>setFormData({...formData, category: e.target.value})} className={`w-full p-4 rounded-xl outline-none ${inputClasses}`} />
-                <input placeholder="Rasm URL" value={formData.image} onChange={e=>setFormData({...formData, image: e.target.value})} className={`w-full p-4 rounded-xl outline-none ${inputClasses}`} />
-                <select value={formData.type} onChange={e=>setFormData({...formData, type: e.target.value})} className={`w-full p-4 rounded-xl outline-none ${inputClasses}`}>
-                  <option>Marketing</option><option>Web site</option><option>CRM</option><option>SMM</option>
-                </select>
-                <div className="flex gap-4 pt-4">
-                  <button onClick={handleSaveProject} className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl flex-1">Saqlash</button>
-                  <button onClick={()=>setIsProjectModalOpen(false)} className={`px-6 py-3 border font-bold rounded-xl flex-1 ${darkMode ? 'border-slate-700 text-white' : 'border-slate-200'}`}>Bekor qilish</button>
-                </div>
-              </div>
-           </div>
-        </div>
-      )}
+                 {modalType === "blog" && (
+                   <>
+                     <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Maqola Sarlavhasi</label>
+                        <input className="ui-input-glow p-5" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} />
+                     </div>
+                     <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Sarlavha kodi (Slug)</label>
+                           <input className="ui-input-glow p-5" value={formData.slug} onChange={e=>setFormData({...formData, slug: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Rasm URL</label>
+                           <input className="ui-input-glow p-5" value={formData.image} onChange={e=>setFormData({...formData, image: e.target.value})} />
+                        </div>
+                     </div>
+                     <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Qisqacha ta'rif</label>
+                        <textarea className="ui-input-glow p-5 min-h-[100px]" value={formData.excerpt} onChange={e=>setFormData({...formData, excerpt: e.target.value})} />
+                     </div>
+                   </>
+                 )}
 
+                 {modalType === "testimonial" && (
+                   <>
+                     <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Mijoz Ismi</label>
+                           <input className="ui-input-glow p-5" value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Kasbi / Lavozimi</label>
+                           <input className="ui-input-glow p-5" value={formData.role} onChange={e=>setFormData({...formData, role: e.target.value})} />
+                        </div>
+                     </div>
+                     <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Mijoz fikri</label>
+                        <textarea className="ui-input-glow p-5 min-h-[120px]" value={formData.content} onChange={e=>setFormData({...formData, content: e.target.value})} />
+                     </div>
+                   </>
+                 )}
+
+                 <div className="flex gap-4 pt-8">
+                    <button onClick={handleSave} className="flex-1 py-5 bg-accent text-white font-black uppercase rounded-2xl shadow-xl shadow-accent/20 tracking-widest text-[11px]">Saqlash</button>
+                    <button onClick={() => setIsModalOpen(false)} className="flex-1 py-5 bg-white/5 text-white font-black uppercase rounded-2xl tracking-widest text-[11px]">Bekor qilish</button>
+                 </div>
+               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 function SidebarItem({ icon, label, active = false, onClick }: any) {
   return (
-    <button onClick={onClick} className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-wider transition-all ${active ? "bg-blue-600 text-white shadow-xl shadow-blue-500/20" : "text-white/40 hover:text-white/80 hover:bg-white/5"}`}>
-      <span className={active ? "text-white" : "text-blue-500/40"}>{icon}</span> {label}
+    <button onClick={onClick} className={`w-full flex items-center gap-3 px-8 py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.15em] transition-all relative ${active ? "text-accent bg-accent/5" : "text-white/30 hover:text-white/80 hover:bg-white/5"}`}>
+      {active && <motion.div layoutId="sb-active" className="absolute left-0 w-1 h-6 bg-accent rounded-r-full" />}
+      <span className={active ? "text-accent" : "text-white/20"}>{icon}</span> {label}
     </button>
+  );
+}
+
+function StatCard({ icon, label, value, delta }: any) {
+  return (
+    <div className="p-8 bg-white/[0.03] border border-white/5 rounded-[2.5rem] flex items-center gap-6">
+       <div className="w-14 h-14 bg-white/5 rounded-[1.5rem] flex items-center justify-center shrink-0">{icon}</div>
+       <div>
+          <p className="text-[10px] font-black uppercase text-white/20 tracking-widest mb-1">{label}</p>
+          <div className="flex items-baseline gap-2">
+             <h4 className="text-3xl font-black italic tracking-tighter">{value}</h4>
+             <span className="text-[9px] font-bold text-green-500 uppercase">{delta}</span>
+          </div>
+       </div>
+    </div>
   );
 }

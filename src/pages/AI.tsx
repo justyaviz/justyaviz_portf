@@ -32,13 +32,15 @@ export default function AI() {
              <motion.div 
                key={i}
                whileHover={{ y: -5 }}
-               className="p-8 glass border-[var(--border-primary)] rounded-3xl space-y-4 hover:bg-accent/5 transition-all group border shadow-sm"
+               className="ui-magic-card group"
              >
-                <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-all font-black text-xl">
-                   {tool.title[0]}
-                </div>
-                <h4 className="text-xl font-display font-bold">{tool.title}</h4>
-                <p className="text-[var(--text-secondary)] text-xs leading-relaxed opacity-60">{tool.desc}</p>
+               <div className="p-8 h-full space-y-4">
+                 <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-all font-black text-xl">
+                    {tool.title[0]}
+                 </div>
+                 <h4 className="text-xl font-display font-bold">{tool.title}</h4>
+                 <p className="text-[var(--text-secondary)] text-xs leading-relaxed opacity-60">{tool.desc}</p>
+               </div>
              </motion.div>
            ))}
         </div>
@@ -51,8 +53,8 @@ export default function AI() {
            <p className="text-[var(--text-secondary)] max-w-xl mx-auto font-medium relative z-10 text-sm md:text-base px-4">
              {t("ai.download.desc")}
            </p>
-           <button className="neon-btn w-full md:w-auto h-[55px] md:h-[60px] relative z-10 overflow-visible mx-auto inline-block">
-              <div className="neon-btn-content w-full md:w-auto px-8 md:px-16 py-4 md:py-6 text-xs md:text-sm text-center">
+           <button className="ui-btn-galaxy h-[55px] md:h-[60px] relative z-10 overflow-visible mx-auto mt-4 inline-flex items-center justify-center">
+              <div className="ui-btn-galaxy-inner px-8 md:px-16 py-4 md:py-6 text-xs md:text-sm text-center w-full justify-center text-white font-bold bg-accent tracking-widest uppercase">
                  {t("ai.download.btn")}
               </div>
            </button>

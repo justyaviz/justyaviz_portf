@@ -67,14 +67,16 @@ export default function Branding() {
                   key={i}
                   {...fadeIn}
                   transition={{ delay: i * 0.1 }}
-                  className="glass p-8 md:p-12 rounded-3xl md:rounded-[3.5rem] border-[var(--border-primary)] space-y-6 md:space-y-8 hover:bg-accent/5 transition-all group shadow-sm"
+                  className="ui-magic-card group"
                 >
-                   <h4 className="text-xl md:text-3xl font-display font-bold leading-tight uppercase tracking-tight">
-                      <EditableText contentKey={`${card.key}Title`} defaultText={card.title} as="span" />
-                   </h4>
-                   <div className="text-[var(--text-secondary)] text-[13px] md:text-sm leading-relaxed font-medium">
-                      <EditableText contentKey={`${card.key}Desc`} defaultText={card.desc} type="textarea" />
-                   </div>
+                  <div className="p-8 md:p-12 space-y-6 md:space-y-8 h-full relative z-10 transition-all">
+                     <h4 className="text-xl md:text-3xl font-display font-bold leading-tight uppercase tracking-tight">
+                        <EditableText contentKey={`${card.key}Title`} defaultText={card.title} as="span" />
+                     </h4>
+                     <div className="text-[var(--text-secondary)] text-[13px] md:text-sm leading-relaxed font-medium">
+                        <EditableText contentKey={`${card.key}Desc`} defaultText={card.desc} type="textarea" />
+                     </div>
+                  </div>
                 </motion.div>
              ))}
           </div>
@@ -90,8 +92,10 @@ export default function Branding() {
                <p className="text-[var(--text-secondary)] text-sm md:text-base leading-relaxed font-medium">
                  {t("branding.logo.desc")}
                </p>
-               <button className="w-full md:w-auto px-10 py-4 bg-accent text-white font-black uppercase text-xs tracking-widest rounded-full hover:scale-105 transition-all shadow-xl">
-                  {t("branding.logo.cta")}
+               <button className="ui-btn-galaxy w-full md:w-auto">
+                 <div className="ui-btn-galaxy-inner px-10 py-4 uppercase text-xs tracking-widest w-full justify-center">
+                   {t("branding.logo.cta")}
+                 </div>
                </button>
             </div>
             <div className="grid grid-cols-4 gap-3 md:gap-4">

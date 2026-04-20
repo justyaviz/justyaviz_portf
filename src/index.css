@@ -217,17 +217,41 @@
 
 /* 2. Uiverse Element: Cyberpunk Shine Button */
 .ui-btn-shine {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   position: relative;
-  padding: 12px 32px;
-  font-size: 14px;
-  font-weight: 600;
+  padding: 14px 32px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
   color: var(--text-primary);
-  background: var(--bg-primary);
+  background: var(--glass-bg);
   border: 1px solid var(--border-primary);
   border-radius: 999px;
   overflow: hidden;
   cursor: pointer;
-  transition: border-color 0.3s;
+  transition: all 0.3s ease;
+}
+
+.ui-btn-shine:active {
+  transform: scale(0.95);
+}
+
+.ui-btn-shine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--text-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.ui-btn-shine:hover::before {
+  opacity: 0.05;
 }
 
 .ui-btn-shine::after {
@@ -291,6 +315,109 @@
     transform: scale(1.2);
     opacity: 0;
   }
+}
+
+/* 4. Uiverse Magic Glowing Hover Card */
+.ui-magic-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem; /* Standard rounded-3xl equivalent */
+  z-index: 1;
+}
+
+.ui-magic-card::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0%, var(--accent) 15%, transparent 30%);
+  animation: ui-spin-border 4s linear infinite;
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+  z-index: -2;
+}
+
+.ui-magic-card:hover::before {
+  opacity: 1;
+}
+
+/* Base surface on top of gradient */
+.ui-magic-card::after {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: calc(1.5rem - 1.5px);
+  z-index: -1;
+  transition: background-color 0.3s;
+}
+
+.ui-magic-card:hover::after {
+  background-color: var(--bg-primary);
+}
+
+@keyframes ui-spin-border {
+  100% { transform: rotate(360deg); }
+}
+
+/* 5. Uiverse Cyberpunk Minimal Input Wrapper */
+.ui-input-glow {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 1rem;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05), inset -2px -2px 5px rgba(255,255,255,0.02);
+}
+
+.ui-input-glow:focus-within {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(0,0,0,0.1), 0 0 20px rgba(0, 163, 255, 0.15); /* Adjust opacity based on accent */
+  transform: translateY(-2px);
+}
+
+/* 6. Uiverse Social Elastic Button */
+.ui-social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), color 0.3s;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.ui-social-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  border-radius: inherit;
+  transform: scale(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.ui-social-icon:hover {
+  transform: translateY(-5px) scale(1.05);
+  color: #fff;
+  border-color: transparent;
+}
+
+.ui-social-icon:hover::before {
+  transform: scale(1.5);
 }
 
 

@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { 
   Send, 
   ArrowRight, 
@@ -81,43 +81,48 @@ export default function Contact() {
                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-4">
                      <label className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)] ml-2">{t("contact.form.firstname")}*</label>
-                     <input 
-                       type="text" 
-                       value={formData.name}
-                       onChange={e => setFormData({...formData, name: e.target.value})}
-                       required
-                       className="w-full bg-accent/5 border border-[var(--border-primary)] rounded-2xl p-6 focus:border-accent outline-none transition-all placeholder:text-[var(--text-secondary)]/30 text-[var(--text-primary)]"
-
-                       placeholder="..."
-                     />
+                     <div className="ui-input-glow rounded-2xl">
+                       <input 
+                         type="text" 
+                         value={formData.name}
+                         onChange={e => setFormData({...formData, name: e.target.value})}
+                         required
+                         className="w-full bg-transparent p-6 outline-none text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]/30 rounded-2xl"
+                         placeholder="..."
+                       />
+                     </div>
                   </div>
                   <div className="space-y-4">
                      <label className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)] ml-2">{t("contact.form.lastname")}*</label>
-                     <input 
-                       type="text" 
-                       className="w-full bg-accent/5 border border-[var(--border-primary)] rounded-2xl p-6 focus:border-accent outline-none transition-all placeholder:text-[var(--text-secondary)]/30 text-[var(--text-primary)]"
-                       placeholder="..."
-                     />
+                     <div className="ui-input-glow rounded-2xl">
+                       <input 
+                         type="text" 
+                         className="w-full bg-transparent p-6 outline-none text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]/30 rounded-2xl"
+                         placeholder="..."
+                       />
+                     </div>
                   </div>
                </div>
 
                <div className="space-y-4">
                   <label className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)] ml-2">{t("contact.form.contactmethod")}*</label>
-                  <input 
-                    type="text" 
-                    value={formData.email}
-                    onChange={e => setFormData({...formData, email: e.target.value})}
-                    required
-                    className="w-full bg-accent/5 border border-[var(--border-primary)] rounded-2xl p-6 focus:border-accent outline-none transition-all placeholder:text-[var(--text-secondary)]/30 text-[var(--text-primary)]"
-                    placeholder="dizayn.13031@gmail.com yoki raqam"
-                  />
+                  <div className="ui-input-glow rounded-2xl">
+                    <input 
+                      type="text" 
+                      value={formData.email}
+                      onChange={e => setFormData({...formData, email: e.target.value})}
+                      required
+                      className="w-full bg-transparent p-6 outline-none text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]/30 rounded-2xl"
+                      placeholder="dizayn.13031@gmail.com yoki raqam"
+                    />
+                  </div>
                </div>
 
                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-4">
                      <label className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)] ml-2">{t("contact.form.location")}*</label>
-                     <div className="relative">
-                        <select className="w-full bg-accent/5 border border-[var(--border-primary)] rounded-2xl p-6 focus:border-accent outline-none transition-all appearance-none cursor-pointer text-[var(--text-secondary)]">
+                     <div className="relative ui-input-glow rounded-2xl">
+                        <select className="w-full bg-transparent p-6 outline-none appearance-none cursor-pointer text-[var(--text-primary)] rounded-2xl">
                            <option>{t("contact.form.country.select")}</option>
                            <option>{t("contact.form.country.uz")}</option>
                            <option>{t("contact.form.country.other")}</option>
@@ -127,8 +132,8 @@ export default function Contact() {
                   </div>
                   <div className="space-y-4">
                      <label className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)] ml-2">{t("contact.form.category")}*</label>
-                     <div className="relative">
-                        <select className="w-full bg-accent/5 border border-[var(--border-primary)] rounded-2xl p-6 focus:border-accent outline-none transition-all appearance-none cursor-pointer text-[var(--text-secondary)]">
+                     <div className="relative ui-input-glow rounded-2xl">
+                        <select className="w-full bg-transparent p-6 outline-none appearance-none cursor-pointer text-[var(--text-primary)] rounded-2xl">
                            <option>{t("contact.form.category.select")}</option>
                            <option>{t("contact.form.category.marketing")}</option>
                            <option>{t("contact.form.category.website")}</option>
@@ -141,18 +146,22 @@ export default function Contact() {
 
                <div className="space-y-4">
                   <label className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)] ml-2">{t("contact.form.message")}*</label>
-                  <textarea 
-                    value={formData.content}
-                    onChange={e => setFormData({...formData, content: e.target.value})}
-                    required
-                    rows={6}
-                    className="w-full bg-accent/5 border border-[var(--border-primary)] rounded-3xl p-6 focus:border-accent outline-none transition-all resize-none placeholder:text-[var(--text-secondary)]/30 text-[var(--text-primary)]"
-                    placeholder={t("contact.form.placeholder")}
-                  />
+                  <div className="ui-input-glow rounded-3xl">
+                    <textarea 
+                      value={formData.content}
+                      onChange={e => setFormData({...formData, content: e.target.value})}
+                      required
+                      rows={6}
+                      className="w-full bg-transparent p-6 outline-none resize-none text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]/30 rounded-3xl"
+                      placeholder={t("contact.form.placeholder")}
+                    />
+                  </div>
                </div>
 
-               <button type="submit" disabled={status === "loading"} className="px-12 py-6 bg-accent text-white font-black uppercase tracking-widest text-xs rounded-full hover:shadow-xl transition-all flex items-center justify-center gap-4 group active:scale-95 disabled:opacity-50">
-                 {status === "loading" ? "Yuborilmoqda..." : t("contact.form.submit")} <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+               <button type="submit" disabled={status === "loading"} className="ui-btn-galaxy w-full md:w-auto">
+                 <div className="ui-btn-galaxy-inner px-12 py-5 uppercase text-xs tracking-widest w-full justify-center">
+                   {status === "loading" ? "Yuborilmoqda..." : t("contact.form.submit")} <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                 </div>
                </button>
             </form>
           </motion.div>
@@ -209,7 +218,7 @@ export default function Contact() {
                      { icon: <Youtube size={20} />, url: "https://youtube.com/@just_yaviz" },
                      { icon: <Github size={20} />, url: "https://github.com/justyaviz" }
                    ].map((social, i) => (
-                     <a key={i} href={social.url} target="_blank" className="w-12 h-12 bg-accent/5 rounded-2xl flex items-center justify-center text-[var(--text-secondary)] hover:text-accent hover:bg-accent/10 transition-all border border-[var(--border-primary)]">
+                     <a key={i} href={social.url} target="_blank" className="ui-social-icon">
                        {social.icon}
                      </a>
                    ))}

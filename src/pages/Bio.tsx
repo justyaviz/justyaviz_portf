@@ -161,13 +161,15 @@ export default function Bio() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="glass p-8 rounded-3xl border-[var(--border-primary)] space-y-4 hover:bg-accent/5 transition-all border-l-4 border-l-accent shadow-sm"
+                  className="ui-magic-card group"
                 >
-                   <div className="space-y-1">
-                      <h4 className="text-accent font-black uppercase tracking-widest text-[10px]">{job.company}</h4>
-                      <h5 className="text-xl font-bold">{job.role}</h5>
+                   <div className="p-8 h-full space-y-4 relative z-10 transition-all border-l-4 border-l-accent shadow-sm">
+                      <div className="space-y-1">
+                         <h4 className="text-accent font-black uppercase tracking-widest text-[10px]">{job.company}</h4>
+                         <h5 className="text-xl font-bold">{job.role}</h5>
+                      </div>
+                      <p className="text-[var(--text-secondary)] text-sm leading-relaxed opacity-80">{job.desc}</p>
                    </div>
-                   <p className="text-[var(--text-secondary)] text-sm leading-relaxed opacity-80">{job.desc}</p>
                 </motion.div>
               ))}
            </div>
@@ -224,9 +226,11 @@ export default function Bio() {
                 { title: t("bio.branding.card3.t"), desc: t("bio.branding.card3.d") },
                 { title: t("bio.branding.card4.t"), desc: t("bio.branding.card4.d") }
               ].map((item, i) => (
-                <div key={i} className="glass p-6 rounded-3xl border-[var(--border-primary)] space-y-3 shadow-md hover:border-accent/30 transition-all">
-                   <h5 className="font-bold text-sm tracking-tight">{item.title}</h5>
-                   <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed font-medium opacity-70">{item.desc}</p>
+                <div key={i} className="ui-magic-card group">
+                   <div className="p-6 h-full space-y-3 relative z-10 transition-all">
+                      <h5 className="font-bold text-sm tracking-tight">{item.title}</h5>
+                      <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed font-medium opacity-70">{item.desc}</p>
+                   </div>
                 </div>
               ))}
            </div>

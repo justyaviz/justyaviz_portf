@@ -144,10 +144,10 @@ export default function Projects() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="group cursor-pointer"
+                className="group cursor-pointer ui-magic-card"
                 onClick={() => handleProjectClick(p)}
               >
-                <div className={`relative ${p.type === "YouTube" ? "aspect-video" : "aspect-[4/5]"} rounded-[2.5rem] overflow-hidden border border-white/5 mb-6 group/card`}>
+                <div className={`relative ${p.type === "YouTube" ? "aspect-video" : "aspect-[4/5]"} rounded-[2.5rem] overflow-hidden mb-6 group/card`}>
                   <ProjectControls project={p} />
                   {p.video && !getYoutubeId(p.video) ? (
                     <div className="absolute inset-0 w-full h-full">
@@ -187,12 +187,12 @@ export default function Projects() {
                     <Logo className="w-full h-full text-white" />
                   </div>
                 </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 px-4 pb-6">
                     <div className="flex items-center justify-between">
                       <h4 className="text-2xl md:text-3xl font-display font-black tracking-tight">{p.title}</h4>
-                      {(p.video || p.link) && <ArrowUpRight className="text-white/20 group-hover:text-accent transition-colors" size={20} />}
+                      {(p.video || p.link) && <ArrowUpRight className="text-[var(--text-secondary)] opacity-50 group-hover:text-accent group-hover:opacity-100 transition-colors" size={20} />}
                     </div>
-                    <p className="text-white/40 text-[10px] md:text-xs uppercase font-bold tracking-widest leading-relaxed">
+                    <p className="text-[var(--text-secondary)] opacity-60 text-[10px] md:text-xs uppercase font-bold tracking-widest leading-relaxed">
                       {p.category}
                       {p.title === "aloo shop" && (
                         <span className="block mt-2 text-[10px] normal-case font-medium text-accent/60 italic">

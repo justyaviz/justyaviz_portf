@@ -159,10 +159,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           <Link 
             to="/contact"
-            className="group relative inline-flex items-center justify-center hidden sm:flex ml-2"
+            className="ui-btn-galaxy hidden sm:flex ml-2"
           >
-             <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-accent to-accent-pink opacity-40 group-hover:opacity-100 blur-sm transition-all duration-500 group-hover:blur-md" />
-             <div className="relative px-5 py-2 bg-[var(--bg-primary)] rounded-full border border-[var(--border-primary)] text-[var(--text-primary)] text-[11px] font-bold uppercase tracking-widest transition-all">
+             <div className="ui-btn-galaxy-inner px-4 py-1.5 text-[11px] uppercase tracking-widest">
                 {t("nav.connect")}
              </div>
           </Link>
@@ -210,17 +209,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          <div className="flex gap-8 md:gap-16">
-            <a href="https://instagram.com/just_yaviz" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:scale-125">
+          <div className="flex gap-6">
+            <a href="https://instagram.com/just_yaviz" className="ui-social-icon">
               <Instagram size={24} />
             </a>
-            <a href="https://t.me/justyaviz_life" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:scale-125">
+            <a href="https://t.me/justyaviz_life" className="ui-social-icon">
               <Send size={24} />
             </a>
-            <a href="https://github.com/justyaviz" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:scale-125">
+            <a href="https://github.com/justyaviz" className="ui-social-icon">
               <Github size={24} />
             </a>
-            <a href="https://youtube.com/@just_yaviz" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:scale-125">
+            <a href="https://youtube.com/@just_yaviz" className="ui-social-icon">
               <Youtube size={24} />
             </a>
           </div>

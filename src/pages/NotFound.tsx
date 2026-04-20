@@ -55,9 +55,11 @@ export default function NotFound() {
            animate={{ opacity: 1, y: 0 }}
            transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <Link to="/" className="group flex items-center gap-3 px-8 py-4 bg-[var(--text-primary)] text-[var(--bg-primary)] rounded-full font-bold uppercase tracking-widest text-[13px] hover:scale-105 transition-transform">
-            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            Bosh sahifaga qaytish
+          <Link to="/" className="ui-btn-galaxy">
+            <div className="ui-btn-galaxy-inner px-8 py-4 w-full flex items-center gap-3 text-[13px] uppercase tracking-widest text-[#fff] bg-[var(--text-primary)]">
+               <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+               Bosh sahifaga qaytish
+            </div>
           </Link>
         </motion.div>
       </div>

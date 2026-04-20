@@ -26,6 +26,70 @@
         "aboutText": { "type": "string" },
         "updatedAt": { "type": "string", "format": "date-time" }
       }
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Client feedback",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "content": { "type": "string" },
+        "rating": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "content"]
+    },
+    "BlogPost": {
+      "title": "Blog Post",
+      "description": "Article for blog/news section",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "content": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "image": { "type": "string" },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "slug", "content"]
+    },
+    "AnalyticsEvent": {
+      "title": "Analytics Event",
+      "description": "Daily aggregated website visits",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "description": "YYYY-MM-DD" },
+        "visitors": { "type": "number" },
+        "pageviews": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["date", "visitors"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "System or user notifications",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "message": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["type", "message", "read"]
+    },
+    "Message": {
+      "title": "Contact Message",
+      "description": "Message from contact form",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "content"]
     }
   },
   "firestore": {
@@ -36,6 +100,26 @@
     "/siteContent/{docId}": {
       "schema": "SiteContent",
       "description": "Singleton or sectional text content"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": "Testimonial",
+      "description": "Collection of client testimonials"
+    },
+    "/blogPosts/{postId}": {
+      "schema": "BlogPost",
+      "description": "Collection of blog/news articles"
+    },
+    "/analytics/{dateId}": {
+      "schema": "AnalyticsEvent",
+      "description": "Daily analytics statistics"
+    },
+    "/notifications/{notifId}": {
+      "schema": "Notification",
+      "description": "Admin notifications"
+    },
+    "/messages/{msgId}": {
+      "schema": "Message",
+      "description": "Contact form messages"
     }
   }
 }

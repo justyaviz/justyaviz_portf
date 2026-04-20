@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
-import { db } from "../lib/firebase";
+import { db } from "../firebase";
 import { useAppContext } from "../context/AppContext";
 import { ProjectControls, AddProjectBtn } from "../components/ProjectEditor";
 import { Logo } from "../components/Logo";

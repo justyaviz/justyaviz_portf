@@ -56,15 +56,16 @@
   p {
     @apply font-plus-jakarta font-medium transition-colors;
     font-size: 14px;
-    @screen md {
-      font-size: 15px;
-    }
     color: var(--text-secondary);
     line-height: 1.6;
-    @screen md {
+    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 768px) {
+    p {
+      font-size: 15px;
       line-height: 1.7;
     }
-    letter-spacing: -0.01em;
   }
 
   h1, h2, h3, h4 {

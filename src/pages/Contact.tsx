@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { useState } from "react";
 import { 
   Send, 
   ArrowRight, 
@@ -12,6 +13,8 @@ import {
 } from "lucide-react";
 import { EditableText } from "../components/EditableText";
 import { useAppContext } from "../context/AppContext";
+import { db } from "../firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -22,6 +25,24 @@ const fadeIn = {
 
 export default function Contact() {
   const { t, theme } = useAppContext();
+  const [formData, setFormData] = useState({ name: "", email: "", content: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.content) return;
+    setStatus("loading");
+    try {
+      await addDoc(collection(db, "messages"), {
+        ...formData,
+        createdAt: new Date().toISOString()
+      });
+      setStatus("success");
+      setFormData({ name: "", email: "", content: "" });
+    } catch (err) {
+      setStatus("error");
+    }
+  };
 
   return (
     <div className="pt-40 pb-20 px-6">
@@ -51,13 +72,22 @@ export default function Contact() {
             {...fadeIn}
             className="lg:col-span-8 glass p-8 md:p-14 rounded-[3.5rem] border-[var(--border-primary)] space-y-12 shadow-sm"
           >
-            <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-10" onSubmit={handleSubmit}>
+               {status === "success" && (
+                 <div className="p-4 bg-green-500/10 border border-green-500/20 text-green-500 rounded-xl font-medium text-center">
+                   Xabaringiz muvaffaqiyatli yuborildi!
+                 </div>
+               )}
                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-4">
                      <label className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)] ml-2">{t("contact.form.firstname")}*</label>
                      <input 
                        type="text" 
+                       value={formData.name}
+                       onChange={e => setFormData({...formData, name: e.target.value})}
+                       required
                        className="w-full bg-accent/5 border border-[var(--border-primary)] rounded-2xl p-6 focus:border-accent outline-none transition-all placeholder:text-[var(--text-secondary)]/30 text-[var(--text-primary)]"
+
                        placeholder="..."
                      />
                   </div>
@@ -75,8 +105,11 @@ export default function Contact() {
                   <label className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)] ml-2">{t("contact.form.contactmethod")}*</label>
                   <input 
                     type="text" 
+                    value={formData.email}
+                    onChange={e => setFormData({...formData, email: e.target.value})}
+                    required
                     className="w-full bg-accent/5 border border-[var(--border-primary)] rounded-2xl p-6 focus:border-accent outline-none transition-all placeholder:text-[var(--text-secondary)]/30 text-[var(--text-primary)]"
-                    placeholder="dizayn.13031@gmail.com"
+                    placeholder="dizayn.13031@gmail.com yoki raqam"
                   />
                </div>
 
@@ -109,14 +142,17 @@ export default function Contact() {
                <div className="space-y-4">
                   <label className="text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)] ml-2">{t("contact.form.message")}*</label>
                   <textarea 
+                    value={formData.content}
+                    onChange={e => setFormData({...formData, content: e.target.value})}
+                    required
                     rows={6}
                     className="w-full bg-accent/5 border border-[var(--border-primary)] rounded-3xl p-6 focus:border-accent outline-none transition-all resize-none placeholder:text-[var(--text-secondary)]/30 text-[var(--text-primary)]"
                     placeholder={t("contact.form.placeholder")}
                   />
                </div>
 
-               <button className="px-12 py-6 bg-accent text-white font-black uppercase tracking-widest text-xs rounded-full hover:shadow-xl transition-all flex items-center justify-center gap-4 group active:scale-95">
-                 {t("contact.form.submit")} <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+               <button type="submit" disabled={status === "loading"} className="px-12 py-6 bg-accent text-white font-black uppercase tracking-widest text-xs rounded-full hover:shadow-xl transition-all flex items-center justify-center gap-4 group active:scale-95 disabled:opacity-50">
+                 {status === "loading" ? "Yuborilmoqda..." : t("contact.form.submit")} <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
                </button>
             </form>
           </motion.div>

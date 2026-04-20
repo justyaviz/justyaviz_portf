@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth, db } from '../lib/firebase';
+import { auth, db } from '../firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 
@@ -11,6 +11,8 @@ interface AdminContextType {
   siteContent: any;
   updateContent: (key: string, value: string) => Promise<void>;
   loading: boolean;
+  loginWithPhone: (phone: string) => void;
+  logoutAdmin: () => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
@@ -22,10 +24,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [loading, setLoading] = useState(true);
   const [phoneVerified, setPhoneVerified] = useState(localStorage.getItem('admin_phone_verified') === 'true');
 
-  const isAdmin = (user?.email?.toLowerCase() === 'yahyobektohirjonov0@gmail.com') || phoneVerified;
+  const isAdmin = phoneVerified || (user?.email?.toLowerCase() === 'yahyobektohirjonov0@gmail.com');
 
   useEffect(() => {
-    // Safety timeout: if auth takes too long, stop loading
     const timer = setTimeout(() => setLoading(false), 5000);
 
     const unsubAuth = onAuthStateChanged(auth, (u) => {
@@ -37,8 +38,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const unsubContent = onSnapshot(doc(db, "siteContent", "main"), (d) => {
       if (d.exists()) setSiteContent(d.data());
     }, (err) => {
-      console.warn("Content subscription error (likely permissions):", err);
-      // Don't set loading false here, auth is more important
+      console.warn("Content subscription error:", err);
     });
 
     return () => {
@@ -47,6 +47,20 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       clearTimeout(timer);
     };
   }, []);
+
+  const loginWithPhone = (phone: string) => {
+    // Bu yerda haqiqiy Firebase OTP bo'lishi kerak, lekin config o'chirilganligi sababli mock ishlatamiz
+    if (phone === "+998931949200") {
+      setPhoneVerified(true);
+      localStorage.setItem('admin_phone_verified', 'true');
+    }
+  };
+
+  const logoutAdmin = () => {
+    setPhoneVerified(false);
+    localStorage.removeItem('admin_phone_verified');
+    setUser(null);
+  };
 
   const updateContent = async (key: string, value: string) => {
     if (!isAdmin) return;
@@ -58,7 +72,17 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <AdminContext.Provider value={{ user, isAdmin, isEditMode, setEditMode, siteContent, updateContent, loading }}>
+    <AdminContext.Provider value={{ 
+      user, 
+      isAdmin, 
+      isEditMode, 
+      setEditMode, 
+      siteContent, 
+      updateContent, 
+      loading,
+      loginWithPhone,
+      logoutAdmin
+    }}>
       {children}
     </AdminContext.Provider>
   );

@@ -28,5 +28,35 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    // Testimonials
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Blog
+    match /blogPosts/{postId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Analytics
+    match /analytics/{dateId} {
+      allow read: if isAdmin();
+      // Allow public to increment page views securely (ideally only fields but this is simple demo)
+      allow write: if true; 
+    }
+
+    // Notifications
+    match /notifications/{notifId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Contact Messages
+    match /messages/{msgId} {
+      allow create: if true; 
+      allow read, update, delete: if isAdmin();
+    }
   }
 }

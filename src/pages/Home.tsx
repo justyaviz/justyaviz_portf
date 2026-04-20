@@ -29,8 +29,8 @@ import { Link } from "react-router-dom";
 import { EditableText } from "../components/EditableText";
 import { ProjectControls, AddProjectBtn } from "../components/ProjectEditor";
 import { useAppContext } from "../context/AppContext";
-import { db } from "../lib/firebase";
-import { doc, onSnapshot, collection, query, limit } from "firebase/firestore";
+import { db } from "../firebase";
+import { doc, onSnapshot, collection, query, limit, orderBy } from "firebase/firestore";
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -42,6 +42,7 @@ const fadeIn = {
 export default function Home() {
   const [content, setContent] = useState<any>(null);
   const [projects, setProjects] = useState<any[]>([]);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
   const { t, lang, theme } = useAppContext();
 
   useEffect(() => {
@@ -54,9 +55,15 @@ export default function Home() {
       setProjects(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
     });
 
+    const qt = query(collection(db, "testimonials"), orderBy("createdAt", "desc"), limit(3));
+    const unsubTestimonials = onSnapshot(qt, (snapshot) => {
+      setTestimonials(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
+
     return () => {
       unsubContent();
       unsubProjects();
+      unsubTestimonials();
     };
   }, []);
 
@@ -466,11 +473,11 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
-            {[
+            {(testimonials.length > 0 ? testimonials : [
               { name: t("testimonials.t1.name"), Role: t("testimonials.t1.role"), text: t("testimonials.t1.text") },
               { name: t("testimonials.t2.name"), Role: t("testimonials.t2.role"), text: t("testimonials.t2.text") },
               { name: t("testimonials.t3.name"), Role: t("testimonials.t3.role"), text: t("testimonials.t3.text") }
-            ].map((test, i) => (
+            ]).map((test, i) => (
               <motion.div 
                 key={i} 
                 {...fadeIn} 
@@ -480,10 +487,10 @@ export default function Home() {
                 <div className="text-accent/20 absolute top-10 right-10 group-hover:text-accent/60 transition-all">
                   <Quote size={40} />
                 </div>
-                <p className="text-white/60 text-lg md:text-xl font-dm-sans leading-relaxed italic">"{test.text}"</p>
+                <p className="text-white/60 text-lg md:text-xl font-dm-sans leading-relaxed italic">"{test.text || test.content}"</p>
                 <div className="pt-6 border-t border-white/5">
                   <h5 className="text-lg md:text-xl font-satoshi font-bold">{test.name}</h5>
-                  <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-white/30">{test.Role}</span>
+                  <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-white/30">{test.Role || test.role}</span>
                 </div>
               </motion.div>
             ))}

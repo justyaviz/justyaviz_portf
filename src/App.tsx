@@ -11,6 +11,8 @@ import Contact from "./pages/Contact";
 import AI from "./pages/AI";
 import Bio from "./pages/Bio";
 import Admin from "./pages/Admin";
+import Blog from "./pages/Blog";
+import AnalyticsTracker from "./components/AnalyticsTracker";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -22,6 +24,7 @@ export default function App() {
 
   return (
     <Router>
+      <AnalyticsTracker />
       <AppProvider>
         <AdminProvider>
           <AnimatePresence mode="wait">
@@ -43,7 +46,7 @@ export default function App() {
                 transition={{ duration: 0.8 }}
                 className="flex flex-col items-center gap-4"
               >
-                <div className="text-5xl font-satoshi font-black tracking-tighter">
+                <div className="text-5xl font-satoshi font-black tracking-tighter text-white">
                   JUST <span className="text-white/20">YAVIZ</span>
                 </div>
                 <div className="w-12 h-[1px] bg-white/20 relative overflow-hidden">
@@ -66,6 +69,7 @@ export default function App() {
                 <Route path="/branding" element={<Branding />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/blog" element={<Blog />} />
                 <Route path="/ai" element={<AI />} />
                 <Route path="/bio" element={<Bio />} />
                 <Route path="/admin" element={<Admin />} />

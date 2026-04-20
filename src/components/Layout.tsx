@@ -19,7 +19,7 @@ import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useAdmin } from "./AdminProvider";
 import { useAppContext } from "../context/AppContext";
-import { logout } from "../lib/firebase";
+import { auth } from "../firebase";
 import { Logo } from "./Logo";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -64,7 +64,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link to="/admin" className="hover:opacity-60 transition-opacity flex items-center gap-2">
               <Settings size={12} /> Dashboard
             </Link>
-            <button onClick={logout} className="hover:opacity-60 transition-opacity flex items-center gap-2 text-red-700">
+            <button onClick={() => auth.signOut()} className="hover:opacity-60 transition-opacity flex items-center gap-2 text-red-700">
               <LogOut size={12} /> Chiqish
             </button>
           </div>
@@ -111,6 +111,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             { to: "/", label: t("nav.home") },
             { to: "/branding", label: t("nav.branding") },
             { to: "/projects", label: t("nav.projects") },
+            { to: "/blog", label: "Blog" },
             { to: "/contact", label: t("nav.contact") }
           ].map(link => (
             <Link 
@@ -176,6 +177,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link to="/" onClick={() => setMobileMenuOpen(false)}>{t("nav.home")}</Link>
             <Link to="/branding" onClick={() => setMobileMenuOpen(false)}>{t("nav.branding")}</Link>
             <Link to="/projects" onClick={() => setMobileMenuOpen(false)}>{t("nav.projects")}</Link>
+            <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
             <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>{t("nav.contact")}</Link>
           </motion.div>
         )}

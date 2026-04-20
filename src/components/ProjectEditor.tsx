@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { db } from '../lib/firebase';
+import { db } from '../firebase';
 import { doc, updateDoc, deleteDoc, addDoc, collection } from 'firebase/firestore';
 import { Edit2, Trash2, X, Plus, Upload, Link as LinkIcon, Image as ImageIcon, Video as VideoIcon, Play } from 'lucide-react';
 import { useAdmin } from './AdminProvider';

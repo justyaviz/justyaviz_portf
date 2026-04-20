@@ -14,8 +14,8 @@
   --font-albert: "Albert Sans", sans-serif;
   --font-cactus: "Cactus Classical Serif", serif;
   
-  --color-accent: #8B5CF6;
-  --color-accent-pink: #D946EF;
+  --color-accent: var(--accent);
+  --color-accent-pink: var(--accent-pink);
   --color-ink: #000000;
   --color-neon: #ffffff;
 }
@@ -23,11 +23,13 @@
 @layer base {
   :root {
     --bg-primary: #ffffff;
-    --text-primary: #0f172a;
+    --text-primary: #060e29;
     --text-secondary: #64748b;
-    --border-primary: rgba(0, 0, 0, 0.05);
-    --glass-bg: rgba(255, 255, 255, 0.8);
-    --hero-note-bg: #f8fafc;
+    --border-primary: #e5e7eb;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --hero-note-bg: #f4f5f6;
+    --accent: #2f49e0;
+    --accent-pink: #3a56e4;
   }
 
   .dark {
@@ -37,6 +39,8 @@
     --border-primary: rgba(255, 255, 255, 0.05);
     --glass-bg: rgba(255, 255, 255, 0.03);
     --hero-note-bg: #0a0a0a;
+    --accent: #8B5CF6;
+    --accent-pink: #D946EF;
   }
 
   html {

@@ -95,12 +95,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* REFINED NAVBAR - FLOATING PILL */}
       <nav className={`pill-nav transition-all ${isAdmin ? 'top-16' : 'top-6'}`}>
-        <div className="flex items-center gap-3">
-           <Link to="/" className="flex flex-row items-center gap-3">
-              <div className="flex flex-col items-center justify-center -rotate-90">
-                 <span className="text-[7px] font-bold uppercase tracking-[0.3em] opacity-10">just.yaviz</span>
+        <div className="flex items-center">
+           <Link to="/" className="flex items-center gap-3 group pl-1">
+              <div className="flex flex-col items-center justify-center -rotate-90 hidden sm:flex -ml-2">
+                 <span className="text-[7px] font-bold uppercase tracking-[0.3em] opacity-30 group-hover:opacity-100 transition-opacity">just.yaviz</span>
               </div>
-              <div className={`w-10 h-10 flex items-center justify-center font-black rounded-xl overflow-hidden p-2.5 transition-colors ${theme === 'dark' ? 'bg-white text-black' : 'bg-black text-white'}`}>
+              <div className={`w-10 h-10 flex items-center justify-center font-black rounded-xl overflow-hidden p-2.5 transition-colors shadow-md ${theme === 'dark' ? 'bg-white text-black' : 'bg-black text-white'}`}>
                  <Logo className="w-full h-full" />
               </div>
            </Link>
@@ -126,18 +126,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         <div className="flex items-center gap-4">
           {/* LANGUAGE SWITCHER */}
-          <div className="flex items-center gap-1.5 p-1 bg-[var(--border-primary)] rounded-full">
+          <div className="flex items-center gap-1 p-1 bg-[var(--border-primary)] rounded-full">
             {[
-              { code: 'uz', flag: '🇺🇿' },
-              { code: 'ru', flag: '🇷🇺' },
-              { code: 'en', flag: '🇬🇧' }
+              { code: 'uz', label: 'UZ' },
+              { code: 'ru', label: 'RU' },
+              { code: 'en', label: 'EN' }
             ].map(l => (
               <button
                 key={l.code}
                 onClick={() => setLang(l.code as any)}
-                className={`w-7 h-7 flex items-center justify-center rounded-full text-[13px] transition-all ${lang === l.code ? 'bg-white shadow-sm scale-110' : 'opacity-40 hover:opacity-100'}`}
+                className={`relative px-3 py-1.5 rounded-full text-[10px] font-bold transition-all duration-300 ${lang === l.code ? 'text-[var(--bg-primary)] shadow-md' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
               >
-                {l.flag}
+                {lang === l.code && (
+                  <motion.div 
+                    layoutId="active-lang"
+                    className="absolute inset-0 bg-[var(--text-primary)] rounded-full z-0"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  />
+                )}
+                <span className="relative z-10 uppercase tracking-widest">{l.label}</span>
               </button>
             ))}
           </div>
@@ -145,22 +152,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {/* THEME TOGGLE */}
           <button 
             onClick={toggleTheme}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--border-primary)] text-[var(--text-primary)] hover:scale-110 transition-transform"
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--border-primary)] text-[var(--text-primary)] hover:scale-110 transition-transform"
           >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
           </button>
 
           <Link 
             to="/contact"
-            className="neon-btn scale-90 hidden sm:inline-flex"
+            className="group relative inline-flex items-center justify-center hidden sm:flex ml-2"
           >
-            <div className="neon-btn-content text-[11px] px-6 py-2.5">
-              {t("nav.connect")}
-            </div>
+             <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-accent to-accent-pink opacity-40 group-hover:opacity-100 blur-sm transition-all duration-500 group-hover:blur-md" />
+             <div className="relative px-5 py-2 bg-[var(--bg-primary)] rounded-full border border-[var(--border-primary)] text-[var(--text-primary)] text-[11px] font-bold uppercase tracking-widest transition-all">
+                {t("nav.connect")}
+             </div>
           </Link>
 
-          <button className="lg:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          <button className="lg:hidden ml-2 flex items-center justify-center w-8 h-8 rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)]" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X size={14} /> : <Menu size={14} />}
           </button>
         </div>
       </nav>

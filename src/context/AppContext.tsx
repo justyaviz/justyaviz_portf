@@ -14,15 +14,23 @@ interface AppContextType {
 const translations = {
   uz: {
     // Nav
-    'nav.home': 'Bosh sahifa',
+    'nav.home': 'Uy',
     'nav.branding': 'Brending',
     'nav.projects': 'Loyihalar',
     'nav.contact': 'Aloqa',
     'nav.connect': "Hozir bog'lanish",
     
+    // Hero Typewriter
+    'hero.hello': 'Salom, men',
+    'hero.name': 'Yahyobek Tohirjonov',
+    'hero.role.1': 'SMM Mutaxassisiman',
+    'hero.role.2': 'Grafik Dizaynerman',
+    'hero.role.3': 'Web Dasturchiman',
+    'hero.role.4': 'Digital Marketerman',
+
     // Hero
     'hero.badge': 'JUST YAVIZ DIGITAL AGENCY',
-    'hero.desc': "Marketing va raqamli texnologiyalar uyg'unligida biznesingiz uchun innovatsion, strategik va natijaga yo'naltirilgan zamonaviy yechimlar.",
+    'hero.desc': "Marketing, dizayn va IT orqali biznesingiz uchun samarali yechimlar. Mening ishlash portfoliom bilan tanishing va loyihangizni amalga oshirish uchum men bilan bog'laning.",
     'hero.cta.projects': "Barcha loyihalarni ko'rish",
     'hero.cta.contact': 'Hozir murojaat qiling',
     'hero.card1': 'Biznesingizga mos professional dizayn va aniq boshqaruv — natija kafolatlangan.',
@@ -214,10 +222,18 @@ const translations = {
     'nav.projects': 'Проекты',
     'nav.contact': 'Контакты',
     'nav.connect': 'Связаться сейчас',
+
+    // Hero Typewriter
+    'hero.hello': 'Привет, я',
+    'hero.name': 'Яхёбек Тохиржонов',
+    'hero.role.1': 'SMM-Специалист',
+    'hero.role.2': 'Графический Дизайнер',
+    'hero.role.3': 'Веб-Разработчик',
+    'hero.role.4': 'Digital Маркетолог',
     
     // Hero
     'hero.badge': 'DIGITAL-АГЕНТСТВО JUST YAVIZ',
-    'hero.desc': 'Инновационные, стратегические и ориентированные на результат современные решения для вашего бизнеса в гармонии маркетинга и цифровых технологий.',
+    'hero.desc': 'Эффективные решения для вашего бизнеса через маркетинг, дизайн и IT. Ознакомьтесь с моим портфолио и свяжитесь со мной для реализации вашего проекта.',
     'hero.cta.projects': 'Смотреть все проекты',
     'hero.cta.contact': 'Связаться сейчас',
     'hero.card1': 'Профессиональный дизайн и четкое управление для вашего бизнеса — результат гарантирован.',
@@ -410,10 +426,18 @@ const translations = {
     'nav.projects': 'Projects',
     'nav.contact': 'Contact',
     'nav.connect': 'Connect Now',
+
+    // Hero Typewriter
+    'hero.hello': 'Hello, I am',
+    'hero.name': 'Yahyobek Tohirjonov',
+    'hero.role.1': 'SMM Specialist',
+    'hero.role.2': 'Graphic Designer',
+    'hero.role.3': 'Web Developer',
+    'hero.role.4': 'Digital Marketer',
     
     // Hero
     'hero.badge': 'JUST YAVIZ DIGITAL AGENCY',
-    'hero.desc': 'Innovative, strategic and result-oriented modern solutions for your business in the harmony of marketing and digital technologies.',
+    'hero.desc': 'Effective solutions for your business through marketing, design, and IT. Explore my portfolio of work and get in touch to bring your project to life.',
     'hero.cta.projects': 'View all projects',
     'hero.cta.contact': 'Contact now',
     'hero.card1': 'Professional design and clear management for your business — result guaranteed.',

@@ -31,6 +31,7 @@ import { ProjectControls, AddProjectBtn } from "../components/ProjectEditor";
 import { useAppContext } from "../context/AppContext";
 import { db } from "../firebase";
 import { doc, onSnapshot, collection, query, limit, orderBy } from "firebase/firestore";
+import { Typewriter } from "../components/Typewriter";
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -119,14 +120,16 @@ export default function Home() {
               <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" /> {t("hero.badge")}
             </div>
             <div className="space-y-6 md:space-y-8">
-              <motion.h1 
-                initial={{ opacity: 0, scale: 0.98, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
-                className="text-[44px] sm:text-[64px] md:text-[8vw] font-satoshi font-medium tracking-tighter flex items-center gap-x-4 md:gap-x-6 leading-[0.9] md:leading-tight whitespace-nowrap"
-              >
-                <EditableText contentKey="heroTitle" defaultText="just.yaviz" as="span" />
-                <Link to="/bio" className="relative shrink-0">
+              <div className="flex flex-col gap-2">
+                 <h3 className="text-xl md:text-3xl font-satoshi font-medium text-[var(--text-secondary)] -mb-2 md:-mb-4">{t("hero.hello")}</h3>
+                 <motion.h1 
+                  initial={{ opacity: 0, scale: 0.98, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+                  className="text-[44px] sm:text-[64px] md:text-[8vw] font-satoshi font-medium tracking-tighter flex items-center gap-x-4 md:gap-x-6 leading-[0.9] md:leading-tight whitespace-nowrap text-[var(--text-primary)]"
+                >
+                  <EditableText contentKey="heroTitle" defaultText="just.yaviz" as="span" />
+                  <Link to="/bio" className="relative shrink-0">
                   <motion.div 
                     initial="initial"
                     whileHover="hover"
@@ -160,6 +163,22 @@ export default function Home() {
                   </motion.div>
                 </Link>
               </motion.h1>
+              </div>
+
+               <div className="flex flex-col gap-2">
+                 <h2 className="text-xl sm:text-2xl md:text-3xl font-satoshi font-bold text-[var(--text-primary)] flex items-center h-10">
+                   <Typewriter 
+                     words={[
+                       t("hero.role.1"), 
+                       t("hero.role.2"), 
+                       t("hero.role.3"), 
+                       t("hero.role.4")
+                     ]} 
+                     delay={3500} 
+                   />
+                 </h2>
+               </div>
+               
               <motion.p 
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -463,7 +482,7 @@ export default function Home() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="py-20 md:py-40 px-6 bg-white/[0.01] border-t border-white/5 overflow-hidden">
+      <section className="py-20 md:py-40 px-6 bg-[var(--text-primary)]/[0.02] border-t border-[var(--border-primary)] overflow-hidden">
         <div className="max-w-7xl mx-auto space-y-20">
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
             <div className="space-y-4 md:space-y-6 text-center md:text-left w-full">
@@ -482,15 +501,15 @@ export default function Home() {
                 key={i} 
                 {...fadeIn} 
                 transition={{ delay: i * 0.1 }}
-                className="p-10 md:p-14 glass border-white/5 rounded-3xl md:rounded-[4rem] space-y-8 relative group hover:border-white/20 transition-all"
+                className="p-10 md:p-14 glass border-[var(--border-primary)] rounded-3xl md:rounded-[4rem] space-y-8 relative group hover:border-accent transition-all"
               >
                 <div className="text-accent/20 absolute top-10 right-10 group-hover:text-accent/60 transition-all">
                   <Quote size={40} />
                 </div>
-                <p className="text-white/60 text-lg md:text-xl font-dm-sans leading-relaxed italic">"{test.text || test.content}"</p>
-                <div className="pt-6 border-t border-white/5">
+                <p className="text-[var(--text-secondary)] text-lg md:text-xl font-dm-sans leading-relaxed italic">"{test.text || test.content}"</p>
+                <div className="pt-6 border-t border-[var(--border-primary)]">
                   <h5 className="text-lg md:text-xl font-satoshi font-bold">{test.name}</h5>
-                  <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-white/30">{test.Role || test.role}</span>
+                  <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-70">{test.Role || test.role}</span>
                 </div>
               </motion.div>
             ))}
@@ -533,7 +552,7 @@ export default function Home() {
       </section>
 
       {/* ABOUT PREVIEW */}
-      <section className="py-20 md:py-40 px-6 bg-white/[0.02] relative overflow-hidden">
+      <section className="py-20 md:py-40 px-6 bg-[var(--text-primary)]/[0.02] relative overflow-hidden">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 md:gap-24 items-center">
           <motion.div {...fadeIn} className="w-full lg:w-1/2 relative group">
              <div className="relative">
@@ -541,7 +560,7 @@ export default function Home() {
                 <img 
                   src="https://yt3.googleusercontent.com/7c66P3YnmaqgNiVybbisloEC64VHRMgdHJAifzqvnTsrZvuoWRnNJYsibF9eMtow3umhZeMlrA=s900-c-k-c0x00ffffff-no-rj" 
                   alt="Yahyobek Tohirjonov" 
-                  className="relative rounded-[2.5rem] md:rounded-[5rem] grayscale group-hover:grayscale-0 transition-all duration-1000 border border-white/5 aspect-[4/5] object-cover shadow-2xl mx-auto" 
+                  className="relative rounded-[2.5rem] md:rounded-[5rem] grayscale group-hover:grayscale-0 transition-all duration-1000 border border-[var(--border-primary)] aspect-[4/5] object-cover shadow-2xl mx-auto" 
                   referrerPolicy="no-referrer"
                 />
              </div>
@@ -572,7 +591,7 @@ export default function Home() {
       </section>
 
       {/* STATS COUNTER */}
-      <section className="py-20 md:py-32 border-b border-white/5 bg-white/[0.01]">
+      <section className="py-20 md:py-32 border-b border-[var(--border-primary)] bg-[var(--text-primary)]/[0.02]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
             {[
@@ -590,8 +609,8 @@ export default function Home() {
                 <div className="flex items-center justify-center md:justify-start gap-3 text-accent/60">
                   {stat.icon}
                 </div>
-                <div className="text-[32px] md:text-5xl font-satoshi font-bold tracking-tighter">{stat.value}</div>
-                <p className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-white/30">{stat.label}</p>
+                <div className="text-[32px] md:text-5xl font-satoshi font-bold tracking-tighter text-[var(--text-primary)]">{stat.value}</div>
+                <p className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-70">{stat.label}</p>
               </motion.div>
             ))}
           </div>
@@ -599,7 +618,7 @@ export default function Home() {
       </section>
 
       {/* CLIENTS MARQUEE */}
-      <section className="py-20 border-t border-white/5 overflow-hidden">
+      <section className="py-20 border-t border-[var(--border-primary)] overflow-hidden">
          <div className="marquee-wrapper opacity-40 grayscale saturate-0 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
             <motion.div 
                animate={{ x: [0, -2500] }} 
@@ -624,7 +643,7 @@ export default function Home() {
                           className="h-8 md:h-12 w-auto object-contain rounded-lg"
                           referrerPolicy="no-referrer"
                         />
-                        <span className="text-xl md:text-2xl font-satoshi font-black tracking-tighter uppercase text-white/40 group-hover/logo:text-white transition-colors">
+                        <span className="text-xl md:text-2xl font-satoshi font-black tracking-tighter uppercase text-[var(--text-secondary)] opacity-50 group-hover/logo:opacity-100 group-hover/logo:text-[var(--text-primary)] transition-all">
                           {client.name}
                         </span>
                       </div>

@@ -3,8 +3,39 @@ import { useState, useRef, useEffect } from "react";
 import { MessageSquare, X, Send, Bot, User, Loader2, MessageCircle } from "lucide-react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
+import { GoogleGenAI } from "@google/genai";
 
 const generateChatId = () => Math.random().toString(36).substring(2, 9);
+
+let aiClient: GoogleGenAI | null = null;
+function getAIClient() {
+  if (!aiClient) {
+    const key = process.env.GEMINI_API_KEY || "dummy";
+    aiClient = new GoogleGenAI({ apiKey: key });
+  }
+  return aiClient;
+}
+
+const SYSTEM_PROMPT = `Sen Yaviz Digital Agency'ning shaxsiy sun'iy intellekt sotuvchi va yordamchisisan.
+Sening isming "Yaviz AI". Ziyrak, professionallarga xos va ochiqko'ngilsan, asosan O'zbek tilida gapirasan.
+Maqsading: Saytga kirgan mijozlarni issiq kutib olish, Yaviz xizmatlarini tushuntirish va ularni 'buyurtma berishga' undash.
+Mijoz admin bilan gaplashmoqchi bo'lsa yoki telefon raqamini, kontaktini qoldirsa darxol "forward_to_agent" funksiyasini chaqir!
+Javoblaring qisqa, tushunarli bo'lsin.`;
+
+const forwardTools = [{
+  functionDeclarations: [{
+    name: "forward_to_agent",
+    description: "Agentga (Adminga) ulanish yoki mijoz raqamini adminga yuborish",
+    parameters: {
+      type: "OBJECT" as any,
+      properties: {
+        phoneOrContact: { type: "STRING" as any, description: "Mijoz qoldirgan telefon raqami yoki kontakt ma'lumoti." },
+        query: { type: "STRING" as any, description: "Mijozning asosiy savoli yoki maqsadi." }
+      },
+      required: ["query"]
+    }
+  }]
+}];
 
 export default function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -72,33 +103,37 @@ export default function AIChatbot() {
     setIsTyping(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ history: newHistory, userMsg })
+      const ai = getAIClient();
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: newHistory,
+        config: {
+          systemInstruction: SYSTEM_PROMPT,
+          tools: forwardTools as any
+        }
       });
 
-      const data = await response.json();
+      const funcCall = response.functionCalls?.[0];
 
-      if (data.type === "function_call" && data.name === "forward_to_agent") {
-         const args = data.args;
+      if (funcCall && funcCall.name === "forward_to_agent") {
+         const args = funcCall.args as any;
          // Send to backend which forwards to Telegram
          await fetch("/api/telegram", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                chatId,
-               message: args.query || userMsg,
-               phone: args.phoneOrContact || ""
+               message: args?.query || userMsg,
+               phone: args?.phoneOrContact || ""
             })
          });
          setMessages([...newHistory, { role: 'model', parts: [{text: "Xabaringiz javobgar xodimlarga yetkazildi! Telegram orqali mutaxassislarimiz shu yerning o'zida sizga javob yozishadi. Iltimos biroz kuting..."}] }]);
       } else {
-         const aiResponse = data.text || "Uzur, ayni damda tushuna olmadim. Adminlarimizga /contact orqali yozishingizni so'rayman.";
+         const aiResponse = response.text || "Uzur, ayni damda tushuna olmadim. Adminlarimizga /contact orqali yozishingizni so'rayman.";
          setMessages([...newHistory, { role: 'model', parts: [{text: aiResponse}] }]);
       }
-    } catch (e) {
-       setMessages([...newHistory, { role: 'model', parts: [{text: "Kechirasiz, xizmat ko'rsatishda xatolik yuzaga keldi."}] }]);
+    } catch (e: any) {
+       setMessages([...newHistory, { role: 'model', parts: [{text: `Kechirasiz, xatolik yuz berdi: ${e.message}`}] }]);
     } finally {
       setIsTyping(false);
     }

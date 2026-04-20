@@ -5,7 +5,6 @@ import path from "path";
 import TelegramBot from "node-telegram-bot-api";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, updateDoc, arrayUnion, setDoc, getDoc } from "firebase/firestore";
-import { GoogleGenAI } from "@google/genai";
 
 const TELEGRAM_TOKEN = "8656425083:AAG-On9SnWgfztJEMbvUEoEv9BBb4zaMFtI";
 const ADMIN_ID = "7539384945";
@@ -112,56 +111,6 @@ async function startServer() {
   const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
   app.use(express.json());
-
-  // GEMINI API Chat setup
-  const ai = process.env.GEMINI_API_KEY ? new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY }) : null;
-  const SYSTEM_PROMPT = `Sen Yaviz Digital Agency'ning shaxsiy sun'iy intellekt sotuvchi va yordamchisisan.
-Sening isming "Yaviz AI". Ziyrak, professionallarga xos va ochiqko'ngilsan, asosan O'zbek tilida gapirasan.
-Maqsading: Saytga kirgan mijozlarni issiq kutib olish, Yaviz xizmatlarini tushuntirish va ularni 'buyurtma berishga' undash.
-Mijoz admin bilan gaplashmoqchi bo'lsa yoki telefon raqamini, kontaktini qoldirsa darxol "forward_to_agent" funksiyasini chaqir!
-Javoblaring qisqa, tushunarli bo'lsin.`;
-
-  const forwardTools = [{
-    functionDeclarations: [{
-      name: "forward_to_agent",
-      description: "Agentga (Adminga) ulanish yoki mijoz raqamini adminga yuborish",
-      parameters: {
-        type: "OBJECT" as any,
-        properties: {
-          phoneOrContact: { type: "STRING" as any, description: "Mijoz qoldirgan telefon raqami yoki kontakt ma'lumoti." },
-          query: { type: "STRING" as any, description: "Mijozning asosiy savoli yoki maqsadi." }
-        },
-        required: ["query"]
-      }
-    }]
-  }];
-
-  app.post("/api/chat", async (req, res) => {
-    if (!ai) {
-      return res.status(500).json({ error: "Gemini API kaliti topilmadi." });
-    }
-    
-    try {
-      const { history } = req.body;
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-pro',
-        contents: history,
-        config: {
-          systemInstruction: SYSTEM_PROMPT,
-          tools: forwardTools
-        }
-      });
-
-      const funcCall = response.functionCalls?.[0];
-      if (funcCall && funcCall.name === "forward_to_agent") {
-        res.json({ type: "function_call", name: funcCall.name, args: funcCall.args });
-      } else {
-        res.json({ type: "text", text: response.text });
-      }
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
 
   // API Route to send a message to telegram
   app.post("/api/telegram", async (req, res) => {

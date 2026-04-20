@@ -1,5 +1,9 @@
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "motion/react";
 import Counter from "../components/Counter";
+import StrategyRoadmap from "../components/StrategyRoadmap";
+import DiscoveryForm from "../components/DiscoveryForm";
+import VideoTestimonials from "../components/VideoTestimonials";
+import AIBrandCheck from "../components/AIBrandCheck";
 import { 
   ArrowUpRight, 
   MousePointer2, 
@@ -24,7 +28,8 @@ import {
   ChevronDown,
   Users,
   Database,
-  GraduationCap
+  GraduationCap,
+  LayoutDashboard
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -178,9 +183,9 @@ export default function Home() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
-    <>
+    <div className="snap-container h-screen overflow-y-auto">
       {/* HERO SECTION */}
-      <section className="relative min-h-[90vh] md:min-h-screen flex items-center pt-32 md:pt-24 px-6 md:px-20 overflow-hidden">
+      <section className="relative min-h-[90vh] md:min-h-screen flex items-center pt-32 md:pt-24 px-6 md:px-20 overflow-hidden snap-section">
         <div className="absolute top-[20%] left-[-10%] w-[40vw] h-[40vw] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute top-[-10%] right-[-10%] w-[30vw] h-[30vw] bg-accent/10 blur-[150px] rounded-full pointer-events-none" />
         
@@ -206,7 +211,7 @@ export default function Home() {
                   transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
                   className="text-[44px] sm:text-[64px] md:text-[8vw] font-satoshi font-medium tracking-tighter flex items-center gap-x-4 md:gap-x-6 leading-[0.9] md:leading-tight whitespace-nowrap text-[var(--text-primary)]"
                 >
-                  <EditableText contentKey="heroTitle" defaultText="just.yaviz | Marketing Strategist" as="span" />
+                  <EditableText contentKey="heroTitle" defaultText="just yaviz" as="span" />
                   <Magnetic>
                     <Link to="/bio" className="relative shrink-0">
                       <motion.div 
@@ -1001,6 +1006,54 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SOCIAL PROOF WALL (Natijalar Devori) */}
+      <section className="py-20 md:py-40 px-6 bg-[var(--text-primary)]/[0.01]">
+        <div className="max-w-7xl mx-auto space-y-24">
+           <div className="text-center space-y-6">
+              <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">SOCIAL PROOF</span>
+              <h2 className="text-4xl md:text-7xl font-display font-medium tracking-tighter uppercase italic">Wall of <span className="text-accent">Victory</span></h2>
+              <p className="text-[var(--text-secondary)] max-w-xl mx-auto font-medium">Real snapshots of growth, engagement, and scaling from our most recent global campaigns.</p>
+           </div>
+
+           <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+              {[
+                { title: "Meta Ads Scaling", value: "+450% ROI", desc: "For e-commerce partner in Tashkent", color: "bg-blue-500/10" },
+                { title: "Viral Content", value: "2.4M Views", desc: "Organic reach within 48 hours for Alloo Panel", color: "bg-accent/10" },
+                { title: "Brand Identity", value: "Global Standard", desc: "Complete brand transformation for Alooest", color: "bg-purple-500/10" },
+                { title: "Lead Generation", value: "1,200+ Qualified", desc: "Automated funnel for Real Estate project", color: "bg-emerald-500/10" },
+                { title: "YouTube Growth", value: "50K Subs", desc: "Content strategy for educational startup", color: "bg-red-500/10" },
+                { title: "Conversion Rate", value: "8.2%", desc: "Optimized landing page for SaaS solution", color: "bg-yellow-500/10" }
+              ].map((item, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  whileHover={{ y: -10 }}
+                  className={`${item.color} border border-white/5 p-8 rounded-[2.5rem] break-inside-avoid shadow-xl space-y-6 group transition-all`}
+                >
+                   <div className="flex justify-between items-start">
+                      <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center">
+                         <Target size={16} className="text-accent" />
+                      </div>
+                      <span className="text-[10px] font-bold opacity-20 group-hover:opacity-100 transition-opacity">REC-2026</span>
+                   </div>
+                   <div className="space-y-2">
+                      <h4 className="text-sm font-black uppercase tracking-widest text-[var(--text-secondary)]">{item.title}</h4>
+                      <p className="text-3xl md:text-5xl font-display font-medium italic tracking-tighter text-accent">{item.value}</p>
+                   </div>
+                   <p className="text-xs font-medium text-[var(--text-secondary)] leading-relaxed italic">{item.desc}</p>
+                   <div className="pt-4 border-t border-white/5 flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                      <span className="text-[9px] font-black uppercase tracking-widest opacity-40">Verified Result</span>
+                   </div>
+                </motion.div>
+              ))}
+           </div>
+        </div>
+      </section>
+
+      <StrategyRoadmap />
+
       {/* FAQ SECTION */}
       <section className="py-20 md:py-40 px-6 border-t border-[var(--border-primary)]">
         <div className="max-w-4xl mx-auto space-y-16 md:space-y-24">
@@ -1109,6 +1162,93 @@ export default function Home() {
         </div>
       </section>
 
+      {/* STRATEGIC ECOSYSTEM (Newsletter + Quick Access) */}
+      <section className="py-20 md:py-40 px-6 border-t border-[var(--border-primary)] relative overflow-hidden bg-gradient-to-b from-transparent to-accent/5">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/10 blur-[150px] rounded-full pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+           {/* NEWSLETTER */}
+           <div className="p-8 md:p-16 glass border border-white/5 rounded-[3rem] md:rounded-[5rem] space-y-12 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-12 opacity-5 -mr-12 -mt-12 group-hover:rotate-12 transition-transform duration-1000">
+                 <Rocket size={200} />
+              </div>
+              
+              <div className="space-y-6 relative z-10">
+                 <div className="badge-it">
+                    <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" /> NEWSLETTER
+                 </div>
+                 <h2 className="text-4xl md:text-7xl font-display font-medium tracking-tighter italic uppercase leading-[0.9]">
+                    Future-Proof <br/> <span className="text-accent underline decoration-white/10 underline-offset-8">Your Brand</span>
+                 </h2>
+                 <p className="text-[var(--text-secondary)] font-medium max-w-md">
+                    Join 1,000+ professionals receiving weekly digital marketing insights, AI trends, and scaling strategies. No spam, just pure signal.
+                 </p>
+              </div>
+
+              <form className="relative z-10 flex flex-col sm:flex-row gap-4" onSubmit={(e) => e.preventDefault()}>
+                 <input 
+                   type="email" 
+                   placeholder="Your professional email" 
+                   className="flex-1 px-8 py-5 bg-white/5 border border-white/10 rounded-2xl md:rounded-3xl focus:outline-none focus:border-accent transition-all font-medium"
+                 />
+                 <button className="ui-btn-galaxy">
+                    <div className="ui-btn-galaxy-inner px-12 py-5 font-black text-xs uppercase tracking-widest whitespace-nowrap">
+                       Join Alpha
+                    </div>
+                 </button>
+              </form>
+              
+              <p className="text-[10px] text-[var(--text-secondary)] opacity-40 uppercase tracking-widest uppercase relative z-10">
+                 Secure connection. One-click unsubscribe anytime.
+              </p>
+           </div>
+
+           {/* QUICK PROFESSIONAL LINKS */}
+           <div className="space-y-8">
+              <div className="space-y-6">
+                 <h3 className="text-3xl md:text-5xl font-display font-medium tracking-tighter uppercase italic">Professional <br/> Access</h3>
+                 <p className="text-[var(--text-secondary)] font-medium max-w-sm">Direct tunnels to branding standards and project management systems.</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                 <Link to="/brand-assets" className="p-8 bg-white/5 border border-white/5 rounded-[2.5rem] hover:bg-white hover:text-black transition-all group">
+                    <div className="space-y-8">
+                       <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
+                          <Palette size={20} />
+                       </div>
+                       <div className="space-y-2">
+                          <h4 className="text-xl font-black uppercase italic tracking-tighter">Brand Space</h4>
+                          <p className="text-[10px] font-bold uppercase tracking-widest opacity-40 group-hover:opacity-60">Logos, Fonts & Guidelines</p>
+                       </div>
+                    </div>
+                 </Link>
+
+                 <Link to="/client-portal" className="p-8 bg-accent/5 border border-accent/20 rounded-[2.5rem] hover:bg-accent hover:text-white transition-all group">
+                    <div className="space-y-8">
+                       <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                          <LayoutDashboard size={20} />
+                       </div>
+                       <div className="space-y-2">
+                          <h4 className="text-xl font-black uppercase italic tracking-tighter">Client Portal</h4>
+                          <p className="text-[10px] font-bold uppercase tracking-widest opacity-40 group-hover:opacity-60">Real-time Project Tracking</p>
+                       </div>
+                    </div>
+                 </Link>
+              </div>
+
+              <div className="p-8 glass border border-white/5 rounded-[2.5rem] flex items-center gap-6 group hover:border-accent/30 transition-all cursor-pointer">
+                 <div className="w-14 h-14 bg-white/5 rounded-full flex items-center justify-center animate-pulse">
+                    <CheckCircle2 className="text-accent" />
+                 </div>
+                 <div className="space-y-1">
+                    <h5 className="text-sm font-black uppercase tracking-widest">Verified Expert Status</h5>
+                    <p className="text-[10px] text-[var(--text-secondary)] font-medium">Meta Certified & Google Approved Strategist</p>
+                 </div>
+              </div>
+           </div>
+        </div>
+      </section>
+
       {/* CLIENTS MARQUEE */}
       <section className="py-20 border-t border-[var(--border-primary)] overflow-hidden">
          <div className="marquee-wrapper opacity-40 grayscale saturate-0 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
@@ -1145,6 +1285,66 @@ export default function Home() {
             </motion.div>
          </div>
       </section>
-    </>
+
+      {/* AI STRATEGIC TOOLS */}
+      <section className="snap-section">
+        <AIBrandCheck />
+      </section>
+
+      <VideoTestimonials />
+
+      {/* DISCOVERY FORM */}
+      <section className="py-20 md:py-40 px-6 snap-section bg-accent/5">
+        <div className="max-w-7xl mx-auto space-y-20">
+           <div className="text-center space-y-6">
+              <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">ONBOARDING</span>
+              <h2 className="text-4xl md:text-7xl font-display font-medium tracking-tighter uppercase italic leading-[0.9]">Start Your <br/> <span className="text-accent underline decoration-white/10">Growth Loop</span></h2>
+              <p className="text-[var(--text-secondary)] max-w-xl mx-auto font-medium">Boshlash uchun bir lahza vaqt ajrating. Sizga mos keladigan strategiyani aniqlaymiz.</p>
+           </div>
+           <DiscoveryForm />
+        </div>
+      </section>
+
+      {/* CALENDLY BOOKING */}
+      <section className="py-20 md:py-40 px-6 snap-section">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+           <div className="space-y-8">
+              <div className="badge-it">
+                 <Rocket size={12} className="text-accent" /> 1:1 CONSULTATION
+              </div>
+              <h2 className="text-4xl md:text-8xl font-display font-medium tracking-tighter uppercase italic leading-[0.85]">
+                 Secure a <br/> <span className="text-accent">Private</span> <br/> Session
+              </h2>
+              <p className="text-[var(--text-secondary)] max-w-md font-medium text-lg leading-relaxed">
+                 Strategik maslahatlashuv uchun vaqtni to'g'ridan-to'g'ri kalendarimdan band qiling. Hech qanday vositachilarsiz, faqat professional yondashuv.
+              </p>
+              <div className="pt-8 flex flex-col sm:flex-row gap-6">
+                 <a 
+                   href="https://calendly.com/justyaviz" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   className="ui-btn-galaxy"
+                 >
+                   <div className="ui-btn-galaxy-inner px-12 py-6 text-xs font-black uppercase tracking-widest flex items-center gap-3">
+                      Book via Calendly <ArrowUpRight />
+                   </div>
+                 </a>
+              </div>
+           </div>
+           
+           <div className="glass p-8 rounded-[4rem] border border-white/5 h-[600px] relative overflow-hidden group">
+              <div className="absolute inset-0 bg-accent/5 animate-pulse" />
+              {/* Calendly Widget Simulation */}
+              <iframe 
+                src="https://calendly.com/justyaviz?embed_domain=justyaviz.uz&embed_type=Inline" 
+                width="100%" 
+                height="100%" 
+                frameBorder="0"
+                className="relative z-10 rounded-3xl"
+              ></iframe>
+           </div>
+        </div>
+      </section>
+    </div>
   );
 }

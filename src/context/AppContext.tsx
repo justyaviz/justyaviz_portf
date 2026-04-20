@@ -114,7 +114,11 @@ const translations = {
     'blog.title': 'Digital Marketing sirlari',
     'section.ecosystem.badge': 'IJTIMOIY ISBOT',
     'section.ecosystem.title': 'RAQAMLI EKOTIZIM',
-    'section.ecosystem.desc': 'Mening barcha rasmiy sahifalarim va ijodiy loyihalarim ekotizimi.',
+    'section.ecosystem.desc': 'Bizning ijtimoiy tarmoqlardagi faolligimiz va keng qamrovli auditoriyamiz.',
+    'section.newsletter.title': 'Brendingizni Kelajakka Tayyorlang',
+    'section.newsletter.desc': "Har haftalik marketing, AI va biznes strategiyalari bo'yicha eksklyuziv bilimlar. Spam yo'q, faqat foydali ma'lumotlar.",
+    'section.access.title': 'Professional Ruxsat',
+    'section.access.desc': 'Brend standartlari va loyihalarni boshqarish tizimlariga to\'g\'ridan-to\'g\'ri kirish.',
 
     // Branding Page
     'branding.hero.title': 'Sifatli dizayn — bu tasodif emas, tizim.',
@@ -416,7 +420,11 @@ const translations = {
     'blog.title': 'Секреты Digital Маркетинга',
     'section.ecosystem.badge': 'СОЦИАЛЬНОЕ ДОКАЗАТЕЛЬСТВО',
     'section.ecosystem.title': 'ЦИФРОВАЯ ЭКОСИСТЕМА',
-    'section.ecosystem.desc': 'Экосистема всех моих официальных страниц и творческих проектов.',
+    'section.ecosystem.desc': 'Наша активность в социальных сетях и широкий охват аудитории.',
+    'section.newsletter.title': 'Подготовьте свой бренд к будущему',
+    'section.newsletter.desc': 'Еженедельные эксклюзивные идеи по маркетингу, ИИ и бизнес-стратегиям. Без спама, только польза.',
+    'section.access.title': 'Профессиональный Доступ',
+    'section.access.desc': 'Прямой доступ к стандартам бренда и системам управления проектами.',
 
     // Branding Page
     'branding.hero.title': 'Качественный дизайн — это не случайность, а система.',
@@ -711,7 +719,11 @@ const translations = {
     'blog.title': 'Digital Marketing Secrets',
     'section.ecosystem.badge': 'SOCIAL PROOF',
     'section.ecosystem.title': 'DIGITAL ECOSYSTEM',
-    'section.ecosystem.desc': 'The ecosystem of all my official pages and creative projects.',
+    'section.ecosystem.desc': 'Our social media activity and comprehensive audience reach.',
+    'section.newsletter.title': 'Future-Proof Your Brand',
+    'section.newsletter.desc': 'Weekly exclusive insights on marketing, AI and business strategies. No spam, only signal.',
+    'section.access.title': 'Professional Access',
+    'section.access.desc': 'Direct tunnels to branding standards and project management systems.',
 
     // Branding Page
     'branding.hero.title': 'Quality design is not an accident, it is a system.',

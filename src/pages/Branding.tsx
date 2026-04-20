@@ -1,199 +1,181 @@
-import { motion } from "motion/react";
-import { useState, useEffect } from "react";
-import { EditableText } from "../components/EditableText";
-import { useAppContext } from "../context/AppContext";
-import { db } from "../firebase";
-import { doc, onSnapshot } from "firebase/firestore";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useState, useRef } from "react";
 import { 
-  CheckCircle2, 
+  Palette, 
+  Type, 
+  Layout, 
   Sparkles, 
   Target, 
   Rocket, 
-  Smartphone, 
-  Briefcase,
-  ExternalLink,
-  Check,
-  X
+  ArrowUpRight,
+  ShieldCheck,
+  CheckCircle2,
+  FileText,
+  MousePointer2
 } from "lucide-react";
-
-const fadeIn = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6, ease: "easeOut" }
-};
+import { useAppContext } from "../context/AppContext";
+import { Logo } from "../components/Logo";
 
 export default function Branding() {
-  const [content, setContent] = useState<any>(null);
-  const { t, theme } = useAppContext();
+  const { t } = useAppContext();
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-  useEffect(() => {
-    const unsub = onSnapshot(doc(db, "siteContent", "main"), (d) => {
-      if (d.exists()) setContent(d.data());
-    });
-    return () => unsub();
-  }, []);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, 45]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 1.2]);
 
   return (
-    <div className="pt-32 space-y-40">
-      {/* HERO SECTION */}
-      <section className="px-6 text-center space-y-8 md:space-y-12 pb-10 md:pb-20">
-        <motion.h1 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-4xl sm:text-5xl md:text-[8vw] font-satoshi font-medium tracking-tighter leading-[0.9] md:leading-[0.85] max-w-6xl mx-auto"
+    <div ref={containerRef} className="pt-32 pb-40 space-y-40 overflow-hidden">
+      
+      {/* HERO SECTION - EDITORIAL STYLE */}
+      <section className="px-6 relative min-h-[70vh] flex flex-col items-center justify-center text-center space-y-12">
+        <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none overflow-hidden">
+           <motion.div style={{ rotate }} className="text-[25vw] font-black italic absolute -top-20 -left-20 opacity-10 whitespace-nowrap">BRANDING SYSTEM</motion.div>
+        </div>
+
+        <div className="space-y-6 relative z-10">
+           <div className="badge-it mx-auto">
+              <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" /> VISUAL IDENTITY
+           </div>
+           <h1 className="text-[12vw] md:text-[9vw] font-display font-medium tracking-tighter leading-[0.85] uppercase italic">
+              Crafting <br /> <span className="text-accent underline decoration-white/10 underline-offset-8">Authority</span>
+           </h1>
+           <p className="text-[var(--text-secondary)] max-w-xl mx-auto font-medium text-lg leading-relaxed pt-8">
+              We don't just design logos; we architect visual ecosystems that command attention and scale businesses into global brands.
+           </p>
+        </div>
+
+        <motion.div 
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 4, repeat: Infinity }}
+          className="pt-12 text-accent"
         >
-          <EditableText contentKey="brandingTitle" defaultText={t("branding.hero.title")} as="span" />
-        </motion.h1>
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="max-w-2xl mx-auto text-[var(--text-secondary)] text-[14px] md:text-[16px] leading-relaxed font-medium"
-        >
-          <EditableText contentKey="brandingDesc" defaultText={t("branding.hero.desc")} type="textarea" />
-        </motion.p>
+           <MousePointer2 size={32} />
+        </motion.div>
       </section>
 
-      {/* CARDS SECTION */}
-      <section className="px-6 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-             {[
-               { key: "brandingCard1", title: t("branding.card1.title"), desc: t("branding.card1.desc") },
-               { key: "brandingCard2", title: t("branding.card2.title"), desc: t("branding.card2.desc") },
-               { key: "brandingCard3", title: t("branding.card3.title"), desc: t("branding.card3.desc") }
-             ].map((card, i) => (
-                <motion.div
-                  key={i}
-                  {...fadeIn}
-                  transition={{ delay: i * 0.1 }}
-                  className="ui-magic-card group"
-                >
-                  <div className="p-8 md:p-12 space-y-6 md:space-y-8 h-full relative z-10 transition-all">
-                     <h4 className="text-xl md:text-3xl font-display font-bold leading-tight uppercase tracking-tight">
-                        <EditableText contentKey={`${card.key}Title`} defaultText={card.title} as="span" />
-                     </h4>
-                     <div className="text-[var(--text-secondary)] text-[13px] md:text-sm leading-relaxed font-medium">
-                        <EditableText contentKey={`${card.key}Desc`} defaultText={card.desc} type="textarea" />
-                     </div>
-                  </div>
-                </motion.div>
-             ))}
-          </div>
+      {/* CORE PILLARS GRID */}
+      <section className="px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          { 
+            title: "Identity Systems", 
+            desc: "Complete visual frameworks including logos, typography, and color psychology engineered for your market.", 
+            icon: <Palette />,
+            stats: "100+ Brands Delivered"
+          },
+          { 
+            title: "Brand Voice", 
+            desc: "Tone of voice and messaging strategies that resonate deeply with your target audience's core desires.", 
+            icon: <Type />,
+            stats: "Global Reach Optimized"
+          },
+          { 
+            title: "Digital Design", 
+            desc: "UI/UX standards that bridge the gap between aesthetic beauty and high-conversion functional design.", 
+            icon: <Layout />,
+            stats: "Pixel Perfect Result"
+          }
+        ].map((pillar, i) => (
+          <motion.div 
+            key={i}
+            whileHover={{ y: -15 }}
+            className="p-12 glass border border-white/5 rounded-[3.5rem] space-y-8 relative overflow-hidden group"
+          >
+             <div className="w-16 h-16 bg-accent text-white rounded-2xl flex items-center justify-center shadow-[0_0_40px_rgba(var(--accent-rgb),0.3)]">
+                {pillar.icon}
+             </div>
+             <div className="space-y-4">
+                <h3 className="text-3xl font-black uppercase italic tracking-tighter">{pillar.title}</h3>
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-medium opacity-60 group-hover:opacity-100 transition-opacity">
+                   {pillar.desc}
+                </p>
+             </div>
+             <div className="pt-8 border-t border-white/5">
+                <span className="text-[9px] font-black uppercase tracking-widest text-accent">{pillar.stats}</span>
+             </div>
+          </motion.div>
+        ))}
       </section>
 
-      {/* LOGO DESIGN SECTION */}
+      {/* IMMERSIVE SHOWCASE */}
       <section className="px-6 max-w-7xl mx-auto">
-         <div className="glass p-8 md:p-20 rounded-3xl md:rounded-[4rem] border-[var(--border-primary)] grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center shadow-lg">
-            <div className="space-y-6 md:space-y-8 text-center lg:text-left">
-               <h2 className="text-3xl md:text-6xl font-display font-black leading-none tracking-tighter">
-                 {t("branding.logo.title")}
-               </h2>
-               <p className="text-[var(--text-secondary)] text-sm md:text-base leading-relaxed font-medium">
-                 {t("branding.logo.desc")}
-               </p>
-               <button className="ui-btn-galaxy w-full md:w-auto">
-                 <div className="ui-btn-galaxy-inner px-10 py-4 uppercase text-xs tracking-widest w-full justify-center">
-                   {t("branding.logo.cta")}
-                 </div>
-               </button>
+         <div className="p-12 md:p-32 bg-accent/5 rounded-[5rem] border border-accent/10 relative overflow-hidden text-center space-y-12">
+            <div className="absolute top-0 right-0 p-12 opacity-5 scale-150 rotate-12">
+               <Logo className="w-80 h-80" />
             </div>
-            <div className="grid grid-cols-4 gap-3 md:gap-4">
+            
+            <div className="space-y-8 relative z-10">
+               <h2 className="text-4xl md:text-8xl font-display font-medium tracking-tighter leading-none uppercase italic">
+                  Visual <br/> Standards <span className="text-accent underline decoration-white/10">2.0</span>
+               </h2>
+               <p className="text-[var(--text-secondary)] max-w-xl mx-auto font-medium text-lg">
+                  Every asset we create is backed by data and psychological analysis to ensure it performs as well as it looks.
+               </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-10">
                {[
-                 "https://static4.tgstat.ru/channels/_0/58/5874f696205edf0c7aa55152da39921a.jpg",
-                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfkcYEjWfYZIpWvZ7fLMcCVxfVZQcXAZ3RQ&s",
-                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxwrLEewH9Kw14lXc8nVXi2bIPilJXbDS1zg&s",
-                 "https://play-lh.googleusercontent.com/7hUsDaIdSaYwgWXQosQZGuOpQ8RLhp8Iw-bSKzNIxocMqw5l-2ZysdbGdyllKkQIOw",
-                 "https://assets.nicepagecdn.com/bc13c16f/6522583/images/Untitled-1.png",
-                 "https://taplink.st/a/5/1/6/f/99552c.jpg?1",
-                 "https://proud-cyan-whxxiapwah.edgeone.app/8586B6B0-80CD-45D5-8121-D8BB132DDF0B.jpeg",
-                 "https://picsum.photos/seed/brand8/200/200"
-               ].map((logo, i) => (
-                 <div key={i} className="aspect-square bg-accent/5 rounded-2xl md:rounded-3xl border border-[var(--border-primary)] overflow-hidden flex items-center justify-center grayscale hover:grayscale-0 transition-all hover:border-accent">
-                   <img src={logo} alt={`Logo ${i}`} className="w-full h-full object-cover p-2" referrerPolicy="no-referrer" />
+                 { label: "Precision", val: "100%" },
+                 { label: "Scaling", val: "Vector" },
+                 { label: "Format", val: "Multi" },
+                 { label: "Update", val: "24/7" }
+               ].map((item, i) => (
+                 <div key={i} className="p-8 bg-white/5 rounded-[2.5rem] border border-white/5 hover:bg-white hover:text-black transition-all group">
+                    <span className="text-2xl font-black italic block mb-2">{item.val}</span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 group-hover:opacity-100">{item.label}</span>
                  </div>
                ))}
             </div>
          </div>
       </section>
 
-      {/* ADVANTAGES COMPARISON */}
-      <section className="px-6 max-w-7xl mx-auto space-y-12 md:space-y-20">
-         <div className="text-center space-y-3 md:space-y-4">
-            <h2 className="text-3xl md:text-6xl font-satoshi font-medium tracking-tighter">{t("branding.why.title")}</h2>
-            <p className="text-[var(--text-secondary)] text-[14px] md:text-base max-w-lg mx-auto">{t("branding.why.subtitle")}</p>
+      {/* BRAND SPACE CTA */}
+      <section className="px-6 max-w-7xl mx-auto space-y-16">
+         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="space-y-4">
+              <span className="text-xs font-black uppercase tracking-widest text-accent">OPEN RESOURCE</span>
+              <h3 className="text-4xl md:text-6xl font-display font-medium tracking-tighter uppercase italic leading-none">Access Our <br/> Blueprint</h3>
+            </div>
+            <p className="text-[var(--text-secondary)] max-w-sm font-medium">Transparency is the ultimate form of authority. Visit our brand space to see how we define our own visual language.</p>
          </div>
 
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-[var(--border-primary)] rounded-3xl md:rounded-[4rem] overflow-hidden border border-[var(--border-primary)] shadow-2xl">
-            {[
-              {
-                okTile: t("flow.1.title"),
-                okDesc: t("flow.1.desc"),
-                badTitle: "Noma'lum yo'nalish",
-                badDesc: "Aniq reja va tahlilsiz ish boshlash."
-              },
-              {
-                okTile: "Mijoz Markazida",
-                okDesc: "Sizning g‘oyangiz asosida ishlash — biz sizning maqsadlaringizni markazga qo‘yib, aniq strategiya va kreativ yechimlar bilan natijaga yetamiz.",
-                badTitle: "Aloqaning Yo‘qligi",
-                badDesc: "Muloqot yetishmasligi va fikr almashinuvi sustligi — noto‘g‘ri qarorlar va kutilmagan natijalarga olib keladi."
-              },
-              {
-                okTile: "Aniq Nazorat",
-                okDesc: "Har bir bosqichda doimiy yangilanishlar, aniq vaqt rejalari va o‘z vaqtida topshiriladigan ishlar.",
-                badTitle: "Tartibsiz Ish",
-                badDesc: "Vaqtni to‘g‘ri rejalamaslik, oxirgi daqiqadagi o‘zgarishlar va muloqotdagi sustlik natijasida sifatsiz mahsulotlar."
-              },
-              {
-                okTile: "Zamonaviy Yondashuv",
-                okDesc: "Kelajakka mos yechimlar — biznesingiz bilan birga o‘suvchi, moslashuvchan va zamonaviy IT hamda marketing xizmatlari.",
-                badTitle: "Eskirgan G‘oyalar",
-                badDesc: "Muddati o‘tgan yechimlar — zamonaviy brend imidjingizga mos kelmaydigan, trenddan orqada qolgan yondashuvlar."
-              }
-            ].map((item, i) => (
-              <div key={i} className={`grid grid-cols-1 lg:grid-cols-2 ${theme === 'dark' ? 'bg-black/40' : 'bg-white/80'} backdrop-blur-3xl`}>
-                 <div className="p-8 md:p-14 space-y-4 md:space-y-6 border-b lg:border-b-0 lg:border-r border-[var(--border-primary)] bg-accent/5">
-                    <div className="w-8 h-8 md:w-10 md:h-10 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center">
-                       <Check size={16} className="md:size-5" />
-                    </div>
-                    <h4 className="text-xl md:text-2xl font-satoshi font-bold leading-tight">{item.okTile}</h4>
-                    <p className="text-[var(--text-secondary)] text-[13px] md:text-sm leading-relaxed">{item.okDesc}</p>
-                 </div>
-                 <div className="p-8 md:p-14 space-y-4 md:space-y-6">
-                    <div className="w-8 h-8 md:w-10 md:h-10 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center">
-                       <X size={16} className="md:size-5" />
-                    </div>
-                    <h4 className="text-xl md:text-2xl font-satoshi font-bold text-[var(--text-secondary)] leading-tight">{item.badTitle}</h4>
-                    <p className="text-[var(--text-secondary)] opacity-50 text-[13px] md:text-sm leading-relaxed">{item.badDesc}</p>
-                 </div>
-              </div>
-            ))}
+         <div className="group relative cursor-pointer" onClick={() => window.location.href='/brand-assets'}>
+            <div className="h-[400px] md:h-[600px] bg-white/5 rounded-[4rem] border border-white/5 overflow-hidden relative">
+               <motion.img 
+                 style={{ scale }}
+                 src="https://picsum.photos/seed/brandspace/1920/1080"
+                 alt="Brand Workspace"
+                 className="w-full h-full object-cover opacity-20 grayscale group-hover:grayscale-0 group-hover:opacity-40 transition-all duration-1000"
+               />
+               <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="ui-btn-galaxy">
+                     <div className="ui-btn-galaxy-inner px-16 py-6 text-xs font-black uppercase tracking-[0.3em] flex items-center gap-4">
+                        ENTER BRAND SPACE <ArrowUpRight />
+                     </div>
+                  </div>
+               </div>
+            </div>
          </div>
       </section>
 
-      {/* WHY US */}
-      <section className="py-40 px-6 border-t border-[var(--border-primary)] text-center space-y-24">
-         <div className="space-y-8">
-            <h2 className="text-5xl md:text-8xl font-satoshi font-medium tracking-tighter leading-none">{t("branding.choosetitle")}</h2>
-            <p className="text-[var(--text-secondary)] max-w-xl mx-auto font-medium tracking-tight leading-relaxed">{t("branding.choosedesc")}</p>
+      {/* FINAL TRUST BAR */}
+      <div className="flex flex-wrap items-center justify-center gap-16 px-6 opacity-20 hover:opacity-100 transition-opacity cursor-default">
+         <div className="flex items-center gap-3">
+            <ShieldCheck className="text-accent" />
+            <span className="text-[10px] font-black uppercase tracking-widest leading-none">Copyright Protected</span>
          </div>
-
-         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 relative">
-            <div className="absolute top-1/2 left-0 w-full h-px bg-[var(--border-primary)] hidden md:block" />
-            {[
-              { title: t("branding.items.contracts"), icon: <Briefcase /> },
-              { title: t("branding.items.conv"), icon: <Target /> },
-              { title: t("branding.items.fast"), icon: <Rocket /> }
-            ].map((item, i) => (
-              <div key={i} className="space-y-8 relative z-10">
-                <div className={`w-20 h-20 shadow-sm border border-[var(--border-primary)] rounded-full flex items-center justify-center mx-auto text-accent ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-                  {item.icon}
-                </div>
-                <h4 className="text-xl font-display font-black">{item.title}</h4>
-              </div>
-            ))}
+         <div className="flex items-center gap-3">
+            <CheckCircle2 className="text-emerald-500" />
+            <span className="text-[10px] font-black uppercase tracking-widest leading-none">Official Identity System</span>
          </div>
-      </section>
+         <div className="flex items-center gap-3">
+            <FileText className="text-blue-500" />
+            <span className="text-[10px] font-black uppercase tracking-widest leading-none">Media Ready Assets</span>
+         </div>
+      </div>
     </div>
   );
 }

@@ -163,7 +163,7 @@ const ProjectDetail = () => {
                 href={project.link} 
                 target="_blank" 
                 rel="noreferrer"
-                className="px-8 py-5 bg-white text-black font-black uppercase text-[10px] tracking-widest rounded-full flex items-center gap-2 hover:bg-accent hover:text-white transition-all"
+                className="px-8 py-5 bg-white text-black font-black uppercase text-[10px] tracking-widest rounded-full flex items-center gap-2 hover:bg-accent hover:text-white transition-all shadow-[0_20px_40px_rgba(255,255,255,0.1)]"
                >
                  {t("projects.detail.view_live")} <ExternalLink size={14} />
                </a>
@@ -173,11 +173,42 @@ const ProjectDetail = () => {
                 href={project.video} 
                 target="_blank" 
                 rel="noreferrer"
-                className="px-8 py-5 bg-accent text-white font-black uppercase text-[10px] tracking-widest rounded-full flex items-center gap-2 hover:bg-white hover:text-black transition-all"
+                className="px-8 py-5 bg-accent text-white font-black uppercase text-[10px] tracking-widest rounded-full flex items-center gap-2 hover:bg-white hover:text-black transition-all shadow-[0_20px_40px_rgba(var(--accent-rgb),0.3)]"
                >
                  {t("projects.detail.view_video")} <Play size={14} fill="currentColor" />
                </a>
             )}
+          </div>
+
+          {/* STRATEGIC BLUEPRINT (BEHIND THE SCENES) */}
+          <div className="space-y-12 py-12 border-t border-white/5">
+            <div className="space-y-4">
+               <span className="text-[10px] font-black uppercase tracking-[0.5em] text-accent">STRATEGIC BLUEPRINT</span>
+               <h3 className="text-4xl font-display font-medium uppercase italic tracking-tighter">Behind the <span className="text-accent underline decoration-white/10">Scenes</span></h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <div className="space-y-6">
+                  <div className="p-8 bg-white/5 rounded-3xl border border-white/5 space-y-4">
+                     <h4 className="text-xl font-bold uppercase italic">01. Discovery Phase</h4>
+                     <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                        Loyiha boshida biz auditoriyaning chuqur tahlili va raqobatchilarning zaif nuqtalarini aniqlashdan boshladik.
+                     </p>
+                  </div>
+                  <div className="p-8 bg-white/5 rounded-3xl border border-white/5 space-y-4">
+                     <h4 className="text-xl font-bold uppercase italic">02. Creative Strategy</h4>
+                     <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                        Vizuallar va kontent shunchaki chiroyli emas, balki psixologik jihatdan sotuvga yo'naltirilgan bo'lishi ta'minlandi.
+                     </p>
+                  </div>
+               </div>
+               <div className="aspect-square bg-white/5 rounded-[4rem] border border-white/5 overflow-hidden group">
+                  <img src="https://picsum.photos/seed/process/800/800?grayscale" alt="Process Map" className="w-full h-full object-cover opacity-20 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                     <span className="text-[10px] font-black uppercase tracking-widest bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-white/10">Process Documentation</span>
+                  </div>
+               </div>
+            </div>
           </div>
 
           {/* Gallery */}

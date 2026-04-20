@@ -1,9 +1,11 @@
 import React, { useRef, useState } from "react";
 import { motion } from "motion/react";
+import { useAudio } from "../hooks/useAudio";
 
 export default function Magnetic({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const { playHover, playClick } = useAudio();
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current) return;
@@ -24,6 +26,8 @@ export default function Magnetic({ children }: { children: React.ReactNode }) {
     <motion.div
       style={{ position: "relative" }}
       ref={ref}
+      onMouseEnter={playHover}
+      onClick={playClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={reset}
       animate={{ x, y }}

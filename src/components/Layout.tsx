@@ -25,6 +25,7 @@ import { Logo } from "./Logo";
 import SmoothScroll from "./SmoothScroll";
 import Preloader from "./Preloader";
 import SEO from "./SEO";
+import CommandMenu from "./CommandMenu";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -62,7 +63,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SmoothScroll>
       <Preloader />
+      <CommandMenu />
       <SEO title={getPageTitle()} />
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Yahyobek Tohirjonov (just yaviz)",
+          "jobTitle": "Marketing Strategist & Digital Architect",
+          "url": "https://justyaviz.uz",
+          "sameAs": [
+            "https://www.instagram.com/just_yaviz/",
+            "https://t.me/justyaviz7",
+            "https://www.youtube.com/@just_yaviz"
+          ]
+        })}
+      </script>
       <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-accent/40 selection:text-white overflow-hidden ${theme === 'dark' ? 'bg-[#000] text-white' : 'bg-[#fff] text-[#0f172a]'}`}>
         {/* ADMIN BAR */}
       {isAdmin && (
@@ -121,6 +137,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             { to: "/", label: t("nav.home") },
             { to: "/branding", label: t("nav.branding") },
             { to: "/projects", label: t("nav.projects") },
+            { to: "/brand-assets", label: "Brand" },
             { to: "/calculator", label: t("nav.calculator") },
             { to: "/book", label: t("nav.book") },
             { to: "/client-portal", label: t("nav.portal") }
@@ -239,6 +256,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {t("footer.rights")}
             </div>
             <div className="flex gap-8 text-[14px] font-space-grotesk text-[var(--text-primary)] font-medium uppercase tracking-widest">
+               <Link to="/brand-assets" className="hover:text-accent transition-colors">Brand Space</Link>
                <Link to="/client-portal" className="text-accent hover:text-[var(--text-primary)] transition-colors">{t("nav.portal")}</Link>
                <Link to="/admin" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Admin</Link>
                <Link to="#" className="hover:text-accent transition-colors">{t("footer.privacy")}</Link>

@@ -14,12 +14,14 @@ import Admin from "./pages/Admin";
 import Blog from "./pages/Blog";
 import ProjectDetail from "./pages/ProjectDetail";
 import ClientPortal from "./pages/ClientPortal";
+import BrandSpace from "./pages/BrandSpace";
 import NotFound from "./pages/NotFound";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 import FloatingContact from "./components/FloatingContact";
 import PageTransition from "./components/PageTransition";
 import ScrollProgress from "./components/ScrollProgress";
 import AIChatbot from "./components/AIChatbot";
+import CustomCursor from "./components/CustomCursor";
 import PricingCalculator from "./pages/PricingCalculator";
 import Book from "./pages/Book";
 
@@ -36,6 +38,7 @@ function AnimatedRoutes() {
           <Route path="/projects" element={<PageTransition><Projects /></PageTransition>} />
           <Route path="/project/:id" element={<PageTransition><ProjectDetail /></PageTransition>} />
           <Route path="/client-portal" element={<PageTransition><ClientPortal /></PageTransition>} />
+          <Route path="/brand-assets" element={<PageTransition><BrandSpace /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
           <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
           <Route path="/ai" element={<PageTransition><AI /></PageTransition>} />
@@ -70,6 +73,7 @@ export default function App() {
       <AppProvider>
         <AdminProvider>
           <>
+            <CustomCursor />
             <Layout>
               <AnimatedRoutes />
             </Layout>

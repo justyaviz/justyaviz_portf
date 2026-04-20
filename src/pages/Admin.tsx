@@ -496,6 +496,7 @@ export default function Admin() {
                                  <option value="SMM">SMM</option>
                                  <option value="CRM">CRM</option>
                                  <option value="YouTube">YouTube (Video)</option>
+                                 <option value="Reels">Reels</option>
                                  <option value="Banner">Banner</option>
                                  <option value="Infografik">Infografik</option>
                                  <option value="Brend book">Brend book</option>

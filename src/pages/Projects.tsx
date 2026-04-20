@@ -50,6 +50,7 @@ export default function Projects() {
     { name: t("projects.filter.website"), id: "Web site", icon: <Globe size={16} /> },
     { name: t("projects.filter.crm"), id: "CRM", icon: <Cpu size={16} /> },
     { name: t("projects.filter.youtube"), id: "YouTube", icon: <Video size={16} /> },
+    { name: t("projects.filter.reels"), id: "Reels", icon: <Video size={16} /> },
     { name: t("projects.filter.brandbook"), id: "Brend book", icon: <Smartphone size={16} /> },
     { name: t("projects.filter.catalog"), id: "Catalog", icon: <Palette size={16} /> },
     { name: t("projects.filter.flayer"), id: "Flayer", icon: <Palette size={16} /> },
@@ -69,8 +70,8 @@ export default function Projects() {
     ? projects 
     : projects.filter(p => p.type === activeCategory);
 
-  const handleProjectClick = (p: any) => {
-    if (p.type === "YouTube" && p.video) {
+   const handleProjectClick = (p: any) => {
+    if ((p.type === "YouTube" || p.type === "Reels") && p.video) {
       const ytId = getYoutubeId(p.video);
       if (ytId) {
         setActiveVideo(ytId);

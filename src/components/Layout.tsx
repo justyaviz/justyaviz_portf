@@ -38,14 +38,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const getPageTitle = () => {
     switch(location.pathname) {
-      case '/': return 'Bosh Sahifa - Yaviz Digital Agency';
-      case '/branding': return 'Branding & SMM - Yaviz Digital Agency';
-      case '/projects': return 'Portfolio & Loyihalar - Yaviz Digital Agency';
-      case '/contact': return 'Bog\'lanish - Yaviz Digital Agency';
-      case '/client-portal': return 'Mijozlar Portali - Yaviz Digital';
-      case '/calculator': return 'Narxlarni Hisoblash - Yaviz Digital';
-      case '/book': return 'Uchrashuv Belgilash - Yaviz Digital';
-      default: return 'Yaviz Digital Agency - IT & Marketing Yechimlari';
+      case '/': return 'Bosh Sahifa - just.yaviz';
+      case '/branding': return 'Branding & SMM - just.yaviz';
+      case '/projects': return 'Portfolio & Loyihalar - just.yaviz';
+      case '/contact': return 'Bog\'lanish - just.yaviz';
+      case '/client-portal': return 'Mijozlar Portali - just.yaviz';
+      case '/calculator': return 'Narxlarni Hisoblash - just.yaviz';
+      case '/book': return 'Uchrashuv Belgilash - just.yaviz';
+      default: return 'just.yaviz digital agency - IT & Marketing Yechimlari';
     }
   };
 

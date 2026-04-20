@@ -10,13 +10,13 @@ interface SEOProps {
 
 const SEO: React.FC<SEOProps> = ({ 
   title, 
-  description = "Yaviz Digital Agency - Biz bilan biznesingizni yangi bosqichga olib chiqing.", 
-  keywords = "IT kompaniya, Veb sayt yaratish, Digital Agency, SMM, Branding, Tashkent, O'zbekiston, Yaviz",
+  description = "just.yaviz - Biz bilan biznesingizni yangi bosqichga olib chiqing.", 
+  keywords = "IT kompaniya, Veb sayt yaratish, Digital Agency, SMM, Branding, Tashkent, O'zbekiston, just.yaviz",
   ogImage = "https://yaviz.vercel.app/logo.png" // We can replace this with a real hero image URL
 }) => {
   return (
     <Helmet>
-      <title>{title} | Yaviz Digital</title>
+      <title>{title} | just.yaviz</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       

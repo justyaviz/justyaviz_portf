@@ -94,7 +94,7 @@ export default function Bio() {
               <span className="text-[10px] uppercase tracking-widest text-[var(--text-secondary)] font-bold">{t("bio.sidebar.company")}</span>
               <div className="flex items-center gap-2">
                  <div className="w-6 h-6 bg-accent text-white rounded flex items-center justify-center text-[10px] font-black">Y</div>
-                 <span className="text-xs font-bold text-accent">Just Yaviz Digital</span>
+                 <span className="text-xs font-bold text-accent">just.yaviz digital</span>
               </div>
            </div>
         </div>

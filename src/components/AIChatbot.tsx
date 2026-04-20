@@ -5,7 +5,7 @@ import { GoogleGenAI } from "@google/genai";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY }); // WARNING: VITE variables are exposed, this is okay for prototype inside applet.
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY }); // Required to use process.env.GEMINI_API_KEY in this environment
 const SYSTEM_PROMPT = `Sen Yaviz Digital Agency'ning shaxsiy sun'iy intellekt sotuvchi va yordamchisisan.
 Sening isming "Yaviz AI". Ziyrak, professionallarga xos va ochiqko'ngilsan, asosan O'zbek tilida gapirasan.
 Maqsading: Saytga kirgan mijozlarni issiq kutib olish, Yaviz xizmatlarini (SMM, Branding, Web Dasturlash, Performance Marketing) tushuntirish va ularni 'buyurtma berishga' undash.
@@ -46,11 +46,13 @@ export default function AIChatbot() {
       // Use standard chat structure for Gemini API
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-pro',
-        systemInstruction: SYSTEM_PROMPT,
         contents: newHistory.map(h => ({
           role: h.role, 
           parts: h.parts
-        }))
+        })),
+        config: {
+          systemInstruction: SYSTEM_PROMPT
+        }
       });
       
       const aiResponse = response.text || "Uzur, ayni damda tushuna olmadim. Adminlarimizga /contact orqali yozishingizni so'rayman.";

@@ -32,8 +32,11 @@ import { ProjectControls, AddProjectBtn } from "../components/ProjectEditor";
 import { useAppContext } from "../context/AppContext";
 import { db } from "../firebase";
 import { doc, onSnapshot, collection, query, limit, orderBy } from "firebase/firestore";
+import { Logo } from "../components/Logo";
 import { Typewriter } from "../components/Typewriter";
 import Lottie from "lottie-react";
+import Magnetic from "../components/Magnetic";
+import { RevealText, CharReveal, ImageReveal } from "../components/Reveal";
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -117,7 +120,9 @@ export default function Home() {
             </div>
             <div className="space-y-6 md:space-y-8">
               <div className="flex flex-col gap-2">
-                 <h3 className="text-xl md:text-3xl font-satoshi font-medium text-[var(--text-secondary)] -mb-2 md:-mb-4">{t("hero.hello")}</h3>
+                 <h3 className="text-xl md:text-3xl font-satoshi font-medium text-[var(--text-secondary)] -mb-2 md:-mb-4">
+                  <CharReveal>{t("hero.hello")}</CharReveal>
+                 </h3>
                  <motion.h1 
                   initial={{ opacity: 0, scale: 0.98, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -125,40 +130,42 @@ export default function Home() {
                   className="text-[44px] sm:text-[64px] md:text-[8vw] font-satoshi font-medium tracking-tighter flex items-center gap-x-4 md:gap-x-6 leading-[0.9] md:leading-tight whitespace-nowrap text-[var(--text-primary)]"
                 >
                   <EditableText contentKey="heroTitle" defaultText="just.yaviz" as="span" />
-                  <Link to="/bio" className="relative shrink-0">
-                  <motion.div 
-                    initial="initial"
-                    whileHover="hover"
-                    animate="animate"
-                    className="relative flex items-center"
-                  >
-                    <motion.div 
-                      variants={{
-                        initial: { rotate: -45, opacity: 0, scale: 0.8 },
-                        animate: { rotate: 0, opacity: 1, scale: 1 },
-                        hover: { rotate: 135, scale: 1.1, borderColor: "rgba(255,255,255,0.8)" }
-                      }}
-                      transition={{ duration: 0.6, ease: "easeOut" }}
-                      className={`w-12 h-12 md:w-16 md:h-16 flex items-center justify-center border border-[var(--border-primary)] rounded-full cursor-pointer bg-[var(--glass-bg)] backdrop-blur-xl transition-colors`}
-                    >
-                      <ArrowUpRight className="size-6 md:size-8" />
-                    </motion.div>
-                    <motion.div
-                      variants={{
-                        initial: { opacity: 0, x: -10, rotate: -15, scale: 0.8 },
-                        animate: { opacity: 0 },
-                        hover: { opacity: 1, x: 0, rotate: -25, scale: 1 }
-                      }}
-                      transition={{ duration: 0.4, ease: "backOut" }}
-                      className="absolute top-12 left-8 md:top-14 md:left-12 pointer-events-none z-[100]"
-                    >
-                      <div className="bg-white text-black text-[10px] md:text-sm font-bold px-3 py-1.5 rounded-full shadow-[0_10px_30px_rgba(255,255,255,0.2)] whitespace-nowrap">
-                        {t("bio.sidebar.who")}
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                </Link>
-              </motion.h1>
+                  <Magnetic>
+                    <Link to="/bio" className="relative shrink-0">
+                      <motion.div 
+                        initial="initial"
+                        whileHover="hover"
+                        animate="animate"
+                        className="relative flex items-center"
+                      >
+                        <motion.div 
+                          variants={{
+                            initial: { rotate: -45, opacity: 0, scale: 0.8 },
+                            animate: { rotate: 0, opacity: 1, scale: 1 },
+                            hover: { rotate: 135, scale: 1.1, borderColor: "rgba(255,255,255,0.8)" }
+                          }}
+                          transition={{ duration: 0.6, ease: "easeOut" }}
+                          className={`w-12 h-12 md:w-16 md:h-16 flex items-center justify-center border border-[var(--border-primary)] rounded-full cursor-pointer bg-[var(--glass-bg)] backdrop-blur-xl transition-colors`}
+                        >
+                          <ArrowUpRight className="size-6 md:size-8" />
+                        </motion.div>
+                        <motion.div
+                          variants={{
+                            initial: { opacity: 0, x: -10, rotate: -15, scale: 0.8 },
+                            animate: { opacity: 0 },
+                            hover: { opacity: 1, x: 0, rotate: -25, scale: 1 }
+                          }}
+                          transition={{ duration: 0.4, ease: "backOut" }}
+                          className="absolute top-12 left-8 md:top-14 md:left-12 pointer-events-none z-[100]"
+                        >
+                          <div className="bg-white text-black text-[10px] md:text-sm font-bold px-3 py-1.5 rounded-full shadow-[0_10px_30px_rgba(255,255,255,0.2)] whitespace-nowrap">
+                            {t("bio.sidebar.who")}
+                          </div>
+                        </motion.div>
+                      </motion.div>
+                    </Link>
+                  </Magnetic>
+                </motion.h1>
               </div>
 
                <div className="flex flex-col gap-2">
@@ -175,14 +182,11 @@ export default function Home() {
                  </h2>
                </div>
                
-              <motion.p 
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
-                className="max-w-lg text-[var(--text-secondary)] font-satoshi text-[15px] md:text-lg leading-relaxed font-medium tracking-tight"
-              >
-                <EditableText contentKey="heroDesc" defaultText={t("hero.desc")} type="textarea" />
-              </motion.p>
+              <div className="max-w-lg text-[var(--text-secondary)] font-satoshi text-[15px] md:text-lg leading-relaxed font-medium tracking-tight">
+                <RevealText>
+                  {content?.heroDesc || t("hero.desc")}
+                </RevealText>
+              </div>
             </div>
             <motion.div 
               initial={{ opacity: 0, y: 15 }}
@@ -190,15 +194,19 @@ export default function Home() {
               transition={{ delay: 0.5, duration: 0.8 }}
               className="flex flex-wrap items-center gap-6"
             >
-               <Link to="/projects" className="ui-btn-shine">
-                 {t("hero.cta.projects")}
-               </Link>
-               <Link to="/contact" className="ui-btn-galaxy">
-                 <div className="ui-btn-galaxy-inner">
-                   {t("hero.cta.contact")}
-                   <Sparkles className="w-4 h-4 text-accent" />
-                 </div>
-               </Link>
+               <Magnetic>
+                 <Link to="/projects" className="ui-btn-shine">
+                   {t("hero.cta.projects")}
+                 </Link>
+               </Magnetic>
+               <Magnetic>
+                 <Link to="/contact" className="ui-btn-galaxy">
+                   <div className="ui-btn-galaxy-inner">
+                     {t("hero.cta.contact")}
+                     <Sparkles className="w-4 h-4 text-accent" />
+                   </div>
+                 </Link>
+               </Magnetic>
             </motion.div>
           </motion.div>
 
@@ -467,7 +475,13 @@ export default function Home() {
             ]).map((p, i) => (
               <motion.div key={i} {...fadeIn} className="group relative h-[400px] md:h-[650px] bg-[var(--glass-bg)] rounded-3xl md:rounded-[4rem] overflow-hidden border border-[var(--border-primary)] cursor-pointer shadow-xl">
                 <ProjectControls project={p} />
-                <img src={p.image} alt="" className="absolute inset-0 w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-80 group-hover:scale-110 transition-all duration-1000" />
+                {p.image ? (
+                  <img src={p.image} alt="" className="absolute inset-0 w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-80 group-hover:scale-110 transition-all duration-1000" />
+                ) : (
+                  <div className="absolute inset-0 w-full h-full bg-accent/5 flex items-center justify-center">
+                    <Logo className="w-20 h-20 opacity-10" />
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-transparent p-8 md:p-12 flex flex-col justify-end">
                    <div className="glass backdrop-blur-3xl p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border-[var(--border-primary)] shadow-2xl space-y-1 md:space-y-2 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
                       <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[var(--text-secondary)]">{p.category}</span>
@@ -677,12 +691,14 @@ export default function Home() {
           <motion.div {...fadeIn} className="w-full lg:w-1/2 relative group">
              <div className="relative">
                 <div className="absolute -inset-4 bg-accent/20 blur-[100px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-                <img 
-                  src="https://yt3.googleusercontent.com/7c66P3YnmaqgNiVybbisloEC64VHRMgdHJAifzqvnTsrZvuoWRnNJYsibF9eMtow3umhZeMlrA=s900-c-k-c0x00ffffff-no-rj" 
-                  alt="Yahyobek Tohirjonov" 
-                  className="relative rounded-[2.5rem] md:rounded-[5rem] grayscale group-hover:grayscale-0 transition-all duration-1000 border border-[var(--border-primary)] aspect-[4/5] object-cover shadow-2xl mx-auto" 
-                  referrerPolicy="no-referrer"
-                />
+                <ImageReveal className="rounded-[2.5rem] md:rounded-[5rem]">
+                  <img 
+                    src="https://yt3.googleusercontent.com/7c66P3YnmaqgNiVybbisloEC64VHRMgdHJAifzqvnTsrZvuoWRnNJYsibF9eMtow3umhZeMlrA=s900-c-k-c0x00ffffff-no-rj" 
+                    alt="Yahyobek Tohirjonov" 
+                    className="relative grayscale group-hover:grayscale-0 transition-all duration-1000 border border-[var(--border-primary)] aspect-[4/5] object-cover shadow-2xl mx-auto" 
+                    referrerPolicy="no-referrer"
+                  />
+                </ImageReveal>
              </div>
           </motion.div>
           <motion.div {...fadeIn} className="w-full lg:w-1/2 space-y-8 md:space-y-12">

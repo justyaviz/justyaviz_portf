@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
+import { Logo } from "../components/Logo";
 
 export default function Bio() {
   const { t } = useAppContext();
@@ -248,7 +249,13 @@ export default function Bio() {
                className="space-y-4 group"
              >
                 <div className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-[var(--border-primary)] shadow-lg transition-all group-hover:shadow-accent/20">
-                   <img src={cert.image} alt={cert.title} className="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+                   {cert.image ? (
+                     <img src={cert.image} alt={cert.title} className="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+                   ) : (
+                     <div className="w-full h-full bg-accent/5 flex items-center justify-center grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700">
+                        <Logo className="w-12 h-12 opacity-10" />
+                     </div>
+                   )}
                    <div className="absolute top-4 right-4 w-8 h-8 bg-[var(--bg-primary)]/80 backdrop-blur-xl border border-[var(--border-primary)] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <ExternalLink size={14} className="text-accent" />
                    </div>

@@ -23,6 +23,7 @@ import { auth } from "../firebase";
 import { Logo } from "./Logo";
 import SmoothScroll from "./SmoothScroll";
 import CustomCursor from "./CustomCursor";
+import Preloader from "./Preloader";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -45,6 +46,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <SmoothScroll>
+      <Preloader />
       <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-accent/40 selection:text-white overflow-hidden ${theme === 'dark' ? 'bg-[#000] text-white' : 'bg-[#fff] text-[#0f172a]'}`}>
         <CustomCursor />
         {/* ADMIN BAR */}

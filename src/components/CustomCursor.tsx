@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
 import { motion, useSpring, useMotionValue } from "motion/react";
+import { useAppContext } from "../context/AppContext";
 
 export default function CustomCursor() {
+  const { theme } = useAppContext();
   const [isPointer, setIsPointer] = useState(false);
-  const [isHidden, setIsHidden] = useState(true);
+  
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
 
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-
-  const springConfig = { damping: 25, stiffness: 250 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
+  const springConfig = { damping: 25, stiffness: 150 };
+  const circleX = useSpring(mouseX, springConfig);
+  const circleY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
     const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-      setIsHidden(false);
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -31,48 +31,41 @@ export default function CustomCursor() {
       setIsPointer(!!isClickable);
     };
 
-    const handleMouseLeave = () => setIsHidden(true);
-    const handleMouseEnter = () => setIsHidden(false);
-
     window.addEventListener("mousemove", moveCursor);
     window.addEventListener("mouseover", handleMouseOver);
-    document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("mouseenter", handleMouseEnter);
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
       window.removeEventListener("mouseover", handleMouseOver);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-      document.removeEventListener("mouseenter", handleMouseEnter);
     };
-  }, [cursorX, cursorY]);
+  }, [mouseX, mouseY]);
 
   return (
     <>
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-accent pointer-events-none z-[9999] mix-blend-difference hidden md:block"
+        className={`fixed top-0 left-0 w-10 h-10 rounded-full border border-accent pointer-events-none z-[9999] hidden md:block`}
         style={{
-          x: cursorXSpring,
-          y: cursorYSpring,
+          x: circleX,
+          y: circleY,
           translateX: "-50%",
           translateY: "-50%",
         }}
         animate={{
           scale: isPointer ? 1.5 : 1,
-          opacity: isHidden ? 0 : 1,
-          backgroundColor: isPointer ? "var(--accent)" : "transparent",
+          opacity: 0.5,
+          borderWidth: isPointer ? "2px" : "1px",
         }}
       />
       <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-accent pointer-events-none z-[9999] hidden md:block"
+        className={`fixed top-0 left-0 w-2 h-2 rounded-full bg-accent pointer-events-none z-[9999] hidden md:block shadow-[0_0_15px_rgba(var(--accent-rgb),0.5)]`}
         style={{
-          x: cursorX,
-          y: cursorY,
+          x: mouseX,
+          y: mouseY,
           translateX: "-50%",
           translateY: "-50%",
         }}
         animate={{
-          opacity: isHidden ? 0 : 1,
+          scale: isPointer ? 0.5 : 1,
         }}
       />
     </>

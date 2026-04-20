@@ -145,12 +145,18 @@ export default function Projects() {
                   <ProjectControls project={p} />
                   {p.video && !getYoutubeId(p.video) ? (
                     <div className="absolute inset-0 w-full h-full">
-                       <img 
-                          src={p.image} 
-                          alt={p.title} 
-                          className="absolute inset-0 w-full h-full object-cover grayscale group-hover/card:opacity-0 transition-all duration-700" 
-                          referrerPolicy="no-referrer"
-                       />
+                       {p.image ? (
+                          <img 
+                            src={p.image} 
+                            alt={p.title} 
+                            className="absolute inset-0 w-full h-full object-cover grayscale group-hover/card:opacity-0 transition-all duration-700" 
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 w-full h-full bg-accent/5 flex items-center justify-center grayscale group-hover/card:opacity-0 transition-all duration-700">
+                             <Logo className="w-12 h-12 opacity-10" />
+                          </div>
+                        )}
                        <video 
                           src={p.video} 
                           className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover/card:opacity-100 transition-all duration-700" 
@@ -162,12 +168,18 @@ export default function Projects() {
                     </div>
                   ) : (
                     <div className="absolute inset-0 w-full h-full">
-                      <img 
-                        src={p.image} 
-                        alt={p.title} 
-                        className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" 
-                        referrerPolicy="no-referrer"
-                      />
+                      {p.image ? (
+                        <img 
+                          src={p.image} 
+                          alt={p.title} 
+                          className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" 
+                          referrerPolicy="no-referrer"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 w-full h-full bg-accent/5 flex items-center justify-center grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
+                           <Logo className="w-16 h-16 opacity-10" />
+                        </div>
+                      )}
                       {p.type === "YouTube" && (
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
                            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-2xl scale-75 group-hover:scale-100 transition-transform">

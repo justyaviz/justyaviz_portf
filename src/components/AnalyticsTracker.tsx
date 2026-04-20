@@ -18,22 +18,14 @@ export default function AnalyticsTracker() {
           shouldIncrementVisitor = true;
         }
 
-        const dateSnap = await getDoc(dateRef);
-        
-        if (!dateSnap.exists()) {
-           await setDoc(dateRef, {
-             date: today,
-             visitors: 1,
-             pageviews: 1,
-             updatedAt: new Date().toISOString()
-           });
-        } else {
-           await setDoc(dateRef, {
-             visitors: shouldIncrementVisitor ? increment(1) : increment(0),
-             pageviews: increment(1),
-             updatedAt: new Date().toISOString()
-           }, { merge: true });
-        }
+        // Use setDoc with merge: true which works even if the document doesn't exist
+        // and doesn't require a preceding getDoc (which public users don't have permission for)
+        await setDoc(dateRef, {
+          date: today,
+          visitors: shouldIncrementVisitor ? increment(1) : increment(0),
+          pageviews: increment(1),
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
       } catch (err) {
         console.error("Analytics error", err);
       }

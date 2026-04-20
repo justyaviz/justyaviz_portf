@@ -241,7 +241,11 @@ export default function Admin() {
            </button>
            
            <div className="flex items-center gap-4 px-4 py-2">
-              <img src={user.photoURL || ""} className="w-8 h-8 rounded-full border border-white/10" alt="" />
+              {user.photoURL ? (
+                <img src={user.photoURL} className="w-8 h-8 rounded-full border border-white/10" alt="" />
+              ) : (
+                <div className="w-8 h-8 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-[10px] font-black">{user.displayName?.[0] || user.email?.[0] || "A"}</div>
+              )}
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-black truncate uppercase">{user.displayName || "Admin"}</p>
                 <button onClick={logoutAdmin} className="text-[9px] font-bold text-rose-500 uppercase hover:underline">Chiqish</button>
@@ -612,7 +616,7 @@ export default function Admin() {
                         <div className="space-y-2">
                            <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Rasm URL {getYoutubeId(formData.video) && <span className="text-accent">(Auto)</span>}</label>
                            <input className="ui-input-glow p-5" value={formData.image} onChange={e=>setFormData({...formData, image: e.target.value})} />
-                           {formData.image && (
+                           {formData.image && formData.image.trim() !== "" && (
                              <div className="mt-2 aspect-video rounded-3xl overflow-hidden border border-white/10 max-h-40">
                                <img src={formData.image} className="w-full h-full object-cover" alt="Preview" referrerPolicy="no-referrer" />
                              </div>

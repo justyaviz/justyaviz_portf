@@ -22,7 +22,8 @@ import {
   Send,
   Youtube,
   Instagram,
-  Facebook
+  Facebook,
+  CheckCircle2
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
@@ -368,28 +369,45 @@ export default function Bio() {
                    whileInView={{ opacity: 1, y: 0 }}
                    viewport={{ once: true }}
                    transition={{ delay: i * 0.1 }}
-                   className="space-y-4 group"
+                   className="space-y-6 group"
                 >
-                   <div className="relative aspect-[4/3] rounded-[2.5rem] overflow-hidden border border-[var(--border-primary)] shadow-xl transition-all group-hover:shadow-accent/40 group-hover:border-accent">
+                   <div className="relative aspect-[4/3] rounded-[3rem] overflow-hidden border border-[var(--border-primary)] shadow-2xl transition-all group-hover:shadow-accent/40 group-hover:border-accent bg-black">
                       {cert.image ? (
-                        <img src={cert.image} alt={cert.title} className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+                        <img src={cert.image} alt={cert.title} className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000" />
                       ) : (
-                        <div className="w-full h-full bg-accent/5 flex items-center justify-center grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700">
-                           <Logo className="w-12 h-12 opacity-10" />
+                        <div className="w-full h-full bg-accent/5 flex items-center justify-center grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000">
+                           <Logo className="w-16 h-16 opacity-5" />
                         </div>
                       )}
-                      <div className="absolute top-6 right-6 w-10 h-10 bg-[var(--bg-primary)]/80 backdrop-blur-xl border border-[var(--border-primary)] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                         <ExternalLink size={18} className="text-accent" />
+                      
+                      <div className="absolute top-8 left-8">
+                         <div className="px-4 py-2 bg-accent/90 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-widest text-white shadow-xl flex items-center gap-2">
+                            <CheckCircle2 size={12} />
+                            Verified Certificate
+                         </div>
+                      </div>
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <div className="absolute bottom-8 left-8 right-8 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                         <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Issued by {cert.provider}</span>
+                            <div className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center shadow-2xl">
+                               <ExternalLink size={16} />
+                            </div>
+                         </div>
                       </div>
                    </div>
-                   <div className="px-4 space-y-2">
-                      <h5 className="text-lg font-black tracking-tight uppercase italic group-hover:text-accent transition-colors">
+                   <div className="px-6 space-y-2">
+                      <h5 className="text-xl font-black tracking-tighter uppercase italic leading-none group-hover:text-accent transition-colors">
                          {cert.title}
                       </h5>
-                      <p className="text-[10px] text-[var(--text-secondary)] tracking-[0.2em] uppercase font-black opacity-60 flex items-center gap-2">
-                         <Globe size={12} />
-                         {cert.provider}
-                      </p>
+                      <div className="flex items-center gap-3">
+                         <div className="w-1 h-1 rounded-full bg-accent" />
+                         <p className="text-[10px] text-[var(--text-secondary)] tracking-[0.2em] uppercase font-black opacity-60">
+                            {cert.provider} • Professional Education
+                         </p>
+                      </div>
                    </div>
                 </motion.div>
               ))}

@@ -98,6 +98,24 @@ const translations = {
     'section.resume.title': 'Mening Professional Yo\'lim',
     'section.contact.title': 'Keling, birga ishlaymiz',
 
+    // New Professional Sections
+    'section.trust.title': 'HAMKORLAR & MIJOZLAR',
+    'section.metrics.title': 'RAQAMLARDA NATIJALAR',
+    'stats.clients.val': '100+',
+    'stats.clients.label': 'Baxtli mijozlar',
+    'stats.projects.val': '250+',
+    'stats.projects.label': 'Bitirilgan loyihalar',
+    'stats.reach.val': '10M+',
+    'stats.reach.label': 'Umumiy qamrov',
+    'stats.roi.val': '450%',
+    'stats.roi.label': "O'rtacha ROI",
+    'section.blog.title': 'RAQAMLI BILIMLAR',
+    'blog.badge': 'BLOG & INSAYTLAR',
+    'blog.title': 'Digital Marketing sirlari',
+    'section.ecosystem.badge': 'IJTIMOIY ISBOT',
+    'section.ecosystem.title': 'RAQAMLI EKOTIZIM',
+    'section.ecosystem.desc': 'Mening barcha rasmiy sahifalarim va ijodiy loyihalarim ekotizimi.',
+
     // Branding Page
     'branding.hero.title': 'Sifatli dizayn — bu tasodif emas, tizim.',
     'branding.hero.desc': 'Biznesingizga mos professional dizayn va aniq boshqaruv — natija kafolatlangan. Har bir detal ustida tizimli ishlaymiz.',
@@ -382,6 +400,24 @@ const translations = {
     'section.resume.title': 'Мой Профессиональный Путь',
     'section.contact.title': 'Давайте работать вместе',
 
+    // New Professional Sections
+    'section.trust.title': 'ПАРТНЕРЫ И КЛИЕНТЫ',
+    'section.metrics.title': 'РЕЗУЛЬТАТЫ В ЦИФРАХ',
+    'stats.clients.val': '100+',
+    'stats.clients.label': 'Счастливых клиентов',
+    'stats.projects.val': '250+',
+    'stats.projects.label': 'Завершенных проектов',
+    'stats.reach.val': '10M+',
+    'stats.reach.label': 'Общий охват',
+    'stats.roi.val': '450%',
+    'stats.roi.label': 'Средний ROI',
+    'section.blog.title': 'ЦИФРОВЫЕ ЗНАНИЯ',
+    'blog.badge': 'БЛОГ И ИНСАЙТЫ',
+    'blog.title': 'Секреты Digital Маркетинга',
+    'section.ecosystem.badge': 'СОЦИАЛЬНОЕ ДОКАЗАТЕЛЬСТВО',
+    'section.ecosystem.title': 'ЦИФРОВАЯ ЭКОСИСТЕМА',
+    'section.ecosystem.desc': 'Экосистема всех моих официальных страниц и творческих проектов.',
+
     // Branding Page
     'branding.hero.title': 'Качественный дизайн — это не случайность, а система.',
     'branding.hero.desc': 'Профессиональный дизайн и четкое управление, подходящие для вашего бизнеса — результат гарантирован. Мы работаем планомерно над каждой деталью.',
@@ -658,6 +694,24 @@ const translations = {
     'section.resume': 'Experience & Education',
     'section.resume.title': 'My Professional Journey',
     'section.contact.title': "Let's work together",
+
+    // New Professional Sections
+    'section.trust.title': 'PARTNERS & CLIENTS',
+    'section.metrics.title': 'IMPACT IN NUMBERS',
+    'stats.clients.val': '100+',
+    'stats.clients.label': 'Happy Clients',
+    'stats.projects.val': '250+',
+    'stats.projects.label': 'Projects Completed',
+    'stats.reach.val': '10M+',
+    'stats.reach.label': 'Total Reach',
+    'stats.roi.val': '450%',
+    'stats.roi.label': 'Average ROI',
+    'section.blog.title': 'DIGITAL INSIGHTS',
+    'blog.badge': 'BLOG & INSIGHTS',
+    'blog.title': 'Digital Marketing Secrets',
+    'section.ecosystem.badge': 'SOCIAL PROOF',
+    'section.ecosystem.title': 'DIGITAL ECOSYSTEM',
+    'section.ecosystem.desc': 'The ecosystem of all my official pages and creative projects.',
 
     // Branding Page
     'branding.hero.title': 'Quality design is not an accident, it is a system.',

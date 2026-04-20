@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useAppContext } from "../context/AppContext";
+import { ArrowUpRight } from "lucide-react";
 
 export default function AI() {
   const { t } = useAppContext();
@@ -19,30 +20,42 @@ export default function AI() {
        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-           {[
-             { title: "Spline", desc: "Place to design and collaborate in 3D" },
-             { title: "Figma", desc: "Design tool for creating and collaborating" },
-             { title: "Framer", desc: "Framer is where teams design and publish stunning sites." },
-             { title: "Lovable", desc: "Build software products, using only a chat interface." },
-             { title: "Relume", desc: "Access the world’s largest library of Figma" },
-             { title: "Webflow", desc: "Take control of HTML, CSS, and JavaScript in a visual canvas." },
-             { title: "Hotjar", desc: "Behaviour analytical tool to track users" },
-             { title: "Notion", desc: "Wiki, docs and projects management system" }
-           ].map((tool, i) => (
-             <motion.div 
-               key={i}
-               whileHover={{ y: -5 }}
-               className="ui-magic-card group"
-             >
-               <div className="p-8 h-full space-y-4">
-                 <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-all font-black text-xl">
-                    {tool.title[0]}
-                 </div>
-                 <h4 className="text-xl font-display font-bold">{tool.title}</h4>
-                 <p className="text-[var(--text-secondary)] text-xs leading-relaxed opacity-60">{tool.desc}</p>
-               </div>
-             </motion.div>
-           ))}
+            {[
+              { title: "Spline", desc: "Place to design and collaborate in 3D", iconColor: "bg-blue-500" },
+              { title: "Figma", desc: "Design tool for creating and collaborating", iconColor: "bg-purple-500" },
+              { title: "Framer", desc: "Design and publish stunning sites", iconColor: "bg-black" },
+              { title: "Lovable", desc: "Build software products via chat", iconColor: "bg-red-500" },
+              { title: "Relume", desc: "The world’s largest Figma library", iconColor: "bg-blue-600" },
+              { title: "Webflow", desc: "Visual canvas for HTML, CSS, JS", iconColor: "bg-blue-400" },
+              { title: "Hotjar", desc: "Behaviour analytical tracking tool", iconColor: "bg-yellow-500" },
+              { title: "Notion", desc: "Wiki, docs and project management", iconColor: "bg-white text-black border border-black/10" }
+            ].map((tool, i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ y: -5, scale: 1.02 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                className="ui-magic-card group"
+              >
+                <div className="p-8 h-full space-y-6 flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className={`w-14 h-14 ${tool.iconColor} rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-all font-black text-2xl shadow-lg`}>
+                       {tool.title[0]}
+                    </div>
+                    <h4 className="text-xl font-display font-black tracking-tight">{tool.title}</h4>
+                    <p className="text-[var(--text-secondary)] text-sm leading-relaxed opacity-70 font-medium">{tool.desc}</p>
+                  </div>
+                  <div className="pt-4 border-t border-[var(--border-primary)] flex items-center justify-between">
+                     <span className="text-[9px] font-black uppercase tracking-widest opacity-40">Pro Tool</span>
+                     <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <ArrowUpRight size={14} />
+                     </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
         </div>
 
         <div className="glass p-8 md:p-24 rounded-3xl md:rounded-[4rem] border-[var(--border-primary)] text-center space-y-8 md:space-y-12 relative overflow-hidden shadow-xl">

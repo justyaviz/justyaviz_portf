@@ -352,6 +352,50 @@ export default function Home() {
       {/* INFINITE MARQUEE */}
       <InfiniteMarquee />
 
+      {/* TRUST BAR / LOGO CLOUD */}
+      <section className="py-12 border-b border-[var(--border-primary)] bg-white/5 opacity-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-60 grayscale hover:grayscale-0 transition-all duration-700">
+             {/* Mocking high-end partner logos with Text/Icon combinations */}
+             <div className="flex items-center gap-2 font-satoshi font-black text-xl italic tracking-tighter transition-transform hover:scale-110">REVAVA</div>
+             <div className="flex items-center gap-2 font-satoshi font-black text-xl tracking-tighter transition-transform hover:scale-110">ALOOFEST</div>
+             <div className="flex items-center gap-2 font-satoshi font-black text-xl transition-transform hover:scale-110 uppercase">Aloo Panel</div>
+             <div className="flex items-center gap-2 font-satoshi font-black text-xl tracking-tighter transition-transform hover:scale-110 italic">DIGITAL.CO</div>
+             <div className="flex items-center gap-2 font-satoshi font-black text-xl transition-transform hover:scale-110 uppercase tracking-widest">Growth</div>
+          </div>
+        </div>
+      </section>
+
+      {/* METRICS OF EXCELLENCE */}
+      <section className="py-20 md:py-32 px-6 bg-[var(--bg-primary)] border-b border-[var(--border-primary)] relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+            {[
+              { val: t("stats.clients.val"), label: t("stats.clients.label") },
+              { val: t("stats.projects.val"), label: t("stats.projects.label") },
+              { val: t("stats.reach.val"), label: t("stats.reach.label") },
+              { val: t("stats.roi.val"), label: t("stats.roi.label") }
+            ].map((stat, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: i * 0.1 }}
+                className="text-center space-y-2 group"
+              >
+                <div className="text-4xl md:text-7xl font-satoshi font-black tracking-tighter text-accent group-hover:scale-110 transition-transform duration-500">
+                  {stat.val}
+                </div>
+                <div className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-[var(--text-secondary)] opacity-60">
+                  {stat.label}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* PROFESSIONAL DIRECTIONS */}
       <section className="py-20 md:py-32 px-6">
         <div className="max-w-7xl mx-auto space-y-12 md:space-y-20">
@@ -387,6 +431,69 @@ export default function Home() {
                 </motion.div>
               ))}
            </div>
+        </div>
+      </section>
+
+      {/* TECH STACK MARQUEE */}
+      <section className="py-12 border-y border-[var(--border-primary)] bg-black/5 overflow-hidden">
+        <div className="flex w-max animate-[marquee_40s_linear_infinite] gap-20 items-center px-10">
+          {["React", "Node.js", "Firebase", "TypeScript", "Tailwind CSS", "Framer Motion", "Adobe Suite", "Meta Ads", "Google Ads", "TikTok Ads", "Python", "Vite"].map((tech, i) => (
+            <div key={i} className="text-xl md:text-3xl font-satoshi font-black uppercase italic tracking-tighter text-[var(--text-secondary)] opacity-20 hover:opacity-100 hover:text-accent transition-all cursor-default">
+              {tech}
+            </div>
+          ))}
+          {/* Duplicate for seamless loop */}
+          {["React", "Node.js", "Firebase", "TypeScript", "Tailwind CSS", "Framer Motion", "Adobe Suite", "Meta Ads", "Google Ads", "TikTok Ads", "Python", "Vite"].map((tech, i) => (
+            <div key={i + 100} className="text-xl md:text-3xl font-satoshi font-black uppercase italic tracking-tighter text-[var(--text-secondary)] opacity-20 hover:opacity-100 hover:text-accent transition-all cursor-default">
+              {tech}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* DIGITAL ECOSYSTEM */}
+      <section className="py-20 md:py-40 px-6 overflow-hidden bg-[var(--glass-bg)] border-b border-[var(--border-primary)] relative">
+        <div className="absolute top-0 right-0 w-[30vw] h-[30vw] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="max-w-7xl mx-auto space-y-16">
+          <div className="text-center space-y-6">
+             <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">{t("section.ecosystem.badge")}</span>
+             <h2 className="text-[32px] md:text-8xl font-satoshi font-medium tracking-tighter leading-none italic uppercase">{t("section.ecosystem.title")}</h2>
+             <p className="text-[var(--text-secondary)] font-medium max-w-xl mx-auto">{t("section.ecosystem.desc")}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+             {[
+               { label: "Instagram", val: "20K+", icon: <Instagram />, url: "https://www.instagram.com/just_yaviz/", color: "group-hover:bg-[#E4405F]" },
+               { label: "YouTube", val: "10K+", icon: <Youtube />, url: "https://www.youtube.com/@just_yaviz", color: "group-hover:bg-[#FF0000]" },
+               { label: "Telegram", val: "5K+", icon: <Send />, url: "https://t.me/just_yaviz", color: "group-hover:bg-[#229ED9]" },
+               { label: "Creative", val: "REVAVA", icon: <Rocket />, url: "https://www.youtube.com/@revavamusic", color: "group-hover:bg-accent" }
+             ].map((item, i) => (
+               <motion.a 
+                 key={i} 
+                 href={item.url} 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 initial={{ opacity: 0, y: 20 }}
+                 whileInView={{ opacity: 1, y: 0 }}
+                 viewport={{ once: true }}
+                 transition={{ delay: i * 0.1 }}
+                 className="group p-10 glass border-[var(--border-primary)] rounded-[3.5rem] space-y-8 hover:border-white/20 transition-all text-center relative overflow-hidden active:scale-95"
+               >
+                  <div className={`w-20 h-20 bg-[var(--bg-primary)] border border-[var(--border-primary)] rounded-[2rem] flex items-center justify-center text-[var(--text-primary)] mx-auto transition-all duration-500 group-hover:scale-110 group-hover:text-white ${item.color} shadow-lg`}>
+                     {item.icon}
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-4xl md:text-5xl font-satoshi font-black tracking-tighter">{item.val}</h4>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-secondary)] opacity-60 group-hover:opacity-100 group-hover:text-accent transition-all">{item.label}</p>
+                  </div>
+                  
+                  {/* Hover arrow overlay */}
+                  <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ArrowUpRight size={20} className="text-white/40" />
+                  </div>
+               </motion.a>
+             ))}
+          </div>
         </div>
       </section>
 
@@ -536,6 +643,71 @@ export default function Home() {
                </motion.div>
             </div>
          </div>
+      </section>
+
+      {/* DIGITAL INSIGHTS / BLOG PREVIEW */}
+      <section className="py-20 md:py-40 px-6 bg-[var(--bg-primary)] border-t border-[var(--border-primary)] overflow-hidden">
+        <div className="max-w-7xl mx-auto space-y-16">
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">{t("blog.badge")}</span>
+              <h2 className="text-[32px] md:text-7xl font-satoshi font-medium tracking-tighter leading-tight italic">
+                {t("blog.title")}
+              </h2>
+            </div>
+            <Link to="/bio" className="group flex items-center gap-4 text-xs font-black uppercase tracking-widest text-accent">
+              Explore Insights <div className="w-10 h-10 rounded-full border border-accent/30 flex items-center justify-center group-hover:bg-accent group-hover:text-black transition-all">→</div>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { 
+                tag: "Marketing", 
+                title: "2026-yilda SMM: Nima o'zgaradi?", 
+                date: "Apr 12, 2026",
+                img: "https://picsum.photos/seed/marketing/800/600"
+              },
+              { 
+                tag: "Strategy", 
+                title: "Viral kontent yaratishning 5 ta oltin qoidasi", 
+                date: "Mar 28, 2026",
+                img: "https://picsum.photos/seed/strategy/800/600"
+              },
+              { 
+                tag: "Business", 
+                title: "Loyihani avtomatlashtirish: Vaqtni qanday tejash mumkin?", 
+                date: "Mar 15, 2026",
+                img: "https://picsum.photos/seed/automation/800/600"
+              }
+            ].map((post, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                className="group space-y-6"
+              >
+                <div className="aspect-[4/3] overflow-hidden rounded-[2.5rem] bg-[var(--border-primary)] relative">
+                  <img 
+                    src={post.img} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[0.5] group-hover:grayscale-0"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute top-6 left-6 px-4 py-2 bg-black/60 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-white border border-white/10">
+                    {post.tag}
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <span className="text-[10px] font-bold text-[var(--text-secondary)] opacity-50 uppercase tracking-widest">{post.date}</span>
+                  <h4 className="text-xl md:text-2xl font-satoshi font-bold leading-tight group-hover:text-accent transition-colors">{post.title}</h4>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* EXPERIENCE & EDUCATION */}

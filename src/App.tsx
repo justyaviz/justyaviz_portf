@@ -12,6 +12,7 @@ import AI from "./pages/AI";
 import Bio from "./pages/Bio";
 import Admin from "./pages/Admin";
 import Blog from "./pages/Blog";
+import NotFound from "./pages/NotFound";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 
 export default function App() {
@@ -73,6 +74,7 @@ export default function App() {
                 <Route path="/ai" element={<AI />} />
                 <Route path="/bio" element={<Bio />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>
           )}

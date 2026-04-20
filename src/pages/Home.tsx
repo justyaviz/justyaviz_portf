@@ -37,6 +37,7 @@ import { Typewriter } from "../components/Typewriter";
 import Lottie from "lottie-react";
 import Magnetic from "../components/Magnetic";
 import { RevealText, CharReveal, ImageReveal } from "../components/Reveal";
+import InfiniteMarquee from "../components/InfiniteMarquee";
 
 import jsPDF from "jspdf";
 
@@ -345,6 +346,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* INFINITE MARQUEE */}
+      <InfiniteMarquee />
 
       {/* PROFESSIONAL DIRECTIONS */}
       <section className="py-20 md:py-32 px-6">

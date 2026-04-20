@@ -22,7 +22,6 @@ import { useAppContext } from "../context/AppContext";
 import { auth } from "../firebase";
 import { Logo } from "./Logo";
 import SmoothScroll from "./SmoothScroll";
-import CustomCursor from "./CustomCursor";
 import Preloader from "./Preloader";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -48,7 +47,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SmoothScroll>
       <Preloader />
       <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-accent/40 selection:text-white overflow-hidden ${theme === 'dark' ? 'bg-[#000] text-white' : 'bg-[#fff] text-[#0f172a]'}`}>
-        <CustomCursor />
         {/* ADMIN BAR */}
       {isAdmin && (
         <div className="fixed top-0 left-0 right-0 h-12 bg-accent text-black z-[200] flex items-center justify-between px-6 font-space-grotesk text-[10px] font-bold uppercase tracking-widest shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)]">
@@ -112,9 +110,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             { to: "/", label: t("nav.home") },
             { to: "/branding", label: t("nav.branding") },
             { to: "/projects", label: t("nav.projects") },
-            { to: "/client-portal", label: t("nav.portal") },
-            { to: "/blog", label: "Blog" },
-            { to: "/contact", label: t("nav.contact") }
+            { to: "/calculator", label: "Narxlar" },
+            { to: "/book", label: "Band qilish" },
+            { to: "/client-portal", label: t("nav.portal") }
           ].map(link => (
             <Link 
               key={link.to}
@@ -186,8 +184,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link to="/" onClick={() => setMobileMenuOpen(false)}>{t("nav.home")}</Link>
             <Link to="/branding" onClick={() => setMobileMenuOpen(false)}>{t("nav.branding")}</Link>
             <Link to="/projects" onClick={() => setMobileMenuOpen(false)}>{t("nav.projects")}</Link>
-            <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
-            <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>{t("nav.contact")}</Link>
+            <Link to="/calculator" onClick={() => setMobileMenuOpen(false)}>Narxlar</Link>
+            <Link to="/book" onClick={() => setMobileMenuOpen(false)}>Band qilish</Link>
             <Link to="/client-portal" onClick={() => setMobileMenuOpen(false)}>{t("nav.portal")}</Link>
           </motion.div>
         )}

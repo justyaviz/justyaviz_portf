@@ -78,6 +78,11 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
+    // Support Chats (AI/Admin Chatbot)
+    match /support_chats/{chatId} {
+      allow read, write: if true; // In production, secure this to specific session/IP or auth if needed
+    }
+
     // Bookings
     match /bookings/{bookingId} {
       allow create: if true;

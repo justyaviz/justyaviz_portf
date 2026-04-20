@@ -20,6 +20,9 @@ import FloatingContact from "./components/FloatingContact";
 import PageTransition from "./components/PageTransition";
 import ScrollProgress from "./components/ScrollProgress";
 import AIChatbot from "./components/AIChatbot";
+import CustomCursor from "./components/CustomCursor";
+import PricingCalculator from "./pages/PricingCalculator";
+import Book from "./pages/Book";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -39,6 +42,8 @@ function AnimatedRoutes() {
           <Route path="/ai" element={<PageTransition><AI /></PageTransition>} />
           <Route path="/bio" element={<PageTransition><Bio /></PageTransition>} />
           <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
+          <Route path="/calculator" element={<PageTransition><PricingCalculator /></PageTransition>} />
+          <Route path="/book" element={<PageTransition><div className="pt-32 pb-24 min-h-screen px-6 flex items-center bg-[var(--bg-primary)]"><Book /></div></PageTransition>} />
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>
       </motion.div>

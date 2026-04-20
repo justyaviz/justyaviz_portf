@@ -184,7 +184,7 @@ const translations = {
     // Bio Page
     'bio.sidebar.home': 'Asosiy',
     'bio.sidebar.who': 'Kim man?',
-    'bio.sidebar.branding': 'dizayn13',
+    'bio.sidebar.branding': 'men',
     'bio.sidebar.int': 'Xalqaro',
     'bio.sidebar.coding': 'Dasturlash',
     'bio.sidebar.ai': 'Ai',
@@ -410,7 +410,7 @@ const translations = {
     // Bio Page
     'bio.sidebar.home': 'Главная',
     'bio.sidebar.who': 'Кто я?',
-    'bio.sidebar.branding': 'dizayn13',
+    'bio.sidebar.branding': 'men',
     'bio.sidebar.int': 'Международный',
     'bio.sidebar.coding': 'Программирование',
     'bio.sidebar.ai': 'Ai',
@@ -636,7 +636,7 @@ const translations = {
     // Bio Page
     'bio.sidebar.home': 'Home',
     'bio.sidebar.who': 'Who am I?',
-    'bio.sidebar.branding': 'dizayn13',
+    'bio.sidebar.branding': 'men',
     'bio.sidebar.int': 'International',
     'bio.sidebar.coding': 'Coding',
     'bio.sidebar.ai': 'Ai',

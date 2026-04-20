@@ -49,8 +49,8 @@ export default function Bio() {
       {/* SIDEBAR */}
       <aside className="w-64 fixed left-0 top-0 h-full border-r border-[var(--border-primary)] p-6 space-y-12 hidden lg:block bg-[var(--bg-primary)]/50 backdrop-blur-3xl z-50">
         <Link to="/" className="flex items-center gap-2 group">
-           <div className="w-8 h-8 bg-black text-white dark:bg-white dark:text-black font-black flex items-center justify-center rounded-lg group-hover:rotate-12 transition-transform">M</div>
-           <span className="font-bold tracking-tighter text-xl">dizayn.13</span>
+           <div className="w-8 h-8 bg-black text-white dark:bg-white dark:text-black font-black flex items-center justify-center rounded-lg group-hover:rotate-12 transition-transform">Y</div>
+           <span className="font-bold tracking-tighter text-xl text-accent">men</span>
         </Link>
 
         <nav className="space-y-1">
@@ -76,8 +76,8 @@ export default function Bio() {
            <div className="glass p-4 rounded-xl border-[var(--border-primary)] space-y-3">
               <span className="text-[10px] uppercase tracking-widest text-[var(--text-secondary)] font-bold">{t("bio.sidebar.company")}</span>
               <div className="flex items-center gap-2">
-                 <div className="w-6 h-6 bg-accent text-white rounded flex items-center justify-center text-[10px] font-black">M</div>
-                 <span className="text-xs font-bold">dizayn13</span>
+                 <div className="w-6 h-6 bg-accent text-white rounded flex items-center justify-center text-[10px] font-black">Y</div>
+                 <span className="text-xs font-bold text-accent">men</span>
               </div>
            </div>
         </div>

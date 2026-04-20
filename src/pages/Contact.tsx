@@ -113,7 +113,7 @@ export default function Contact() {
                       onChange={e => setFormData({...formData, email: e.target.value})}
                       required
                       className="w-full bg-transparent p-6 outline-none text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]/30 rounded-2xl"
-                      placeholder="dizayn.13031@gmail.com yoki raqam"
+                      placeholder="yahyobektohirjonov0@gmail.com yoki raqam"
                     />
                   </div>
                </div>

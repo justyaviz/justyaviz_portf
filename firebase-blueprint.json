@@ -113,6 +113,32 @@
       },
       "required": ["type", "message", "read"]
     },
+    "Experience": {
+      "title": "Work Experience",
+      "description": "Professional history entry",
+      "type": "object",
+      "properties": {
+        "company": { "type": "string" },
+        "role": { "type": "string" },
+        "description": { "type": "string" },
+        "order": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["company", "role"]
+    },
+    "Certificate": {
+      "title": "Certificate",
+      "description": "Academic or professional certification",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "provider": { "type": "string" },
+        "image": { "type": "string" },
+        "order": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "provider"]
+    },
     "Message": {
       "title": "Contact Message",
       "description": "Message from contact form",
@@ -158,6 +184,14 @@
     "/notifications/{notifId}": {
       "schema": "Notification",
       "description": "Admin notifications"
+    },
+    "/experience/{expId}": {
+      "schema": "Experience",
+      "description": "Professional career history"
+    },
+    "/certificates/{certId}": {
+      "schema": "Certificate",
+      "description": "Professional and academic certifications"
     },
     "/messages/{msgId}": {
       "schema": "Message",

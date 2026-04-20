@@ -8,7 +8,7 @@ import {
   Bell, Layers, FileText, Smartphone, Zap, Rocket, Users, Target,
   Database, ChartBar, MessageSquare, Moon, Sun, Newspaper, Star,
   ChevronRight, ArrowUpRight, CheckCircle2, AlertCircle, Clock,
-  MoreVertical, Filter, Download, ExternalLink, Activity
+  MoreVertical, Filter, Download, ExternalLink, Activity, Briefcase, Award
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
@@ -25,7 +25,7 @@ export default function Admin() {
     logoutAdmin 
   } = useAdmin();
 
-  const [activeTab, setActiveTab] = useState<"dashboard" | "projects" | "content" | "leads" | "blog" | "testimonials" | "services" | "clients">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "projects" | "content" | "leads" | "blog" | "testimonials" | "services" | "clients" | "bio">("dashboard");
   const [projects, setProjects] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState<any[]>([]);
@@ -33,10 +33,12 @@ export default function Admin() {
   const [testimonials, setTestimonials] = useState<any[]>([]);
   const [services, setServices] = useState<any[]>([]);
   const [clientProjects, setClientProjects] = useState<any[]>([]);
+  const [experience, setExperience] = useState<any[]>([]);
+  const [certificates, setCertificates] = useState<any[]>([]);
   
   // Modals & Editing
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<"project" | "blog" | "testimonial" | "service" | "clientProject" | null>(null);
+  const [modalType, setModalType] = useState<"project" | "blog" | "testimonial" | "service" | "clientProject" | "experience" | "certificate" | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<any>({});
 
@@ -65,13 +67,20 @@ export default function Admin() {
     const unsubClients = onSnapshot(query(collection(db, "clientProjects"), orderBy("updatedAt", "desc")), snap => {
       setClientProjects(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
+    const unsubExperience = onSnapshot(query(collection(db, "experience"), orderBy("order", "asc")), snap => {
+      setExperience(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
+    const unsubCertificates = onSnapshot(query(collection(db, "certificates"), orderBy("order", "asc")), snap => {
+      setCertificates(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
 
     return () => { 
       unsubProjects(); unsubMessages(); unsubAnalytics(); unsubBlogs(); unsubTestimonials(); unsubServices(); unsubClients();
+      unsubExperience(); unsubCertificates();
     };
   }, [isAdmin]);
 
-  const openModal = (type: "project" | "blog" | "testimonial" | "service" | "clientProject", data: any = null) => {
+  const openModal = (type: "project" | "blog" | "testimonial" | "service" | "clientProject" | "experience" | "certificate", data: any = null) => {
     setModalType(type);
     setEditingId(data?.id || null);
     if (data) {
@@ -83,6 +92,8 @@ export default function Admin() {
         case "testimonial": setFormData({ name: "", role: "", content: "", rating: 5 }); break;
         case "service": setFormData({ title: "", price: "", features: "", isPopular: false, bentoSize: "medium", order: 0 }); break;
         case "clientProject": setFormData({ clientEmail: "", projectName: "", status: "Boshlanmoqda", progress: 0, files: [] }); break;
+        case "experience": setFormData({ company: "", role: "", description: "", order: experience.length }); break;
+        case "certificate": setFormData({ title: "", provider: "", image: "", order: certificates.length }); break;
       }
     }
     setIsModalOpen(true);
@@ -109,7 +120,9 @@ export default function Admin() {
       const collectionName = modalType === "project" ? "projects" : 
                              modalType === "blog" ? "blogPosts" : 
                              modalType === "testimonial" ? "testimonials" :
-                             modalType === "service" ? "services" : "clientProjects";
+                             modalType === "service" ? "services" :
+                             modalType === "experience" ? "experience" :
+                             modalType === "certificate" ? "certificates" : "clientProjects";
       
       const dataToSave = { ...formData };
       
@@ -195,7 +208,7 @@ export default function Admin() {
       {/* SIDEBAR */}
       <aside className="w-72 border-r border-white/5 flex flex-col fixed inset-y-0 left-0 bg-[#0a0a0a] z-50">
         <div className="p-8 flex items-center gap-3 border-b border-white/5">
-           <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-accent/30">J</div>
+           <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-accent/30">Y</div>
            <div>
              <h2 className="font-black text-lg leading-none uppercase italic tracking-tighter">Just Yaviz</h2>
              <p className="text-[10px] text-white/30 uppercase font-bold mt-1 tracking-widest">Master Panel v2.0</p>
@@ -214,6 +227,7 @@ export default function Admin() {
               <SidebarItem icon={<Layers size={18} />} label="Loyihalar" active={activeTab === "projects"} onClick={() => setActiveTab("projects")} />
               <SidebarItem icon={<Newspaper size={18} />} label="Maqolalar" active={activeTab === "blog"} onClick={() => setActiveTab("blog")} />
               <SidebarItem icon={<Star size={18} />} label="Mijozlar Fikri" active={activeTab === "testimonials"} onClick={() => setActiveTab("testimonials")} />
+              <SidebarItem icon={<Briefcase size={18} />} label="Kim man?" active={activeTab === "bio"} onClick={() => setActiveTab("bio")} />
               <SidebarItem icon={<FileText size={18} />} label="Sayt Matnlari" active={activeTab === "content"} onClick={() => setActiveTab("content")} />
            </div>
 
@@ -296,19 +310,19 @@ export default function Admin() {
                      </div>
                      <div className="h-80 w-full font-mono text-[10px]">
                         <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart data={analytics}>
-                            <defs>
-                              <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.3}/>
-                                <stop offset="95%" stopColor="var(--accent)" stopOpacity={0}/>
-                              </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                            <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" axisLine={false} tickLine={false} dy={10} />
-                            <YAxis stroke="rgba(255,255,255,0.2)" axisLine={false} tickLine={false} dx={-10} />
-                            <Tooltip contentStyle={{ background: '#141414', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem', fontSize: '12px' }} />
-                            <Area type="monotone" dataKey="visitors" stroke="var(--accent)" strokeWidth={3} fillOpacity={1} fill="url(#colorVisits)" />
-                          </AreaChart>
+                           <AreaChart data={analytics}>
+                             <defs>
+                               <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
+                                 <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.3}/>
+                                 <stop offset="95%" stopColor="var(--accent)" stopOpacity={0}/>
+                               </linearGradient>
+                             </defs>
+                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                             <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" axisLine={false} tickLine={false} dy={10} />
+                             <YAxis stroke="rgba(255,255,255,0.2)" axisLine={false} tickLine={false} dx={-10} />
+                             <Tooltip contentStyle={{ background: '#141414', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem', fontSize: '12px' }} />
+                             <Area type="monotone" dataKey="visitors" stroke="var(--accent)" strokeWidth={3} fillOpacity={1} fill="url(#colorVisits)" />
+                           </AreaChart>
                         </ResponsiveContainer>
                      </div>
                   </div>
@@ -568,7 +582,57 @@ export default function Admin() {
                   ))}
                 </div>
              </motion.div>
-          ) : null}
+          ) : activeTab === "bio" ? (
+            <motion.div key="bio" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-12">
+               <div className="space-y-8">
+                 <div className="flex items-center justify-between">
+                    <h3 className="font-black uppercase italic text-2xl tracking-tighter">Ish Tajribasi</h3>
+                    <button onClick={() => openModal("experience")} className="px-8 py-4 bg-accent text-white font-black uppercase rounded-2xl text-[10px] tracking-widest">Yangi Tajriba</button>
+                 </div>
+                 <div className="space-y-4">
+                    {experience.map(exp => (
+                      <div key={exp.id} className="p-8 bg-white/[0.03] border border-white/5 rounded-[2rem] flex items-center justify-between">
+                         <div className="flex gap-6 items-center">
+                            <div className="w-12 h-12 bg-accent/20 rounded-xl flex items-center justify-center text-accent font-black">{exp.company ? exp.company[0] : "?"}</div>
+                            <div className="flex-1">
+                               <h4 className="font-black uppercase text-sm tracking-widest">{exp.company}</h4>
+                               <p className="text-xs font-bold text-accent">{exp.role}</p>
+                               <p className="text-[10px] text-white/40 max-w-md mt-2 leading-relaxed">{exp.description}</p>
+                            </div>
+                         </div>
+                         <div className="flex gap-4">
+                            <button onClick={() => openModal("experience", exp)} className="p-2 text-white/40 hover:text-white"><Edit2 size={18} /></button>
+                            <button onClick={() => handleDelete("experience", exp.id)} className="p-2 text-rose-500/50 hover:text-rose-500"><Trash2 size={18} /></button>
+                         </div>
+                      </div>
+                    ))}
+                 </div>
+               </div>
+               <div className="space-y-8">
+                 <div className="flex items-center justify-between">
+                    <h3 className="font-black uppercase italic text-2xl tracking-tighter">Sertifikatlar</h3>
+                    <button onClick={() => openModal("certificate")} className="px-8 py-4 bg-accent text-white font-black uppercase rounded-2xl text-[10px] tracking-widest">Yangi Sertifikat</button>
+                 </div>
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                   {certificates.map(cert => (
+                     <div key={cert.id} className="p-6 bg-white/[0.03] border border-white/5 rounded-[2rem] space-y-4">
+                        <div className="aspect-video bg-white/5 rounded-xl border border-white/5 overflow-hidden flex items-center justify-center">
+                           {cert.image ? <img src={cert.image} className="w-full h-full object-cover" alt="" referrerPolicy="no-referrer" /> : <Award className="text-white/10" size={32} />}
+                        </div>
+                        <div>
+                           <h4 className="font-black uppercase text-xs tracking-widest truncate">{cert.title}</h4>
+                           <p className="text-[10px] text-accent font-bold mt-1 tracking-wider">{cert.provider}</p>
+                        </div>
+                        <div className="flex gap-4 pt-2">
+                           <button onClick={() => openModal("certificate", cert)} className="text-[10px] font-black uppercase text-white/40 hover:text-white underline">Edit</button>
+                           <button onClick={() => handleDelete("certificates", cert.id)} className="text-[10px] font-black uppercase text-rose-500/50 hover:text-rose-500 underline">Delete</button>
+                        </div>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+            </motion.div>
+         ) : null}
         </AnimatePresence>
       </main>
 
@@ -710,6 +774,48 @@ export default function Admin() {
                       </div>
                    </div>
                  )}
+
+                 {modalType === "experience" && (
+                    <div className="space-y-6">
+                       <div className="space-y-2">
+                         <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Kompaniya Nomi</label>
+                         <input className="ui-input-glow p-5" value={formData.company} onChange={e=>setFormData({...formData, company: e.target.value})} />
+                       </div>
+                       <div className="space-y-2">
+                         <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Lavozim</label>
+                         <input className="ui-input-glow p-5" value={formData.role} onChange={e=>setFormData({...formData, role: e.target.value})} />
+                       </div>
+                       <div className="space-y-2">
+                         <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Tafsilotlar</label>
+                         <textarea className="ui-input-glow p-5 min-h-[100px]" value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})} />
+                       </div>
+                       <div className="space-y-2">
+                         <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Tartib (Order)</label>
+                         <input type="number" className="ui-input-glow p-5" value={formData.order} onChange={e=>setFormData({...formData, order: parseInt(e.target.value) || 0})} />
+                       </div>
+                    </div>
+                  )}
+
+                  {modalType === "certificate" && (
+                    <div className="space-y-6">
+                       <div className="space-y-2">
+                         <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Sertifikat Nomi</label>
+                         <input className="ui-input-glow p-5" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} />
+                       </div>
+                       <div className="space-y-2">
+                         <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Beruvchi Tashkilot</label>
+                         <input className="ui-input-glow p-5" value={formData.provider} onChange={e=>setFormData({...formData, provider: e.target.value})} />
+                       </div>
+                       <div className="space-y-2">
+                         <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Rasm URL</label>
+                         <input className="ui-input-glow p-5" value={formData.image} onChange={e=>setFormData({...formData, image: e.target.value})} />
+                       </div>
+                       <div className="space-y-2">
+                         <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Tartib (Order)</label>
+                         <input type="number" className="ui-input-glow p-5" value={formData.order} onChange={e=>setFormData({...formData, order: parseInt(e.target.value) || 0})} />
+                       </div>
+                    </div>
+                  )}
 
                  {modalType === "blog" && (
                    <>

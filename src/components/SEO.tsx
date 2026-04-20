@@ -16,7 +16,7 @@ const SEO: React.FC<SEOProps> = ({
 }) => {
   return (
     <Helmet>
-      <title>{title} | just.yaviz</title>
+      <title>just.yaviz | {title}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       

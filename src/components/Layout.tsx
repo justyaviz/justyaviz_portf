@@ -23,6 +23,7 @@ import { auth } from "../firebase";
 import { Logo } from "./Logo";
 import SmoothScroll from "./SmoothScroll";
 import Preloader from "./Preloader";
+import SEO from "./SEO";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,9 +36,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+  const getPageTitle = () => {
+    switch(location.pathname) {
+      case '/': return 'Bosh Sahifa - Yaviz Digital Agency';
+      case '/branding': return 'Branding & SMM - Yaviz Digital Agency';
+      case '/projects': return 'Portfolio & Loyihalar - Yaviz Digital Agency';
+      case '/contact': return 'Bog\'lanish - Yaviz Digital Agency';
+      case '/client-portal': return 'Mijozlar Portali - Yaviz Digital';
+      case '/calculator': return 'Narxlarni Hisoblash - Yaviz Digital';
+      case '/book': return 'Uchrashuv Belgilash - Yaviz Digital';
+      default: return 'Yaviz Digital Agency - IT & Marketing Yechimlari';
+    }
+  };
+
   if (location.pathname === "/admin" || location.pathname === "/bio") {
     return (
       <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-accent/40 selection:text-white ${location.pathname === "/admin" ? "bg-[#f8fafc] text-slate-900" : ""}`}>
+        <SEO title={getPageTitle()} />
         {children}
       </div>
     );
@@ -46,6 +61,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SmoothScroll>
       <Preloader />
+      <SEO title={getPageTitle()} />
       <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-accent/40 selection:text-white overflow-hidden ${theme === 'dark' ? 'bg-[#000] text-white' : 'bg-[#fff] text-[#0f172a]'}`}>
         {/* ADMIN BAR */}
       {isAdmin && (

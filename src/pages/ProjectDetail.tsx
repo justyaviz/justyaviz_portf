@@ -6,6 +6,16 @@ import { motion } from 'motion/react';
 import { ArrowLeft, ExternalLink, Play, CheckCircle2 } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
+const defaultProjects = [
+  { id: "dummy1", title: "Magic City", category: "Marketing", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxwrLEewH9Kw14lXc8nVXi2bIPilJXbDS1zg&s", type: "Marketing", problem: "Magic City O'zbekistonning eng yirik shijoatli obyekti bo'lsa-da, tashrif buyuruvchilarning barchasi haqiqiy imkoniyatlaridan xabardor emas edi. Bizga organik va keng qamrovli social media ishtiroki kerak edi.", solution: "Brendning yangi yuzi sifatida dinamik SMM strategiyasi tuzildi, kreativ videolar olindi va maqsadli auditoriyani jalb qilish uchun qiziqarli o'yinlar, konkurslar va yuqori sifatli 'Premium Vizuallar' ishlab chiqildi.", result: "Ijtimoiy tarmoqlardagi obunachilar soni va organik reach 4X barobar oshdi. Tashrif buyuruvchilar soni stabil va brand sodiqligi yuksak darajaga chiqdi." },
+  { id: "dummy2", title: "Sundecor", category: "Marketing", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfkcYEjWfYZIpWvZ7fLMcCVxfVZQcXAZ3RQ&s", type: "Marketing", problem: "Tashqi bozorlarga e'lon qilish va keng ko'lamda tanilish uchun Premium imaj yetishmayotgan edi.", solution: "Minimalistik rebrending, hashamatga urg'u beruvchi sifatli videolar hamda dizaynlashtirilgan katalog yaratildi.", result: "Prestige auditoriyaning qiziqishi oshdi va conversion rate B2B doirasida keskin o'sish ko'rsatdi." },
+  { id: "dummy3", title: "Ilm Chashmalari", category: "SMM", image: "https://static4.tgstat.ru/channels/_0/58/5874f696205edf0c7aa55152da39921a.jpg", type: "Marketing", problem: "Katta ma'lumotlar bor bo'lishiga qaramay, ularni kuzatuvchiga to'g'ri va tushunarli tarzda yetkazib berish bo'yicha platforma yo'q edi.", solution: "Oddiy, yengil hamda foydali ma'lumotlarga asoslangan mikro-kontent (Reels) strategiyasi, shuningdek postlarni interaktiv formatda uzatish tizimi qurildi.", result: "Auditoriya faolligi (ER) o'sdi va doimiy o'qitish platformasi orqali ishonchli imidj yaratildi." },
+  { id: "dummy4", title: "e-one stores", category: "Web site", image: "https://taplink.st/a/5/1/6/f/99552c.jpg?1", type: "Web site", link: "https://e-one.uz", problem: "E-commerce doirasida xaridorning saytdan mahsulot xarid qilishdagi qiyinchiliklari va noqulay UI/UX holati sabab savdolar past edi.", solution: "UX lab va A/B testlar orqali foydalanuvchilar harakati (User Journey) noldan yaratildi va tezkor ishlovchi frontend (React/Next.js) yaratildi.", result: "Tashlab ketilgan savatchalar (Abandoned Cart) 30% ga kamaydi, xarid jarayoni osonlashdi." },
+  { id: "dummy5", title: "aloo shop", category: "Yandex Maps / Marketing", image: "https://proud-cyan-whxxiapwah.edgeone.app/8586B6B0-80CD-45D5-8121-D8BB132DDF0B.jpeg", type: "Marketing", link: "https://yandex.uz/maps/org/180263652317/", problem: "Bozorda ko'plab do'konlar bo'lishiga qaramasdan mijozlar topish va xaritada navigatsiyalash noqulay edi.", solution: "Yandex Maps tizimiga mukammal integratsiyalangan katalog, do'kon ko'rinishi, filiallari qo'shildi va Google SEO orqali hududiy marketing qilindi.", result: "Faqat Yandexni o'zidan oyiga minglab yangi potensial xaridorlar oqimi paydo bo'ldi." },
+  { id: "dummy6", title: "Yengil Taxi", category: "CRM", image: "https://assets.nicepagecdn.com/bc13c16f/6522583/images/Untitled-1.png", type: "CRM", problem: "Haydovchilar bilan mijozlar orasidagi logistika jarayonlarini monitoring qilish muammo edi.", solution: "Custom CRM tizimi yaratilib, buyurtmalar, to'lovlar hamda haydovchilar bahosi bitta admin panelda yig'ildi.", result: "Operatorlarga bo'lgan yuk 50% gacha kamaydi va buyurtmani qabul qilib olish vaqti yashinsimon tezlikka chiqdi." },
+  { id: "dummy7", title: "Yengil Mijoz", category: "Marketing", image: "https://play-lh.googleusercontent.com/7hUsDaIdSaYwgWXQosQZGuOpQ8RLhp8Iw-bSKzNIxocMqw5l-2ZysdbGdyllKkQIOw", type: "Marketing", problem: "Foydalanuvchilarni ilovani ko'proq yuklab olishga(Install) tushirish uchun reklama yetishmasligi sezilardi.", solution: "Performance Marketing yo'nalishida 5 xil konvertatsiya bo'ladigan takliflar asosida App Installs kampaniyalari ishga tushirildi.", result: "CPA(Harajat/mijoz) optimallashtirildi va 10 000+ yangi organik va aktiv mijozlar app orqali xarid qilishni boshladi." },
+];
+
 const ProjectDetail = () => {
   const { id } = useParams();
   const [project, setProject] = useState<any>(null);
@@ -16,6 +26,17 @@ const ProjectDetail = () => {
     const fetchProject = async () => {
       if (!id) return;
       setLoading(true);
+      
+      const isDummy = defaultProjects.find(p => p.id === id);
+      if (isDummy) {
+        setProject({
+          ...isDummy,
+          createdAt: new Date().toISOString()
+        });
+        setLoading(false);
+        return;
+      }
+
       try {
         const docRef = doc(db, 'projects', id);
         const docSnap = await getDoc(docRef);

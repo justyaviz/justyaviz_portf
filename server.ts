@@ -18,6 +18,15 @@ const db = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId);
 // Initialize Telegram Bot
 const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: true });
 
+// Prevent Telegram polling error crashes when both AI Studio and Railway are running
+bot.on('polling_error', (error: any) => {
+  if (error.code === 'ETELEGRAM' && error.message.includes('409 Conflict')) {
+    console.warn("Telegram warning: Multiple bot instances running (409 Conflict).");
+  } else {
+    console.warn("Telegram polling error:", error.message);
+  }
+});
+
 bot.on('message', async (msg) => {
   // Only accept from Admin
   if (msg.chat.id.toString() !== ADMIN_ID) return;
@@ -100,7 +109,7 @@ bot.on('message', async (msg) => {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
   app.use(express.json());
 

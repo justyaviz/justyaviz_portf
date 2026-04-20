@@ -372,10 +372,6 @@ const translations = {
     'services.contact_us': 'Задать вопрос',
     'services.custom_title': 'Индивидуальное Решение',
     'services.custom_desc': 'Специальные пакеты маркетинга и ИТ, адаптированные под ваш бизнес.',
-    'projects.filter.catalog': 'Каталог',
-    'projects.filter.flayer': 'Флаер',
-    'projects.empty': 'Скоро появится...',
-    'projects.modal.close': 'Закрыть',
 
     // Contact Page
     'contact.hero.title': 'Есть вопросы? Мы здесь, чтобы помочь.',
@@ -581,6 +577,26 @@ const translations = {
     'projects.filter.flayer': 'Flayer',
     'projects.empty': 'Coming soon...',
     'projects.modal.close': 'Close',
+    'projects.detail.back': 'Back',
+    'projects.detail.problem': 'Problem',
+    'projects.detail.solution': 'Solution',
+    'projects.detail.result': 'Result',
+    'projects.detail.view_live': 'View Live',
+    'projects.detail.view_video': 'View Video',
+    'projects.detail.gallery': 'Project Gallery',
+    'projects.detail.client': 'Client',
+    'projects.detail.date': 'Date',
+    'projects.detail.category': 'Category',
+    'projects.detail.similar': 'Order similar project',
+
+    'services.badge': 'Services',
+    'services.title': 'Professional Packages',
+    'services.order': 'Order Now',
+    'services.popular': 'Most Popular',
+    'services.start_price': 'Starting at',
+    'services.contact_us': 'Ask a Question',
+    'services.custom_title': 'Custom Solution',
+    'services.custom_desc': 'Bespoke marketing and IT packages tailored specifically to your business needs.',
 
     // Contact Page
     'contact.hero.title': 'Have any questions? We are here to help.',

@@ -88,6 +88,22 @@ export default function Admin() {
     setIsModalOpen(true);
   };
 
+  const getYoutubeId = (url: string | undefined) => {
+    if (!url || typeof url !== 'string') return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  const handleVideoUrlChange = (url: string) => {
+    const yid = getYoutubeId(url);
+    const updates: any = { video: url };
+    if (yid) {
+      updates.image = `https://img.youtube.com/vi/${yid}/maxresdefault.jpg`;
+    }
+    setFormData({ ...formData, ...updates });
+  };
+
   const handleSave = async () => {
     try {
       const collectionName = modalType === "project" ? "projects" : 
@@ -594,8 +610,13 @@ export default function Admin() {
                            </div>
                         </div>
                         <div className="space-y-2">
-                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Rasm URL</label>
+                           <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Rasm URL {getYoutubeId(formData.video) && <span className="text-accent">(Auto)</span>}</label>
                            <input className="ui-input-glow p-5" value={formData.image} onChange={e=>setFormData({...formData, image: e.target.value})} />
+                           {formData.image && (
+                             <div className="mt-2 aspect-video rounded-3xl overflow-hidden border border-white/10 max-h-40">
+                               <img src={formData.image} className="w-full h-full object-cover" alt="Preview" referrerPolicy="no-referrer" />
+                             </div>
+                           )}
                         </div>
                         
                         <div className="p-6 bg-white/5 rounded-3xl space-y-4">
@@ -619,7 +640,7 @@ export default function Admin() {
                         <div className="grid grid-cols-2 gap-6">
                            <div className="space-y-2">
                               <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Video URL (YouTube)</label>
-                              <input className="ui-input-glow p-5" placeholder="https://youtube.com/..." value={formData.video} onChange={e=>setFormData({...formData, video: e.target.value})} />
+                              <input className="ui-input-glow p-5" placeholder="https://youtube.com/..." value={formData.video} onChange={e=>handleVideoUrlChange(e.target.value)} />
                            </div>
                            <div className="space-y-2">
                               <label className="text-[10px] font-black uppercase text-white/30 tracking-widest ml-4">Havola (Link)</label>
